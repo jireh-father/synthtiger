@@ -62,12 +62,12 @@ class SynthDoG(templates.Template):
 
         image = paper_layer.output(bbox=[0, 0, *size])
         image = Image.fromarray(image[..., :3].astype(np.uint8))
-        image.save("paper_" + str(uuid.uuid4()), quality=100)
+        image.save("paper_" + str(uuid.uuid4()) + ".jpg", quality=100)
 
         for text_layer in text_layers:
             image = text_layer.output(bbox=[0, 0, *size])
             image = Image.fromarray(image[..., :3].astype(np.uint8))
-            image.save("text_" + str(uuid.uuid4()), quality=100)
+            image.save("text_" + str(uuid.uuid4()) + ".jpg", quality=100)
 
         document_group = layers.Group([*text_layers, paper_layer])
         document_space = np.clip(size - document_group.size, 0, None)
