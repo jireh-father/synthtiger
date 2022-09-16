@@ -109,6 +109,9 @@ class SynthTiger(templates.Template):
         fg_image, label = self._generate_fg(fg_color, fg_style)
         bg_image = self._generate_bg(fg_image.shape[:2][::-1], bg_color)
 
+        image_path = ""
+        image = Image.fromarray(fg_image[..., :3].astype(np.uint8))
+        image.save(image_path, quality=100)
         if midground:
             fg_mask = _create_mask(fg_image, self.foreground_mask_pad)
             mg_image, _ = self._generate_mg(mg_color, mg_style, fg_mask)
