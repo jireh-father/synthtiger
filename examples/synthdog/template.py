@@ -60,15 +60,6 @@ class SynthDoG(templates.Template):
         bg_layer = self.background.generate(size)
         paper_layer, text_layers, texts = self.document.generate(size)
 
-        image = paper_layer.output(bbox=[0, 0, *size])
-        image = Image.fromarray(image.astype(np.uint8))
-        image.save("paper_" + str(uuid.uuid4()) + ".png", quality=100)
-
-        for text_layer in text_layers:
-            image = text_layer.output(bbox=[0, 0, *size])
-            image = Image.fromarray(image.astype(np.uint8))
-            image.save("text_" + str(uuid.uuid4()) + ".png", quality=100)
-
         document_group = layers.Group([*text_layers, paper_layer])
         document_space = np.clip(size - document_group.size, 0, None)
         document_group.left = np.random.randint(document_space[0] + 1)

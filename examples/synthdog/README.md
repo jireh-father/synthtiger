@@ -4,6 +4,31 @@ SynthDoG is synthetic document generator for visual document understanding (VDU)
 
 ![image](../misc/sample_synthdog.png)
 
+## Summary
+```text
+배경
+문서
+ 페이퍼
+ 컨텐츠(텍스트 layers)
+  레이아웃
+   텍스트박스(with font)
+
+컨텐츠 + 페이퍼
+
+[페이퍼+컨텐츠] + 배경
+
+배경
+문서
+ 테이블
+   페이퍼(배경)
+   컨텐츠(table html) : 공통 속성, 폰트, 사이즈, 등등
+    header : 개별 속성, 폰트, 사이즈, 등등
+    rows : 개별 속성, 폰트, 사이즈, 등등
+    cells : 개별 속성, 폰트, 사이즈, 등등
+     text : 개별 속성, 폰트, 사이즈, 등등
+```
+
+
 ## Prerequisites
 
 - python>=3.6
