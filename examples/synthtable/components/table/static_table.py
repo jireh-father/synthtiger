@@ -6,7 +6,7 @@ import traceback
 
 import numpy as np
 from PIL import Image
-from utils import image_utl
+from utils import image_util
 from synthtiger import utils
 from synthtiger.components.component import Component
 from synthtiger import components
