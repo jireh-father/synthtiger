@@ -64,7 +64,7 @@ class StaticTable(Component):
                 traceback.print_exc()
                 continue
             html_json_path = meta['html_path']
-            html_json = json.load(open(html_json_path), encodings='utf-8')
+            html_json = json.load(open(html_json_path), encoding='utf-8')
             if self.min_cols > html_json['nums_col'] or self.max_cols < html_json['nums_col']:
                 continue
             if self.min_rows > html_json['nums_row'] or self.max_rows < html_json['nums_row']:
