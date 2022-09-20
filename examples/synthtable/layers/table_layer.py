@@ -4,7 +4,7 @@ from PIL import Image
 
 class TableLayer(Layer):
     def __init__(self, size):
-        self.size = size
+        self.table_size = size
         self.html = {}
         self.plain_html = None
         self.plain_html_with_styles = None
@@ -18,5 +18,5 @@ class TableLayer(Layer):
         super().__init__(image)
 
         height, width = self.image.shape[:2]
-        self.size = (width, height)
+        self.table_size = (width, height)
 

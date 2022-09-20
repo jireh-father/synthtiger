@@ -61,7 +61,7 @@ class SynthTable(templates.Template):
         # 배경 레이어 생성(배경 이미지를 crop 및 resize하고 효과를 줌)
         bg_layer = self.background.generate(size)
         table_layer = self.document.generate(size)
-        table_size = table_layer.size
+        table_size = table_layer.table_size
         table_html = table_layer.plain_html
         if table_size[0] > size[0] or table_size[1] > size[1]:
             if table_size[0] > self.short_size[0] or table_size[1] > self.short_size[1]:
