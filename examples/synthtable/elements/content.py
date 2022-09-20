@@ -6,10 +6,7 @@ MIT License
 from collections import OrderedDict
 
 import numpy as np
-from synthtiger import components
 
-from elements.textbox import TextBox
-from layouts import GridStack
 from elements.paper import Paper
 from elements.table import Table
 
