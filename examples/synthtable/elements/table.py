@@ -56,7 +56,8 @@ class Table(Selector):
 
         elements = []
         elements.append(comps.StaticTable(**config["static"], common=config["common"]))
-        elements.append(comps.SynthTable(**config["synth"], common=config["common"]))
+        # elements.append(comps.SynthTable(**config["synth"], common=config["common"]))
+        elements.append(None)
         weights = [config["static"]["weight"], config["synth"]["weight"]]
         super().__init__(elements, weights)
 
