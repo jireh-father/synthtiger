@@ -6,7 +6,6 @@ MIT License
 import json
 import os
 import re
-import uuid
 from typing import Any, List
 
 import numpy as np
@@ -45,18 +44,12 @@ class SynthDoG(templates.Template):
         self.split_ratio = [sum(split_ratio[: i + 1]) for i in range(0, len(split_ratio))]
 
     def generate(self):
-        # 가로로 긴 이미지인지 여부 선택
         landscape = np.random.rand() < self.landscape
-        # 짧은쪽 변의 길이 선택
         short_size = np.random.randint(self.short_size[0], self.short_size[1] + 1)
-        # aspect ratio 선택
         aspect_ratio = np.random.uniform(self.aspect_ratio[0], self.aspect_ratio[1])
-        # 긴쪽 변의 길이 선택(aspect ratio 에 맞게)
         long_size = int(short_size * aspect_ratio)
-        # 사각형 width, height 선택
         size = (long_size, short_size) if landscape else (short_size, long_size)
 
-        # 배경 레이어 생성(배경 이미지를 crop 및 resize하고 효과를 줌)
         bg_layer = self.background.generate(size)
         paper_layer, text_layers, texts = self.document.generate(size)
 
