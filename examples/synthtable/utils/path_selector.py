@@ -63,6 +63,7 @@ class PathSelector:
     def _sample_path(self):
         key = np.random.choice(len(self.paths), p=self._probs)
         print("key", key)
+        print(self._counts)
         if self._counts[key] == 0:
             raise RuntimeError(f"There is no path: {self.paths[key]}")
 
