@@ -17,7 +17,7 @@ import glob
 
 
 class StaticTable(Component):
-    def __init__(self, html_paths, image_paths, path_weights, lower_image_size_ratios, common):
+    def __init__(self, html_paths, image_paths, path_weights, lower_image_size_ratios, common, **kwargs):
         super(StaticTable, self).__init__()
         self.html_path_selector = PathSelector(html_paths, path_weights, exts=['json'])
         self.image_path_selector = PathSelector(image_paths, path_weights, exts=['jpg', 'png'])
