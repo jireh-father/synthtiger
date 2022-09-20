@@ -4,9 +4,7 @@ Copyright (c) 2022-present NAVER Corp.
 MIT License
 """
 import components as comps
-from synthtiger import components
 from layers import *
-import numpy as np
 from utils.selector import Selector
 
 
