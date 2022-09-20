@@ -7,6 +7,5 @@ from elements.background import Background
 from elements.content import Content
 from elements.document import Document
 from elements.paper import Paper
-from elements.textbox import TextBox
 
-__all__ = ["Background", "Content", "Document", "Paper", "TextBox"]
+__all__ = ["Background", "Content", "Document", "Paper"]
