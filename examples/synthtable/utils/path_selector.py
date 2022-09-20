@@ -8,7 +8,6 @@ from synthtiger import utils
 def search_files(root, names=None, exts=None):
     paths = []
 
-    print(root)
     for dir_path, _, file_names in os.walk(root, followlinks=True):
         print(file_names)
         for file_name in file_names:
@@ -21,8 +20,7 @@ def search_files(root, names=None, exts=None):
                 continue
 
             paths.append(file_path)
-    print(paths)
-    sys.exit()
+
     return paths
 
 
@@ -65,6 +63,7 @@ class PathSelector:
 
     def _sample_path(self):
         key = np.random.choice(len(self.paths), p=self._probs)
+        print("key", key)
         if self._counts[key] == 0:
             raise RuntimeError(f"There is no path: {self.paths[key]}")
 
