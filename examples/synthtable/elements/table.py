@@ -130,7 +130,7 @@ class Table(Selector):
         #     ])
         # ], **config)
 
-    def generate(self, size, paper_layer):
+    def generate(self, size):
         table_layer = TableLayer(size)
 
         self.apply([table_layer], {'size': size})
