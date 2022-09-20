@@ -95,7 +95,7 @@ class StaticTable(Component):
         if image.mode != "RGB":
             image = image.convert("RGB")
 
-        image = image_utl.resize_keeping_aspect_ratio(image, target_size, Image.ANTIALIAS)
+        image = image_util.resize_keeping_aspect_ratio(image, target_size, Image.ANTIALIAS)
 
         for layer in layers:
             layer.plain_html = html

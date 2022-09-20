@@ -5,6 +5,24 @@ import numpy as np
 from synthtiger import utils
 
 
+def search_files(root, names=None, exts=None):
+    paths = []
+
+    for dir_path, _, file_names in os.walk(root, followlinks=True):
+        for file_name in file_names:
+            file_path = os.path.join(dir_path, file_name)
+            file_ext = os.path.splitext(file_name)[1]
+
+            if names is not None and file_name not in names:
+                continue
+            if exts is not None and file_ext.lower() not in exts:
+                continue
+
+            paths.append(file_path)
+
+    return paths
+
+
 class PathSelector:
     def __init__(self, paths=(), weights=(), exts=None, use_sort=True):
         super().__init__()
@@ -36,7 +54,7 @@ class PathSelector:
 
             paths = [path]
             if os.path.isdir(path):
-                paths = utils.search_files(path, exts=self.exts)
+                paths = search_files(path, exts=self.exts)
             if self.use_sort:
                 paths.sort()
             self._paths.append(paths)
@@ -45,7 +63,7 @@ class PathSelector:
     def _sample_path(self):
         key = np.random.choice(len(self.paths), p=self._probs)
         if self._counts[key] == 0:
-            raise RuntimeError(f"There is no texture: {self.paths[key]}")
+            raise RuntimeError(f"There is no path: {self.paths[key]}")
 
         idx = np.random.randint(len(self._paths[key]))
         path = self._paths[key][idx]
