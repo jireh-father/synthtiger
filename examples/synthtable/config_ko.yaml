@@ -62,7 +62,7 @@ document:
             tbody: []
             tr: []
             td: []
-            local: []
+            local:
               prob: 0.4
               tr: []
               td: []
@@ -74,7 +74,6 @@ document:
             size: []
             margin: []
             round: []
-
       common:
         image_border:
           color: [ 1,3 ]
@@ -100,143 +99,143 @@ document:
 
 
 
-      weights: [10,90]
-      args:
-        # HtmlAndImageFile iterator
-        - args:
-          # HtmlAndImageFile
-          - html_paths: [ resources/table_html ]
-            image_paths: [ resources/table_image ]
-            weights: [ 1 ]
-          # Image Border Switch
-          - prob: 0.5
-            args:
-              width: []
-              color: []
-          # Image Margin Switch
-          - prob: 0.5
-            args:
-              # margin selector
-              weights: [5,5]
-              args:
-                # 위,아래,왼,우 동일하게 적용
-                - length: [ ]
-                # 위,아래,왼,우 각각 적용
-                - left: [ ]
-                  top: [ ]
-                  right: [ ]
-                  bottom: [ ]
-        # Synth htmls and images iterator:
-        - args:
-          # table html selector
-          - weights: []
-            args:
-              # html file and synth contents iterator
-              - args:
-                # html file
-                - paths: []
-                  weights: [1]
-                # synth table content switch
-                - prob: 0.5
-                  args:
-                    # synth table content selector
-                    - weights: []
-                      args:
-                        # corpus
-                        - paths: []
-                          weights: []
-                        # synth text
-                        - paths: [ ]
-                          weights: [ ]
-                        # key value corpus
-                        - paths: [ ]
-                          weights: [ ]
-              # synth table structure and contents iterator
-              - args:
-                # synth table structure html
-                - rows: [ ]
-                  cols: [ ]
-                # synth table content selector
-                - weights: [ ]
-                  args:
-                    # corpus
-                    - paths: [ ]
-                      weights: [ ]
-                    # synth text
-                    - paths: [ ]
-                      weights: [ ]
-                    # key value corpus
-                    - paths: [ ]
-                      weights: [ ]
-          # table styles iterator
-          - args:
-            # table global styles template selector
-            - weights: []
-              args:
-                # table global random synth styles iterator
-                - args:
-                  # table tag global style iterator
-                  - args:
-                    # bg selector
-                    - weights: [ 1,1,1,1 ]
-                      args:
-                        # color
-                        # gradient
-                        # image
-                        # paper
-                        - paths: [ resources/paper ]
-                          weights: [ 1 ]
-                          alpha: [ 0, 0.2 ]
-                          grayscale: 1
-                          crop: 1
-                  # thead tag global style iterator
-                  # tbody tag global style iterator
-                  # tr tag global style iterator
-                  # td tag global style iterator
-                # striped rows
-                - args:
-                # simple table styles
-            # tr individually style switch
-            - prob: 0.3
-              args:
-            # td individually style switch
-            - prob: 0.3
-              args:
+#      weights: [10,90]
+#      args:
+#        # HtmlAndImageFile iterator
+#        - args:
+#          # HtmlAndImageFile
+#          - html_paths: [ resources/table_html ]
+#            image_paths: [ resources/table_image ]
+#            weights: [ 1 ]
+#          # Image Border Switch
+#          - prob: 0.5
+#            args:
+#              width: []
+#              color: []
+#          # Image Margin Switch
+#          - prob: 0.5
+#            args:
+#              # margin selector
+#              weights: [5,5]
+#              args:
+#                # 위,아래,왼,우 동일하게 적용
+#                - length: [ ]
+#                # 위,아래,왼,우 각각 적용
+#                - left: [ ]
+#                  top: [ ]
+#                  right: [ ]
+#                  bottom: [ ]
+#        # Synth htmls and images iterator:
+#        - args:
+#          # table html selector
+#          - weights: []
+#            args:
+#              # html file and synth contents iterator
+#              - args:
+#                # html file
+#                - paths: []
+#                  weights: [1]
+#                # synth table content switch
+#                - prob: 0.5
+#                  args:
+#                    # synth table content selector
+#                    - weights: []
+#                      args:
+#                        # corpus
+#                        - paths: []
+#                          weights: []
+#                        # synth text
+#                        - paths: [ ]
+#                          weights: [ ]
+#                        # key value corpus
+#                        - paths: [ ]
+#                          weights: [ ]
+#              # synth table structure and contents iterator
+#              - args:
+#                # synth table structure html
+#                - rows: [ ]
+#                  cols: [ ]
+#                # synth table content selector
+#                - weights: [ ]
+#                  args:
+#                    # corpus
+#                    - paths: [ ]
+#                      weights: [ ]
+#                    # synth text
+#                    - paths: [ ]
+#                      weights: [ ]
+#                    # key value corpus
+#                    - paths: [ ]
+#                      weights: [ ]
+#          # table styles iterator
+#          - args:
+#            # table global styles template selector
+#            - weights: []
+#              args:
+#                # table global random synth styles iterator
+#                - args:
+#                  # table tag global style iterator
+#                  - args:
+#                    # bg selector
+#                    - weights: [ 1,1,1,1 ]
+#                      args:
+#                        # color
+#                        # gradient
+#                        # image
+#                        # paper
+#                        - paths: [ resources/paper ]
+#                          weights: [ 1 ]
+#                          alpha: [ 0, 0.2 ]
+#                          grayscale: 1
+#                          crop: 1
+#                  # thead tag global style iterator
+#                  # tbody tag global style iterator
+#                  # tr tag global style iterator
+#                  # td tag global style iterator
+#                # striped rows
+#                - args:
+#                # simple table styles
+#            # tr individually style switch
+#            - prob: 0.3
+#              args:
+#            # td individually style switch
+#            - prob: 0.3
+#              args:
 
 
-        - html:
-            paths: [ resources/html ]
-            weights: [ 1 ]
-            table:
-              cols: [ 2,20 ]
-              rows: [ 2,20 ]
-              header:
-                prob: 0.5
-                args:
-                  rows: [ 1, 2 ]
-              style:
-              background:
-                weights: [ 1,1,1,1 ]
-                color:
-                gradient:
-                image:
-                paper:
-                  image:
-                    paths: [ resources/paper ]
-                    weights: [ 1 ]
-                    alpha: [ 0, 0.2 ]
-                    grayscale: 1
-                    crop: 1
-              thead:
-                background:
-                  weights: [ 1,1,1,1 ]
-                  color:
-                  gradient:
-                tr:
-                  td:
-              tbody:
-                tr:
-                  td:
+#        - html:
+#            paths: [ resources/html ]
+#            weights: [ 1 ]
+#            table:
+#              cols: [ 2,20 ]
+#              rows: [ 2,20 ]
+#              header:
+#                prob: 0.5
+#                args:
+#                  rows: [ 1, 2 ]
+#              style:
+#              background:
+#                weights: [ 1,1,1,1 ]
+#                color:
+#                gradient:
+#                image:
+#                paper:
+#                  image:
+#                    paths: [ resources/paper ]
+#                    weights: [ 1 ]
+#                    alpha: [ 0, 0.2 ]
+#                    grayscale: 1
+#                    crop: 1
+#              thead:
+#                background:
+#                  weights: [ 1,1,1,1 ]
+#                  color:
+#                  gradient:
+#                tr:
+#                  td:
+#              tbody:
+#                tr:
+#                  td:
 
     margin: [0, 0.1]
     text:
