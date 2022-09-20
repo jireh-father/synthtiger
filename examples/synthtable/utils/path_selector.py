@@ -8,7 +8,9 @@ from synthtiger import utils
 def search_files(root, names=None, exts=None):
     paths = []
 
+    print(root)
     for dir_path, _, file_names in os.walk(root, followlinks=True):
+        print(file_names)
         for file_name in file_names:
             file_path = os.path.join(dir_path, file_name)
             file_ext = os.path.splitext(file_name)[1]
@@ -19,7 +21,8 @@ def search_files(root, names=None, exts=None):
                 continue
 
             paths.append(file_path)
-
+    print(paths)
+    sys.exit()
     return paths
 
 
