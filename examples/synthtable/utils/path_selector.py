@@ -53,21 +53,15 @@ class PathSelector:
                 continue
 
             paths = [path]
-            print("os.path.isdir(path)", os.path.isdir(path))
             if os.path.isdir(path):
                 paths = search_files(path, exts=self.exts)
             if self.use_sort:
                 paths.sort()
-            print(len(paths))
-            print(paths[:10])
-            sys.exit()
             self._paths.append(paths)
             self._counts.append(len(paths))
 
     def _sample_path(self):
         key = np.random.choice(len(self.paths), p=self._probs)
-        print("key", key)
-        print(self._counts)
         if self._counts[key] == 0:
             raise RuntimeError(f"There is no path: {self.paths[key]}")
 
