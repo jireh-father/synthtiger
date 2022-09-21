@@ -73,6 +73,8 @@ class Document:
                     new_height = np.random.randint(table_size[1], self.short_size[1] + 1)
 
                 size = (new_width, new_height)
+        else:
+            size = (table_size[0], table_size[1])
 
         print("last size", size)
         paper_layer = self.paper.generate(size)
