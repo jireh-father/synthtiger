@@ -41,8 +41,6 @@ class SynthTable(templates.Template):
             **config.get("effect", {}),
         )
 
-        self.paper = Paper(config["document"]["paper"])
-
         # config for splits (output_filename, split_ratio etc)
         self.splits = ["train", "validation", "test"]
         self.split_indexes = [0, 0, 0]
@@ -61,24 +59,11 @@ class SynthTable(templates.Template):
         size = (long_size, short_size) if landscape else (short_size, long_size)
 
         # 배경 레이어 생성(배경 이미지를 crop 및 resize하고 효과를 줌)
+
+        table_layer, paper_layer = self.document.generate(size)
+
         bg_layer = self.background.generate(size)
-        table_layer = self.document.generate(size)
-        table_size = table_layer.table_size
         table_html = table_layer.plain_html
-        if table_size[0] > size[0] or table_size[1] > size[1]:
-            if table_size[0] > self.short_size[0] or table_size[1] > self.short_size[1]:
-                return self.generate()
-            else:
-                new_width = table_size[0]
-                new_height = table_size[1]
-                if table_size[0] > size[0]:
-                    new_width = np.random.randint(table_size[0], self.short_size[0] + 1)
-                if table_size[1] > size[1]:
-                    new_height = np.random.randint(table_size[1], self.short_size[1] + 1)
-
-                size = (new_width, new_height)
-
-        paper_layer = self.paper.generate(size)
 
         document_group = layers.Group([table_layer, paper_layer])
         document_space = np.clip(size - document_group.size, 0, None)
