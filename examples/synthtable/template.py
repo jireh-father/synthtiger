@@ -15,6 +15,8 @@ from PIL import Image
 from synthtiger import components, layers, templates
 
 from elements.paper import Paper
+
+
 class SynthTable(templates.Template):
     def __init__(self, config=None, split_ratio: List[float] = [0.8, 0.1, 0.1]):
         super().__init__(config)
@@ -67,8 +69,14 @@ class SynthTable(templates.Template):
             if table_size[0] > self.short_size[0] or table_size[1] > self.short_size[1]:
                 return self.generate()
             else:
-                size = (np.random.randint(table_size[0], self.short_size[0] + 1),
-                        np.random.randint(table_size[1], self.short_size[1] + 1))
+                new_width = table_size[0]
+                new_height = table_size[1]
+                if table_size[0] > size[0]:
+                    new_width = np.random.randint(table_size[0], self.short_size[0] + 1)
+                if table_size[1] > size[1]:
+                    new_height = np.random.randint(table_size[1], self.short_size[1] + 1)
+
+                size = (new_width, new_height)
 
         paper_layer = self.paper.generate(size)
 
