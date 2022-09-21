@@ -16,7 +16,7 @@ class Document:
         self.short_size = config.get("short_size", [480, 1024])
         self.aspect_ratio = config.get("aspect_ratio", [1, 2])
         self.content = Content(config.get("content", {}))
-        self.paper = Paper(config["document"]["paper"])
+        self.paper = Paper(config.get("paper", {}))
         self.effect = components.Iterator(
             [
                 components.Switch(components.ElasticDistortion()),
