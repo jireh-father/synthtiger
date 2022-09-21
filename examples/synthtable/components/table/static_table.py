@@ -94,6 +94,7 @@ class StaticTable(Component):
         image = Image.open(image_path)
         if image.mode != "RGB":
             image = image.convert("RGB")
+        print("ori", (html_json['width'], html_json['height']))
         print("before", target_size)
         image, target_size = image_util.resize_keeping_aspect_ratio(image, target_size, Image.ANTIALIAS)
         print("after", target_size)
