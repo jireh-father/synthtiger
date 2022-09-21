@@ -72,7 +72,7 @@ class SynthTable(templates.Template):
 
         paper_layer = self.paper.generate(size)
 
-        document_group = layers.Group([paper_layer, table_layer])
+        document_group = layers.Group([table_layer, paper_layer])
         document_space = np.clip(size - document_group.size, 0, None)
         document_group.left = np.random.randint(document_space[0] + 1)
         document_group.top = np.random.randint(document_space[1] + 1)

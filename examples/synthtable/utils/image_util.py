@@ -16,4 +16,4 @@ def resize_keeping_aspect_ratio(pil_image, target_size, resample=None):
         )
     target_size = (x, y)
 
-    return pil_image.resize(target_size, resample)
+    return pil_image.resize(target_size, resample), target_size
