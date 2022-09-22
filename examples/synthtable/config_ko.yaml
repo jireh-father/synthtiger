@@ -20,7 +20,7 @@ document:
   landscape: 0.5
   short_size: [720, 1024]
   aspect_ratio: [1, 2]
-
+  margin: [0, 0.2]
   paper:
     image:
       paths: [resources/paper]
@@ -237,7 +237,7 @@ document:
 #                tr:
 #                  td:
 
-    margin: [0, 0.1]
+
     text:
       path: resources/corpus/kowiki.txt
     font:

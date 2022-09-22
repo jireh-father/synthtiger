@@ -60,13 +60,13 @@ class SynthTable(templates.Template):
 
         # 배경 레이어 생성(배경 이미지를 crop 및 resize하고 효과를 줌)
 
-        table_layer, paper_layer = self.document.generate(size)
+        table_layer, paper_layer, bg_size = self.document.generate(size)
 
-        bg_layer = self.background.generate(size)
+        bg_layer = self.background.generate(bg_size)
         table_html = table_layer.plain_html
 
         document_group = layers.Group([table_layer, paper_layer])
-        document_space = np.clip(size - document_group.size, 0, None)
+        document_space = np.clip(bg_size - document_group.size, 0, None)
         document_group.left = np.random.randint(document_space[0] + 1)
         document_group.top = np.random.randint(document_space[1] + 1)
         roi = np.array(paper_layer.quad, dtype=int)
@@ -74,7 +74,7 @@ class SynthTable(templates.Template):
         layer = layers.Group([*document_group.layers, bg_layer]).merge()
         self.effect.apply([layer])
 
-        image = layer.output(bbox=[0, 0, *size])
+        image = layer.output(bbox=[0, 0, *bg_size])
         quality = np.random.randint(self.quality[0], self.quality[1] + 1)
 
         data = {
