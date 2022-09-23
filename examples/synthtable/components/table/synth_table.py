@@ -48,7 +48,7 @@ class SynthTable(Component):
 
     def _sample_html_path(self):
         while True:
-            html_json_path = self.html_path_selector.select()
+            html_json_path, _, _ = self.html_path_selector.select()
             html_json = json.load(open(html_json_path), encoding='utf-8')
             if self.min_cols > html_json['nums_col'] or self.max_cols < html_json['nums_col']:
                 continue
