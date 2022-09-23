@@ -92,8 +92,8 @@ class SynthTable(Component):
                 #     "width"
                 # }
                 "table": {
-                    "width": target_size[0] + "px",
-                    "height": target_size[1] + "px",
+                    "width": str(target_size[0]) + "px",
+                    "height": str(target_size[1]) + "px",
                 }
 
             }
