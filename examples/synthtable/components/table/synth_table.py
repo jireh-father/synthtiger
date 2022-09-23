@@ -97,4 +97,4 @@ class SynthTable(Component):
                 }
 
             }
-            layer.render_table(tmp_path=self.tmp_path, paper=self.paper, max_size=max_size)
+            layer.render_table(tmp_path=self.tmp_path, size=target_size, paper=self.paper, max_size=max_size)

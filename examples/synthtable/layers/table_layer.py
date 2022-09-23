@@ -64,7 +64,7 @@ class TableLayer(Layer):
             for style_key in styles[selector]:
                 self.global_style[selector][style_key] = styles[selector][style_key]
 
-    def _render_table_selenium(self, html_path, image_path, paper, max_size):
+    def _render_table_selenium(self, html_path, image_path, paper, size, max_size):
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
@@ -81,14 +81,16 @@ class TableLayer(Layer):
             # required_height = driver.execute_script('return document.body.parentNode.scrollHeight')
             # required_width = 1280
             # bigger than table
-            driver.set_window_size(window_size, window_size)
+            # driver.set_window_size(window_size, window_size)
+            driver.set_window_size(size[0], size[1])
 
             div = driver.find_element(By.ID, 'table_wrapper')
             # todo: get div size and apply
             table_width = div.size['width']
             table_height = div.size['height']
-            if table_width >= window_size or table_height >= window_size:
+            if table_width >= [0] or table_height >= size[1]:
                 window_size += max_size
+                size = (int(size[0] * 1.2), int(size[1] * 1.2))
             else:
                 break
 
@@ -110,13 +112,13 @@ class TableLayer(Layer):
         driver.set_window_size(table_width, table_height)
         driver.close()
 
-    def render_table(self, image=None, tmp_path=None, paper=None, max_size=None):
+    def render_table(self, image=None, size=None,tmp_path=None, paper=None, max_size=None):
         if not image:
             image_path = os.path.join(tmp_path, str(uuid.uuid4()) + ".png")
             html_path = os.path.join(tmp_path, str(uuid.uuid4()) + ".html")
 
             try:
-                self._render_table_selenium(html_path, image_path, paper, max_size)
+                self._render_table_selenium(html_path, image_path, paper, size, max_size)
             except Exception as e:
                 if os.path.isfile(image_path):
                     os.unlink(image_path)
