@@ -46,14 +46,16 @@ class TableLayer(Layer):
         </head>
         <body>
             <div id="table_wrapper">
+                <table>
                 {}
+                </table>
             </div>
         </body>
         </html>
         """
         with open(html_path, "w+") as html_file:
-            html_template.format(self._convert_global_style_to_css(), self.plain_html_with_styles)
-            html_file.write(self.plain_html_with_styles)
+            html = html_template.format(self._convert_global_style_to_css(), self.plain_html_with_styles)
+            html_file.write(html)
 
     def _add_global_styles(self, styles):
         for selector in styles:
