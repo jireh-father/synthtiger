@@ -17,8 +17,8 @@ class SynthTable(Component):
 
         self.paper = Paper(style["common"]["background"]["paper"])
 
-        self.synth_structure_prob = BoolSwitch(common['synth_structure_prob'])
-        self.synth_content_prob = BoolSwitch(common['synth_content_prob'])
+        self.synth_structure_prob = BoolSwitch(html['synth_structure_prob'])
+        self.synth_content_prob = BoolSwitch(html['synth_content_prob'])
 
         self.min_rows = common['rows'][0]
         self.max_rows = common['rows'][1]
