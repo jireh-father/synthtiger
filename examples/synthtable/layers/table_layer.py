@@ -75,7 +75,6 @@ class TableLayer(Layer):
         window_size = max_size * 2
         while True:
             self._write_html_file(html_path)
-            print(os.path.abspath(html_path))
             driver.get("file:///{}".format(os.path.abspath(html_path)))
             # original_size = driver.get_window_size()
             # required_width = driver.execute_script('return document.body.parentNode.scrollWidth')
@@ -100,8 +99,8 @@ class TableLayer(Layer):
             {'#table_wrapper': {"background-image": 'url("data:image/png;base64,{}")'.format(base64_image)}})
         self._write_html_file(html_path)
 
-        driver.get("file:///{}".format(os.path.join(sys.path[0], html_path)))
-
+        driver.get("file:///{}".format(os.path.abspath(html_path)))
+        div = driver.find_element(By.ID, 'table_wrapper')
         div.screenshot(image_path)
         driver.set_window_size(window_size, window_size)
         driver.close()
