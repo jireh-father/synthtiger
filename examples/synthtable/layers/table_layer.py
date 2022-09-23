@@ -55,6 +55,7 @@ class TableLayer(Layer):
         """
         with open(html_path, "w+") as html_file:
             html = html_template.format(self._convert_global_style_to_css(), self.plain_html_with_styles)
+            print(html)
             html_file.write(html)
 
     def _add_global_styles(self, styles):
