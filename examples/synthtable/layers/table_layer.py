@@ -127,8 +127,8 @@ class TableLayer(Layer):
                 raise e
 
             image = Image.open(image_path)
-            os.unlink(image_path)
-            os.unlink(html_path)
+            # os.unlink(image_path)
+            # os.unlink(html_path)
 
         super().__init__(image)
 
