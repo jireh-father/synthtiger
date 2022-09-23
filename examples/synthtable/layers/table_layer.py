@@ -76,7 +76,7 @@ class TableLayer(Layer):
         window_size = max_size * 2
         while True:
             self._write_html_file(html_path)
-            print(os.path.join(sys.path[0], html_path))
+            print(os.path.join(sys.path[1], html_path))
             driver.get("file:///{}".format(os.path.join(sys.path[0], html_path)))
             # original_size = driver.get_window_size()
             # required_width = driver.execute_script('return document.body.parentNode.scrollWidth')
