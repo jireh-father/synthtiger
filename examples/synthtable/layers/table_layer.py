@@ -73,8 +73,8 @@ class TableLayer(Layer):
         driver.implicitly_wait(0.5)
 
         window_size = max_size * 2
+        self._write_html_file(html_path)
         while True:
-            self._write_html_file(html_path)
             driver.get("file:///{}".format(os.path.abspath(html_path)))
             # original_size = driver.get_window_size()
             # required_width = driver.execute_script('return document.body.parentNode.scrollWidth')
@@ -95,6 +95,10 @@ class TableLayer(Layer):
         paper_layer = paper.generate((table_width, table_height))
         base64_image = image_util.image_to_base64(paper_layer.image)
 
+        driver.close()
+
+        driver = webdriver.Chrome('chromedriver', options=options)
+        driver.implicitly_wait(0.5)
         self._add_global_styles(
             {'#table_wrapper': {"background-image": 'url("data:image/png;base64,{}")'.format(base64_image)}})
         self._write_html_file(html_path)
