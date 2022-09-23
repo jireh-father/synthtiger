@@ -71,6 +71,7 @@ class TableLayer(Layer):
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
         driver = webdriver.Chrome('chromedriver', options=options)
+        driver.implicitly_wait(0.5)
 
         window_size = max_size * 2
         while True:
