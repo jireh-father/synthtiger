@@ -30,7 +30,8 @@ class TableLayer(Layer):
             for key in self.global_style[selector]:
                 value = self.global_style[selector][key]
                 styles.append("{}: {};".format(key, value))
-            css_list.append("{} { {} }".format(selector, "".join(styles)))
+
+            css_list.append(selector + " { " + "".join(styles) + " }")
 
         return "\n".join(css_list)
 
