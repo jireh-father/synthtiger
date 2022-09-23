@@ -3,12 +3,14 @@ Donut
 Copyright (c) 2022-present NAVER Corp.
 MIT License
 """
+import traceback
+
 import components as comps
 from layers import *
 from utils.selector import Selector
 
 
-class Table(Selector):
+class Table():
     def __init__(self, config):
         # table의 구성성분
         # table template
@@ -53,13 +55,11 @@ class Table(Selector):
         # width, height
         # margin table
         # round
+        self.static = comps.StaticTable(**config["static"], common=config["common"])
+        self.synth = comps.SynthTable(**config["synth"], common=config["common"])
 
-        elements = []
-        elements.append(comps.StaticTable(**config["static"], common=config["common"]))
-        # elements.append(comps.SynthTable(**config["synth"], common=config["common"]))
-        elements.append(None)
         weights = [config["static"]["weight"], config["synth"]["weight"]]
-        super().__init__(elements, weights)
+        self.table_selector = Selector(["static", "synth"], weights)
 
         # self.table_component = components.Selector([
         #     # use predefined html file and image file pairs
@@ -130,12 +130,17 @@ class Table(Selector):
         #     ])
         # ], **config)
 
-    def generate(self, size):
+    def generate(self, size, max_size):
         table_layer = TableLayer(size)
 
-        self.apply([table_layer], {'size': size})
-
-        # paper_layer = layers.RectLayer(size, (255, 255, 255, 255))
-        # self.image.apply([paper_layer])
+        table_creator = self.table_selector.select()
+        try:
+            if table_creator == "static":
+                self.static.apply([table_layer], {'size': size})
+            elif table_creator == "synth":
+                self.synth.apply([table_layer], {'size': size, 'max_size': max_size})
+        except:
+            traceback.print_exc()
+            return self.generate(size, max_size)
 
         return table_layer

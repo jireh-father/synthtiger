@@ -24,9 +24,6 @@ class SynthTable(templates.Template):
             config = {}
 
         self.quality = config.get("quality", [50, 95])
-        self.landscape = config.get("landscape", 0.5)
-        self.short_size = config.get("short_size", [720, 1024])
-        self.aspect_ratio = config.get("aspect_ratio", [1, 2])
         self.background = Background(config.get("background", {}))
         self.document = Document(config.get("document", {}))
         self.effect = components.Iterator(
@@ -42,36 +39,22 @@ class SynthTable(templates.Template):
         )
 
         # config for splits (output_filename, split_ratio etc)
-        self.splits = ["train", "validation", "test"]
-        self.split_indexes = [0, 0, 0]
-        self.split_ratio = [sum(split_ratio[: i + 1]) for i in range(0, len(split_ratio))]
+        # self.splits = ["train", "validation", "test"]
+        # self.split_indexes = [0, 0, 0]
+        # self.split_ratio = [sum(split_ratio[: i + 1]) for i in range(0, len(split_ratio))]
 
     def generate(self):
-        # 가로로 긴 이미지인지 여부 선택
-        landscape = np.random.rand() < self.landscape
-        # 짧은쪽 변의 길이 선택
-        short_size = np.random.randint(self.short_size[0], self.short_size[1] + 1)
-        # aspect ratio 선택
-        aspect_ratio = np.random.uniform(self.aspect_ratio[0], self.aspect_ratio[1])
-        # 긴쪽 변의 길이 선택(aspect ratio 에 맞게)
-        long_size = int(short_size * aspect_ratio)
-        # 사각형 width, height 선택
-        size = (long_size, short_size) if landscape else (short_size, long_size)
-
-        # 배경 레이어 생성(배경 이미지를 crop 및 resize하고 효과를 줌)
-
-        table_layer, paper_layer, bg_size = self.document.generate(size)
+        table_layer, bg_size = self.document.generate()
 
         bg_layer = self.background.generate(bg_size)
         table_html = table_layer.plain_html
 
-        document_group = layers.Group([table_layer, paper_layer])
-        document_space = np.clip(bg_size - document_group.size, 0, None)
-        document_group.left = np.random.randint(document_space[0] + 1)
-        document_group.top = np.random.randint(document_space[1] + 1)
-        roi = np.array(paper_layer.quad, dtype=int)
+        document_space = np.clip(bg_size - table_layer.size, 0, None)
+        table_layer.left = np.random.randint(document_space[0] + 1)
+        table_layer.top = np.random.randint(document_space[1] + 1)
+        roi = np.array(table_layer.quad, dtype=int)
 
-        layer = layers.Group([*document_group.layers, bg_layer]).merge()
+        layer = layers.Group([table_layer, bg_layer]).merge()
         self.effect.apply([layer])
 
         image = layer.output(bbox=[0, 0, *bg_size])
@@ -97,16 +80,18 @@ class SynthTable(templates.Template):
         roi = data["roi"]
 
         # split
-        output_dirpath = os.path.join(root, "train")
+        # output_dirpath = os.path.join(root, "train")
+        output_dirpath = root
+
         file_idx = idx
 
-        split_prob = np.random.rand()
-        for _idx, (split, ratio) in enumerate(zip(self.splits, self.split_ratio)):
-            if split_prob < ratio:
-                output_dirpath = os.path.join(root, split)
-                file_idx = self.split_indexes[_idx]
-                self.split_indexes[_idx] += 1
-                break
+        # split_prob = np.random.rand()
+        # for _idx, (split, ratio) in enumerate(zip(self.splits, self.split_ratio)):
+        #     if split_prob < ratio:
+        #         output_dirpath = os.path.join(root, split)
+        #         file_idx = self.split_indexes[_idx]
+        #         self.split_indexes[_idx] += 1
+        #         break
 
         # save image
         image_filename = f"image_{file_idx}.jpg"

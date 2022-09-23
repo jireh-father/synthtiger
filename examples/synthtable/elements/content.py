@@ -81,7 +81,7 @@ class Content:
         # self.textbox_color = components.Switch(components.Gray(), **config.get("textbox_color", {}))
         # self.content_color = components.Switch(components.Gray(), **config.get("content_color", {}))
 
-    def generate(self, size):
+    def generate(self, size, paper, max_size):
         width, height = size
 
         layout_left = width * np.random.uniform(self.margin[0], self.margin[1])
@@ -92,4 +92,5 @@ class Content:
 
         # paper_layer = self.paper.generate(size)
 
-        return self.table.generate(size)
+        table_layer = self.table.generate(size, paper, max_size)
+        return table_layer

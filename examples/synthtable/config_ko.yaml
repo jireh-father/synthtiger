@@ -1,7 +1,4 @@
 quality: [50, 95]
-landscape: 0.5
-short_size: [720, 1024]
-aspect_ratio: [1, 2]
 
 background:
   image:
@@ -21,14 +18,6 @@ document:
   short_size: [720, 1024]
   aspect_ratio: [1, 2]
   margin: [0, 0.2]
-  paper:
-    image:
-      paths: [resources/paper]
-      weights: [1]
-      alpha: [0, 0.2]
-      grayscale: 0.5
-      crop: 1
-
   content:
     table:
       static:
@@ -38,35 +27,45 @@ document:
         path_weights: [1]
         lower_image_size_ratios: [0.9]
       synth:
-        weight: 0
+        weight: 5
         html:
           paths: [ resources/table_html ]
           weights: [1]
-          synth_structure_prob: 0.2
-          synth_content_prob: 0.1
+          synth_structure_prob: 0.0
+          synth_content_prob: 0.0
           synth_structure: []
-          synth_contnet: []
-          common: []
+          synth_content: []
         style:
-          dark:
+          #table 템플릿 몇개 정하기
+          row_striped:
             weight: 1
-            theads: []
-            line_template: []
-          striped:
-            weight: 1
-            line_template: []
-          random:
-            weight: 4
-            table: []
-            thead: []
-            tbody: []
-            tr: []
-            td: []
-            local:
-              prob: 0.4
-              tr: []
-              td: []
+            background_color: []
+#          dark:
+#            weight: 1
+#            theads: [ ]
+#            line_template: [ ]
+#          random:
+#            weight: 4
+#            table: []
+#            thead: []
+#            tbody: []
+#            tr: []
+#            td: []
+#            local:
+#              prob: 0.4
+#              tr: []
+#              td: []
           common:
+            background:
+              paper:
+                image:
+                  paths: [ resources/paper ]
+                  weights: [ 1 ]
+                  alpha: [ 0, 0.2 ]
+                  grayscale: 0.5
+                  crop: 1
+              color: []
+              gradient: []
             border: []
             text: []
             bg: []
@@ -96,6 +95,7 @@ document:
         has_span: 0.5
         has_col_span: 0.5
         has_row_span: 0.5
+        tmp_path: tmp
 
 
 
@@ -321,6 +321,6 @@ effect:
         k: [3, 5]
         angle: [0, 360]
     # gaussian blur
-    - prob: 1
+    - prob: 0.5
       args:
         sigma: [0, 1.5]

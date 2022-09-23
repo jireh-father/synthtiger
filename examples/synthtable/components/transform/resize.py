@@ -9,7 +9,6 @@ from synthtiger.components.component import Component
 from synthtiger import components
 
 import components as comps
-from utils.selector import Selector, ValueSelector
 from utils.switch import BoolSwitch
 from utils.path_selector import PathSelector
 from PIL import Image

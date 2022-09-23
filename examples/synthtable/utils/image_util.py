@@ -1,4 +1,6 @@
 import math
+import cv2
+import base64
 
 
 def _round_aspect(number, key):
@@ -17,3 +19,9 @@ def resize_keeping_aspect_ratio(pil_image, target_size, resample=None):
     target_size = (x, y)
 
     return pil_image.resize(target_size, resample), target_size
+
+
+def image_to_base64(cv2_image, ext='png'):
+    _, im_arr = cv2.imencode('.{}'.format(ext), cv2_image)  # im_arr: image in Numpy one-dim array format.
+    im_bytes = im_arr.tobytes()
+    return base64.b64encode(im_bytes)
