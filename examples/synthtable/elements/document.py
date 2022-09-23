@@ -7,7 +7,6 @@ import numpy as np
 from synthtiger import components
 
 from elements.content import Content
-from elements.paper import Paper
 
 
 class Document:
@@ -18,7 +17,6 @@ class Document:
         self.short_size = config.get("short_size", [480, 1024])
         self.aspect_ratio = config.get("aspect_ratio", [1, 2])
         self.content = Content(config.get("content", {}))
-        self.paper = Paper(config.get("paper", {}))
         self.effect = components.Iterator(
             [
                 components.Switch(components.ElasticDistortion()),
@@ -48,7 +46,7 @@ class Document:
         long_size = int(short_size * aspect_ratio)
         size = (long_size, short_size) if landscape else (short_size, long_size)
 
-        table_layer = self.content.generate(size, self.paper, int(self.short_size[1] * self.aspect_ratio[1]))
+        table_layer = self.content.generate(size, int(self.short_size[1] * self.aspect_ratio[1]))
 
         fullscreen = np.random.rand() < self.fullscreen
         if fullscreen:

@@ -7,7 +7,6 @@ from collections import OrderedDict
 
 import numpy as np
 
-from elements.paper import Paper
 from elements.table import Table
 
 class TextReader:
@@ -71,7 +70,6 @@ class Content:
     def __init__(self, config):
         self.margin = config.get("margin", [0, 0.1])
         # self.reader = TextReader(**config.get("text", {}))
-        self.paper = Paper(config.get("paper", {}))
 
         self.table = Table(config.get("table", {}))
 
@@ -81,7 +79,7 @@ class Content:
         # self.textbox_color = components.Switch(components.Gray(), **config.get("textbox_color", {}))
         # self.content_color = components.Switch(components.Gray(), **config.get("content_color", {}))
 
-    def generate(self, size, paper, max_size):
+    def generate(self, size, max_size):
         width, height = size
 
         layout_left = width * np.random.uniform(self.margin[0], self.margin[1])
@@ -90,7 +88,6 @@ class Content:
         layout_height = max(height - layout_top * 2, 0)
         layout_bbox = [layout_left, layout_top, layout_width, layout_height]
 
-        # paper_layer = self.paper.generate(size)
 
-        table_layer = self.table.generate(size, paper, max_size)
+        table_layer = self.table.generate(size, max_size)
         return table_layer

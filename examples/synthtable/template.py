@@ -14,7 +14,6 @@ from elements import Background, Document
 from PIL import Image
 from synthtiger import components, layers, templates
 
-from elements.paper import Paper
 
 
 class SynthTable(templates.Template):
