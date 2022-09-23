@@ -24,4 +24,4 @@ def resize_keeping_aspect_ratio(pil_image, target_size, resample=None):
 def image_to_base64(cv2_image, ext='png'):
     _, im_arr = cv2.imencode('.{}'.format(ext), cv2_image)  # im_arr: image in Numpy one-dim array format.
     im_bytes = im_arr.tobytes()
-    return base64.b64encode(im_bytes)
+    return base64.b64encode(im_bytes).decode('ascii')
