@@ -107,7 +107,7 @@ class TableLayer(Layer):
 
     def render_table(self, image=None, tmp_path=None, paper=None, max_size=None):
         if not image:
-            image_path = os.path.join(tmp_path, str(uuid.uuid4()) + ".jpg")
+            image_path = os.path.join(tmp_path, str(uuid.uuid4()) + ".png")
             html_path = os.path.join(tmp_path, str(uuid.uuid4()) + ".html")
 
             try:
