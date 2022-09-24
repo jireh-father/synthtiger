@@ -74,13 +74,9 @@ class TableLayer(Layer):
 
         self._write_html_file(html_path)
         driver.get("file:///{}".format(os.path.abspath(html_path)))
-        # original_size = driver.get_window_size()
-        # required_width = driver.execute_script('return document.body.parentNode.scrollWidth')
-        # required_height = driver.execute_script('return document.body.parentNode.scrollHeight')
-        # required_width = 1280
-        # bigger than table
-        # driver.set_window_size(window_size, window_size)
-        driver.set_window_size(600, 600)
+        required_width = driver.execute_script('return document.body.parentNode.scrollWidth')
+        required_height = driver.execute_script('return document.body.parentNode.scrollHeight')
+        driver.set_window_size(required_width, required_height)
 
         div = driver.find_element(By.ID, 'table_wrapper')
         # todo: get div size and apply
