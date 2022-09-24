@@ -88,6 +88,8 @@ class TableLayer(Layer):
             # todo: get div size and apply
             table_width = div.size['width']
             table_height = div.size['height']
+            print("div.size", div.size)
+            print("size", size)
             if table_width >= size[0] or table_height >= size[1]:
                 window_size += max_size
                 size = (int(size[0] * 1.2), int(size[1] * 1.2))
