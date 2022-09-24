@@ -105,7 +105,7 @@ class SynthTable(Component):
                     "width": str(target_size[0]) + "px",
                     "height": str(target_size[1]) + "px",
                 },
-                "table_wrapper": {
+                "#table_wrapper": {
                     "display": "inline-block"
                 }
 
