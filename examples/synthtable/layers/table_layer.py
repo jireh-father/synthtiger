@@ -1,5 +1,5 @@
 import traceback
-from utils.style import add_styles
+from utils.html_style import add_styles
 from synthtiger.layers.layer import Layer
 from PIL import Image
 import uuid
