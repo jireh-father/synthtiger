@@ -74,27 +74,21 @@ class TableLayer(Layer):
 
         window_size = max_size * 2
         self._write_html_file(html_path)
-        while True:
-            driver.get("file:///{}".format(os.path.abspath(html_path)))
-            # original_size = driver.get_window_size()
-            # required_width = driver.execute_script('return document.body.parentNode.scrollWidth')
-            # required_height = driver.execute_script('return document.body.parentNode.scrollHeight')
-            # required_width = 1280
-            # bigger than table
-            # driver.set_window_size(window_size, window_size)
-            driver.set_window_size(size[0], size[1])
+        driver.get("file:///{}".format(os.path.abspath(html_path)))
+        # original_size = driver.get_window_size()
+        # required_width = driver.execute_script('return document.body.parentNode.scrollWidth')
+        # required_height = driver.execute_script('return document.body.parentNode.scrollHeight')
+        # required_width = 1280
+        # bigger than table
+        # driver.set_window_size(window_size, window_size)
+        driver.set_window_size(600, 600)
 
-            div = driver.find_element(By.ID, 'table_wrapper')
-            # todo: get div size and apply
-            table_width = div.size['width']
-            table_height = div.size['height']
-            print("div.size", div.size)
-            print("size", size)
-            if table_width >= size[0] or table_height >= size[1]:
-                window_size += max_size
-                size = (int(size[0] * 1.2), int(size[1] * 1.2))
-            else:
-                break
+        div = driver.find_element(By.ID, 'table_wrapper')
+        # todo: get div size and apply
+        table_width = div.size['width']
+        table_height = div.size['height']
+        print("div.size", div.size)
+        print("size", size)
 
         paper_layer = paper.generate((table_width, table_height))
         base64_image = image_util.image_to_base64(paper_layer.image)
