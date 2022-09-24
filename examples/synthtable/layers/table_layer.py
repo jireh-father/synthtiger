@@ -111,7 +111,7 @@ class TableLayer(Layer):
         driver.set_window_size(table_width, table_height)
         div = driver.find_element(By.ID, 'table_wrapper')
         div.screenshot(image_path)
-        driver.set_window_size(table_width, table_height)
+        # driver.set_window_size(table_width, table_height)
         driver.close()
 
     def render_table(self, image=None, size=None,tmp_path=None, paper=None, max_size=None):
