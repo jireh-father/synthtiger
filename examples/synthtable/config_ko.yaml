@@ -63,10 +63,27 @@ document:
             text:
 #              color: [] # font color
 #              font: []
-              font_size: [8, 30]
-              text_align: ['left', 'right', 'center']
-              #vertical-align: ['top', 'middle', 'bottom']
-              font_weight: ['lighter', 'bold', 'normal']
+              font-size:
+                values: [8, 30]
+                postfix: "px"
+              text-align: [left, right, center]
+              #vertical-align: [top, middle, bottom]
+              font-weight: [lighter, bold, normal]
+              font-style:
+                values: [normal, italic]
+                weights: [9, 1]
+              text-decoration:
+                values: [ none, underline, line-through ]
+                weights: [ 10, 1, 1 ]
+              letter-spacing:
+                values: [0, 5]
+                postfix: "px"
+              word-spacing:
+                values: [ 0, 5 ]
+                postfix: "px"
+              #text-shadow
+              #text-shadow: 4px 4px 5px red;
+              #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
             table:
               margin: []
               width: []

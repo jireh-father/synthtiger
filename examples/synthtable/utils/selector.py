@@ -7,11 +7,12 @@ import numpy as np
 
 
 class Selector:
-    def __init__(self, components_or_names, weights=None):
+    def __init__(self, components_or_names, weights=None, postfix=None):
         self.components_or_names = components_or_names
         if weights is None:
             weights = [1] * len(components_or_names)
         self._probs = np.array(weights) / sum(weights)
+        self.postfix = postfix
 
     def apply(self, layers, meta=None):
         idx = np.random.choice(len(self.components_or_names), replace=False, p=self._probs)
@@ -19,4 +20,6 @@ class Selector:
 
     def select(self):
         idx = np.random.choice(len(self._probs), replace=False, p=self._probs)
+        if self.postfix:
+            str(self.components_or_names[idx]) + self.postfix
         return self.components_or_names[idx]

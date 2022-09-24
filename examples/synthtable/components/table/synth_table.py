@@ -9,6 +9,7 @@ from PIL import Image
 from utils.selector import Selector
 from elements.paper import Paper
 from collections import defaultdict
+from utils import html_style
 
 
 class SynthTable(Component):
@@ -18,12 +19,8 @@ class SynthTable(Component):
 
         # styles
         self.paper = Paper(style["global"]["background"]["paper"])
-        font_size = style["global"]["text"]["font_size"]
-        self.font_size_selector = Selector(list(range(font_size[0], font_size[1] + 1)))
-        text_align = style["global"]["text"]["text_align"]
-        self.text_align_selector = Selector(text_align)
-        font_weight = style["global"]["text"]["font_weight"]
-        self.font_weight_selector = Selector(font_weight)
+
+        self.text_style_selectors = html_style.parse_html_style(style["global"]["text"])
 
         self.synth_structure_prob = BoolSwitch(html['synth_structure_prob'])
         self.synth_content_prob = BoolSwitch(html['synth_content_prob'])
@@ -94,15 +91,11 @@ class SynthTable(Component):
         # synth style
         global_style = defaultdict(dict)
         global_style['#table_wrapper']["display"] = "inline-block"
-        # font-size
-        font_size = self.font_size_selector.select()
-        global_style['table']['font-size'] = str(font_size) + "px"
-        # text-align
-        text_align = self.text_align_selector.select()
-        global_style['table']['text-align'] = text_align
-        # font-weight
-        font_weight = self.font_weight_selector.select()
-        global_style['table']['font-weight'] = font_weight
+        # text styles
+        for k in self.text_style_selectors:
+            selector = self.text_style_selectors[k]
+            value = selector.select()
+            global_style['table'][k] = value
 
         # rendering
         for layer in layers:
