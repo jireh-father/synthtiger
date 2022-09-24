@@ -1,6 +1,5 @@
 import os
 import traceback
-from utils.style import add_styles
 import json
 from synthtiger.components.component import Component
 from utils.switch import BoolSwitch
