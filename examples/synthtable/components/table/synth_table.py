@@ -18,8 +18,10 @@ class SynthTable(Component):
 
         # styles
         self.paper = Paper(style["global"]["background"]["paper"])
-        font_size = style["global"]["text"]["font-size"]
+        font_size = style["global"]["text"]["font_size"]
         self.font_size_selector = Selector(list(range(font_size[0], font_size[1] + 1)))
+        text_align = style["global"]["text"]["text_align"]
+        self.text_align_selector = Selector(text_align)
 
         self.synth_structure_prob = BoolSwitch(html['synth_structure_prob'])
         self.synth_content_prob = BoolSwitch(html['synth_content_prob'])
@@ -93,6 +95,9 @@ class SynthTable(Component):
         # font-size
         font_size = self.font_size_selector.select()
         global_style['table']['font-size'] = str(font_size) + "px"
+        # text-align
+        text_align = self.text_align_selector.select()
+        global_style['table']['text-align'] = text_align
 
         # rendering
         for layer in layers:
