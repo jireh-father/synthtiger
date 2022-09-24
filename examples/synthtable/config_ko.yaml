@@ -61,12 +61,12 @@ document:
               all: []
 #              border-radius: 6px
             text:
-              color: [] # font color
-              font: []
+#              color: [] # font color
+#              font: []
               font_size: [8, 30]
               text_align: ['left', 'right', 'center']
               #vertical-align: ['top', 'middle', 'bottom']
-              font_weight: []
+              font_weight: ['lighter', 'bold', 'normal']
             table:
               margin: []
               width: []
