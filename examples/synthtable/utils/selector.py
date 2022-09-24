@@ -10,7 +10,7 @@ class Selector:
     def __init__(self, components_or_names, weights=None):
         self.components_or_names = components_or_names
         if weights is None:
-            weights = [1] * components_or_names
+            weights = [1] * len(components_or_names)
         self._probs = np.array(weights) / sum(weights)
 
     def apply(self, layers, meta=None):
