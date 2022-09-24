@@ -30,7 +30,8 @@ class Table():
         # tbody
         # row
         # cell
-        # border
+
+        # border (border-width: )
         # color
         # width(with 0)
         # ( table에 border-collapse: collapse; 적용, td에 전체 border 적용)
@@ -60,75 +61,6 @@ class Table():
 
         weights = [config["static"]["weight"], config["synth"]["weight"]]
         self.table_selector = Selector(["static", "synth"], weights)
-
-        # self.table_component = components.Selector([
-        #     # use predefined html file and image file pairs
-        #     comps.StaticHtmlAndImage,
-        #     # synth htmls and styles
-        #     components.Iterator([
-        #         # table html
-        #         components.Selector([
-        #             # html file and change contents switch
-        #             components.Iterator([
-        #                 comps.TableHtmlFile(),
-        #                 components.Switch(
-        #                     components.Selector([
-        #                         comps.Corpus,
-        #                         comps.SynthText,
-        #                         comps.KeyValueCorpus,
-        #                     ]),
-        #                 ),
-        #             ]),
-        #             # synth table structure and contents html
-        #             components.Iterator([
-        #                 comps.SynthTableStructureHtml(),
-        #                 components.Selector([
-        #                     comps.Corpus,
-        #                     comps.SynthText,
-        #                     comps.KeyValueCorpus,
-        #                 ]),
-        #             ])
-        #         ]),
-        #         # table styles
-        #         components.Iterator([
-        #             # table style selector(table globally)
-        #             components.Selector([
-        #                 # random synth style
-        #                 components.Iterator([
-        #                     # table
-        #                     #   bg
-        #                     #   padding
-        #                     # thead
-        #                     # tbody
-        #                     # tr
-        #                     # td
-        #                 ]),
-        #                 # striped rows
-        #                 components.Iterator([
-        #                     comps.StrongColor,
-        #                     comps.WeakColor,
-        #                 ])
-        #                 # simple styles
-        #             ]),
-        #             # tr & th style iterator(tr individually)
-        #             components.Switch(
-        #                 components.Iterator([
-        #                     # bg color
-        #                     # border
-        #                     # ...
-        #                 ]),
-        #             ),
-        #             # td style iterator(td individually)
-        #             components.Switch(
-        #                 components.Iterator([
-        #                     # bg color
-        #                     # border
-        #                     # ...
-        #                 ]),
-        #             )
-        #         ])
-        #     ])
-        # ], **config)
 
     def generate(self, size, max_size):
         table_layer = TableLayer(size)

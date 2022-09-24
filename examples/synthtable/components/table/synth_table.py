@@ -15,7 +15,7 @@ class SynthTable(Component):
 
         self.style = style
 
-        self.paper = Paper(style["common"]["background"]["paper"])
+        self.paper = Paper(style["global"]["background"]["paper"])
 
         self.synth_structure_prob = BoolSwitch(html['synth_structure_prob'])
         self.synth_content_prob = BoolSwitch(html['synth_content_prob'])
@@ -38,9 +38,12 @@ class SynthTable(Component):
         if synth_structure:
             pass
         else:
-            html_path, html = self._sample_html_path()
+            html_path, html_json = self._sample_html_path()
             meta['html_path'] = html_path
-            meta['html'] = html
+            meta['html'] = html_json['html']
+            meta['html_json'] = html_json
+            meta['nums_col'] = html_json['nums_col']
+            meta['nums_row'] = html_json['nums_row']
         meta['synth_structure'] = synth_structure
         meta['synth_content'] = synth_content
 
@@ -64,7 +67,7 @@ class SynthTable(Component):
                 if self.has_col_span.on() and not html_json['has_col_span']:
                     continue
 
-            return html_json_path, html_json['html']
+            return html_json_path, html_json
 
     def apply(self, layers, meta=None):
         target_size = meta['size']
@@ -72,9 +75,12 @@ class SynthTable(Component):
 
         meta = self.sample(meta)
         if meta['synth_structure']:
+            # meta['nums_col'] = html_json['nums_col']
+            # meta['nums_row'] = html_json['nums_row']
             pass
         else:
             html = meta['html']
+
 
         if meta['synth_content']:
             pass
@@ -82,6 +88,10 @@ class SynthTable(Component):
             pass
 
         # synth style
+        # todo: font_size를 col, row갯수와 target_size 에 맞게 조절
+        # todo: 글자 큰거 한글자당 font_size 대비 셀의 높이와 너비 계산
+        # meta['nums_col']
+        # meta['nums_row']
 
         # rendering
         for layer in layers:

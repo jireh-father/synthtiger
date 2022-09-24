@@ -66,8 +66,8 @@ class TableLayer(Layer):
 
     def _render_table_selenium(self, html_path, image_path, paper, size, max_size):
         options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
-        options.add_argument('--no-sandbox')
+        # options.add_argument('--headless')
+        # options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
         driver = webdriver.Chrome('chromedriver', options=options)
         driver.implicitly_wait(0.5)
@@ -127,8 +127,8 @@ class TableLayer(Layer):
                 raise e
 
             image = Image.open(image_path)
-            # os.unlink(image_path)
-            # os.unlink(html_path)
+            os.unlink(image_path)
+            os.unlink(html_path)
 
         super().__init__(image)
 

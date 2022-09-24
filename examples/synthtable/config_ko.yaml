@@ -36,10 +36,50 @@ document:
           synth_structure: []
           synth_content: []
         style:
-          #table 템플릿 몇개 정하기
-          row_striped:
-            weight: 1
-            background_color: []
+          global:
+            weight: 10
+            thead:
+              prob: 0.5
+              dark: []
+              light: []
+            background:
+              paper:
+                image:
+                  paths: [ resources/paper ]
+                  weights: [ 1 ]
+                  alpha: [ 0, 0.2 ]
+                  grayscale: 0.5
+                  crop: 1
+              color:
+                striped: []
+                random: []
+              gradient: [ ]
+            border:
+              border-radius: 6px
+            text:
+              color: [] # font color
+              font: []
+              font-size: [8, 100]
+              text-align: []
+              vertical-align: []
+              font-weight: []
+            table:
+              margin: []
+              width: []
+              height: []
+            cell:
+              padding: []
+              width: [ ]
+              height: [ ]
+            #table 템플릿 몇개 정하기
+            # bg 템플릿
+            # 라인 템플릿
+            # bg & fg 컬러 템플릿
+          local:
+            weight: 9
+#          row_striped:
+#            weight: 1
+#            background_color: []
 #          dark:
 #            weight: 1
 #            theads: [ ]
