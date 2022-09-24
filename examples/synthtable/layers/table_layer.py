@@ -1,5 +1,5 @@
 import traceback
-
+from utils.style import add_styles
 from synthtiger.layers.layer import Layer
 from PIL import Image
 import uuid
@@ -64,7 +64,7 @@ class TableLayer(Layer):
             for style_key in styles[selector]:
                 self.global_style[selector][style_key] = styles[selector][style_key]
 
-    def _render_table_selenium(self, html_path, image_path, paper, size, max_size):
+    def _render_table_selenium(self, html_path, image_path, paper):
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
@@ -72,7 +72,6 @@ class TableLayer(Layer):
         driver = webdriver.Chrome('chromedriver', options=options)
         driver.implicitly_wait(0.5)
 
-        window_size = max_size * 2
         self._write_html_file(html_path)
         driver.get("file:///{}".format(os.path.abspath(html_path)))
         # original_size = driver.get_window_size()
@@ -87,8 +86,6 @@ class TableLayer(Layer):
         # todo: get div size and apply
         table_width = div.size['width']
         table_height = div.size['height']
-        print("div.size", div.size)
-        print("size", size)
 
         paper_layer = paper.generate((table_width, table_height))
         base64_image = image_util.image_to_base64(paper_layer.image)
@@ -97,6 +94,8 @@ class TableLayer(Layer):
 
         driver = webdriver.Chrome('chromedriver', options=options)
         driver.implicitly_wait(0.5)
+        add_styles(self.global_style,
+                   {'#table_wrapper': {"background-image": 'url("data:image/png;base64,{}")'.format(base64_image)}})
         self._add_global_styles(
             {'#table_wrapper': {"background-image": 'url("data:image/png;base64,{}")'.format(base64_image)}})
         self._write_html_file(html_path)
@@ -108,13 +107,13 @@ class TableLayer(Layer):
         # driver.set_window_size(table_width, table_height)
         driver.close()
 
-    def render_table(self, image=None, size=None,tmp_path=None, paper=None, max_size=None):
+    def render_table(self, image=None, tmp_path=None, paper=None):
         if not image:
             image_path = os.path.join(tmp_path, str(uuid.uuid4()) + ".png")
             html_path = os.path.join(tmp_path, str(uuid.uuid4()) + ".html")
 
             try:
-                self._render_table_selenium(html_path, image_path, paper, size, max_size)
+                self._render_table_selenium(html_path, image_path, paper)
             except Exception as e:
                 if os.path.isfile(image_path):
                     os.unlink(image_path)

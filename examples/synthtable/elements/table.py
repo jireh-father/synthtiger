@@ -70,7 +70,7 @@ class Table():
             if table_creator == "static":
                 self.static.apply([table_layer], {'size': size})
             elif table_creator == "synth":
-                self.synth.apply([table_layer], {'size': size, 'max_size': max_size})
+                self.synth.apply([table_layer])
         except:
             traceback.print_exc()
             return self.generate(size, max_size)

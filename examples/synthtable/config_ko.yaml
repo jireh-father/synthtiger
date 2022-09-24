@@ -59,7 +59,7 @@ document:
             text:
               color: [] # font color
               font: []
-              font-size: [8, 100]
+              font-size: [8, 30]
               text-align: []
               vertical-align: []
               font-weight: []

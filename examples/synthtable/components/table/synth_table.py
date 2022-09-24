@@ -1,21 +1,25 @@
 import os
 import traceback
+from utils.style import add_styles
 import json
 from synthtiger.components.component import Component
 from utils.switch import BoolSwitch
 from utils.path_selector import PathSelector
 from PIL import Image
-from utils import image_util
+from utils.selector import Selector
 from elements.paper import Paper
+from collections import defaultdict
+
 
 class SynthTable(Component):
     def __init__(self, html, style, common, **kwargs):
         super().__init__()
         self.html_path_selector = PathSelector(html["paths"], html["weights"], exts=['.json'])
 
-        self.style = style
-
+        # styles
         self.paper = Paper(style["global"]["background"]["paper"])
+        font_size = style["global"]["text"]["font-size"]
+        self.font_size_selector = Selector(list(range(font_size[0], font_size[1] + 1)))
 
         self.synth_structure_prob = BoolSwitch(html['synth_structure_prob'])
         self.synth_content_prob = BoolSwitch(html['synth_content_prob'])
@@ -70,9 +74,6 @@ class SynthTable(Component):
             return html_json_path, html_json
 
     def apply(self, layers, meta=None):
-        target_size = meta['size']
-        max_size = meta['max_size']
-
         meta = self.sample(meta)
         if meta['synth_structure']:
             # meta['nums_col'] = html_json['nums_col']
@@ -81,33 +82,21 @@ class SynthTable(Component):
         else:
             html = meta['html']
 
-
         if meta['synth_content']:
             pass
         else:
             pass
 
         # synth style
-        # todo: font_size를 col, row갯수와 target_size 에 맞게 조절
-        # todo: 글자 큰거 한글자당 font_size 대비 셀의 높이와 너비 계산
-        # meta['nums_col']
-        # meta['nums_row']
+        global_style = defaultdict(dict)
+        global_style['#table_wrapper']["display"] = "inline-block"
+        # font-size
+        font_size = self.font_size_selector.select()
+        global_style['table']['font-size'] = str(font_size) + "px"
 
         # rendering
         for layer in layers:
             layer.plain_html = html
             layer.plain_html_with_styles = html
-            layer.global_style = {
-                # "#table_wrapper":{
-                #     "width"
-                # }
-                "table": {
-                    "width": str(target_size[0]) + "px",
-                    "height": str(target_size[1]) + "px",
-                },
-                "#table_wrapper": {
-                    "display": "inline-block"
-                }
-
-            }
-            layer.render_table(tmp_path=self.tmp_path, size=target_size, paper=self.paper, max_size=max_size)
+            layer.global_style = global_style
+            layer.render_table(tmp_path=self.tmp_path, paper=self.paper)
