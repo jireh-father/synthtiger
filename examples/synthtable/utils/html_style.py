@@ -33,3 +33,4 @@ def parse_html_style(config):
     for k in config:
         v = config[k]
         selectors[k] = parse_html_style_values(v)
+    return selectors
