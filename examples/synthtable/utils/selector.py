@@ -15,7 +15,7 @@ class Selector:
         else:
             self.components_or_names = components_or_names
         if weights is None:
-            weights = [1] * len(components_or_names)
+            weights = [1] * len(self.components_or_names)
         self._probs = np.array(weights) / sum(weights)
         self.postfix = postfix
 
