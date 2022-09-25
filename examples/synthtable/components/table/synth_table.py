@@ -19,7 +19,7 @@ class SynthTable(Component):
         self.html_path_selector = PathSelector(html["paths"], html["weights"], exts=['.json'])
 
         # styles
-        #todo: select parer or other backgrounds
+        # todo: select parer or other backgrounds
         if 'weight' in style["global"]["background"]["paper"]:
             del style["global"]["background"]["paper"]['weight']
         self.paper = Paper(style["global"]["background"]["paper"])
@@ -49,17 +49,21 @@ class SynthTable(Component):
         global_style = defaultdict(dict)
         global_style['#table_wrapper']["display"] = "inline-block"
         # text styles
+        meta = {}
         for k in self.text_style_selectors:
             selector = self.text_style_selectors[k]
             value = selector.select()
             global_style['table'][k] = value
+            meta['table_' + k] = value
 
         if self.margin_switch.on():
-            global_style['table']['left'] = self.margin_selector.select()
-            global_style['table']['right'] = self.margin_selector.select()
-            global_style['table']['top'] = self.margin_selector.select()
-            global_style['table']['bottom'] = self.margin_selector.select()
-        return global_style
+            global_style['table']['margin-left'] = self.margin_selector.select()
+            global_style['table']['margin-right'] = self.margin_selector.select()
+            global_style['table']['margin-top'] = self.margin_selector.select()
+            global_style['table']['margin-bottom'] = self.margin_selector.select()
+            meta['margin_width'] = global_style['table']['margin-left'] + global_style['table']['margin-right']
+            meta['margin_height'] = global_style['table']['margin-top'] + global_style['table']['margin-bottom']
+        return global_style, meta
 
     def sample(self, meta=None):
         if meta is None:
@@ -78,7 +82,8 @@ class SynthTable(Component):
         meta['synth_structure'] = synth_structure
         meta['synth_content'] = synth_content
 
-        meta['global_style'] = self.sample_global_style()
+        meta['global_style'], global_style_meta = self.sample_global_style()
+        meta.update(global_style_meta)
 
         meta['table_width'] = self.table_width_selector.select()
         meta['table_height'] = self.table_height_selector.select()

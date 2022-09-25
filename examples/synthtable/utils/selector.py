@@ -10,6 +10,8 @@ class Selector:
     def __init__(self, components_or_names, weights=None, postfix=None):
         if len(components_or_names) == 2 and all(isinstance(c, float) for c in components_or_names):
             self.components_or_names = {'low': components_or_names[0], 'high': components_or_names[1]}
+        elif len(components_or_names) == 2 and all(isinstance(c, int) for c in components_or_names):
+            self.components_or_names = list(range(components_or_names[0], components_or_names[1] + 1))
         else:
             self.components_or_names = components_or_names
         if weights is None:

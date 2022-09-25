@@ -76,8 +76,10 @@ class TableLayer(Layer):
         table_width = int(div.size['width'] * meta['table_width'])
         table_height = int(div.size['height'] * meta['table_height'])
         # driver.close()
+        image_width = table_width + meta['margin_width']
+        image_height = table_height + meta['margin_height']
 
-        paper_layer = paper.generate((table_width, table_height))
+        paper_layer = paper.generate((image_width, image_height))
         base64_image = image_util.image_to_base64(paper_layer.image)
 
         driver = webdriver.Chrome('chromedriver', options=options)
@@ -90,7 +92,7 @@ class TableLayer(Layer):
         self._write_html_file(html_path)
 
         driver.get("file:///{}".format(os.path.abspath(html_path)))
-        driver.set_window_size(table_width, table_height)
+        driver.set_window_size(image_width, image_height)
         div = driver.find_element(By.ID, 'table_wrapper')
         div.screenshot(image_path)
         # driver.set_window_size(table_width, table_height)
