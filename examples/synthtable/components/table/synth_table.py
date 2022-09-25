@@ -26,6 +26,8 @@ class SynthTable(Component):
         self.margin_switch = BoolSwitch(style["global"]["table"]["margin"]["prob"])
         self.margin_selector = Selector(style["global"]["table"]["margin"]["values"])
 
+        self.cell_padding_selector = Selector(style["global"]["cel"]["padding"])
+
         self.table_width_selector = Selector(style["global"]["table"]['width'])
         self.table_height_selector = Selector(style["global"]["table"]['height'])
 
@@ -70,6 +72,9 @@ class SynthTable(Component):
         else:
             meta['margin_width'] = 0
             meta['margin_height'] = 0
+
+        global_style['td']['padding'] = self.cell_padding_selector.select()
+        meta['td_padding'] = self.cell_padding_selector.select()
         return global_style, meta
 
     def sample(self, meta=None):

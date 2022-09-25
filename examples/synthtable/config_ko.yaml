@@ -70,12 +70,14 @@ document:
                 postfix: "px"
               text-align: [left, right, center]
               #vertical-align: [top, middle, bottom]
-              font-weight: [lighter, bold, normal]
+#              font-weight: [lighter, bold, normal]
+              font-weight: [lighter, normal]
               font-style:
                 values: [normal, italic]
                 weights: [9, 1]
               text-decoration:
-                values: [ none, underline, line-through ]
+#                values: [ none, underline, line-through ]
+                values: [ none, underline ]
                 weights: [ 10, 1, 1 ]
               letter-spacing:
                 values: [0, 5]
