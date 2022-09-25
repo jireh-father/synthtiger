@@ -82,8 +82,8 @@ class TableLayer(Layer):
         paper_layer = paper.generate((image_width, image_height))
         base64_image = image_util.image_to_base64(paper_layer.image)
 
-        driver = webdriver.Chrome('chromedriver', options=options)
-        driver.implicitly_wait(0.5)
+        # driver = webdriver.Chrome('chromedriver', options=options)
+        # driver.implicitly_wait(0.5)
         add_styles(self.global_style,
                    {'#table_wrapper': {"background-image": 'url("data:image/png;base64,{}")'.format(base64_image)}})
         add_styles(self.global_style,
