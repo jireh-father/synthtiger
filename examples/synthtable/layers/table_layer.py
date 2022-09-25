@@ -75,15 +75,15 @@ class TableLayer(Layer):
         # todo: get div size and apply
         table_width = int(table_element.size['width'] * meta['table_width'])
         table_height = int(table_element.size['height'] * meta['table_height'])
-        # driver.close()
+        driver.close()
         image_width = table_width + meta['margin_width']
         image_height = table_height + meta['margin_height']
 
         paper_layer = paper.generate((image_width, image_height))
         base64_image = image_util.image_to_base64(paper_layer.image)
 
-        # driver = webdriver.Chrome('chromedriver', options=options)
-        # driver.implicitly_wait(0.5)
+        driver = webdriver.Chrome('chromedriver', options=options)
+        driver.implicitly_wait(0.5)
         add_styles(self.global_style,
                    {'#table_wrapper': {"background-image": 'url("data:image/png;base64,{}")'.format(base64_image)}})
         add_styles(self.global_style,
