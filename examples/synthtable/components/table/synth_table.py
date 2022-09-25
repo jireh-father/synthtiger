@@ -20,7 +20,8 @@ class SynthTable(Component):
 
         # styles
         #todo: select parer or other backgrounds
-        del style["global"]["background"]["paper"]['weight']
+        if 'weight' in style["global"]["background"]["paper"]:
+            del style["global"]["background"]["paper"]['weight']
         self.paper = Paper(style["global"]["background"]["paper"])
         self.margin_switch = BoolSwitch(style["global"]["table"]["margin"]["prob"])
         self.margin_selector = Selector(style["global"]["table"]["margin"]["values"], postfix="px")
