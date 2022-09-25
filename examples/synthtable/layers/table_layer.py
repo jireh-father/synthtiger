@@ -82,7 +82,7 @@ class TableLayer(Layer):
         print("margin_width", meta['margin_width'])
         print("margin_height", meta['margin_height'])
 
-        # driver.close()
+        driver.close()
         image_width = table_width + meta['margin_width']
         image_height = table_height + meta['margin_height']
         print("image", image_width, image_height)
@@ -90,8 +90,8 @@ class TableLayer(Layer):
         paper_layer = paper.generate((image_width, image_height))
         base64_image = image_util.image_to_base64(paper_layer.image)
 
-        # driver = webdriver.Chrome('chromedriver', options=options)
-        # driver.implicitly_wait(0.5)
+        driver = webdriver.Chrome('chromedriver', options=options)
+        driver.implicitly_wait(0.5)
 
         add_styles(self.global_style,
                    {'table': {"width": str(table_width) + "px", "height": str(table_height) + "px", }})
@@ -106,7 +106,6 @@ class TableLayer(Layer):
         div_element = driver.find_element(By.ID, 'table_wrapper')
         print("last div size", div_element.size['width'], div_element.size['height'])
         div_element.screenshot(image_path)
-        driver.set_window_size(image_width, image_height)
         driver.close()
 
     def render_table(self, image=None, tmp_path=None, paper=None, meta=None):
