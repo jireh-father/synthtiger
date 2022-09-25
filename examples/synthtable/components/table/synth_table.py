@@ -26,7 +26,7 @@ class SynthTable(Component):
         self.margin_switch = BoolSwitch(style["global"]["table"]["margin"]["prob"])
         self.margin_selector = Selector(style["global"]["table"]["margin"]["values"])
 
-        self.cell_padding_selector = Selector(style["global"]["cel"]["padding"])
+        self.cell_padding_selector = Selector(style["global"]["cell"]["padding"])
 
         self.table_width_selector = Selector(style["global"]["table"]['width'])
         self.table_height_selector = Selector(style["global"]["table"]['height'])
