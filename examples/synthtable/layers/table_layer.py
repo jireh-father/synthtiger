@@ -105,6 +105,7 @@ class TableLayer(Layer):
         driver.get("file:///{}".format(os.path.abspath(html_path)))
         driver.set_window_size(image_width, image_height)
         div_element = driver.find_element(By.ID, 'table_wrapper')
+        print("last div size", div_element)
         div_element.screenshot(image_path)
         # driver.set_window_size(table_width, table_height)
         driver.close()
