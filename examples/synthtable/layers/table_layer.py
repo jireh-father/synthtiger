@@ -57,14 +57,7 @@ class TableLayer(Layer):
             html = html_template.format(self._convert_global_style_to_css(), self.plain_html_with_styles)
             html_file.write(html)
 
-    def _add_global_styles(self, styles):
-        for selector in styles:
-            if selector not in self.global_style:
-                self.global_style[selector] = {}
-            for style_key in styles[selector]:
-                self.global_style[selector][style_key] = styles[selector][style_key]
-
-    def _render_table_selenium(self, html_path, image_path, paper):
+    def _render_table_selenium(self, html_path, image_path, paper, meta):
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
@@ -80,20 +73,20 @@ class TableLayer(Layer):
 
         div = driver.find_element(By.ID, 'table_wrapper')
         # todo: get div size and apply
-        table_width = div.size['width']
-        table_height = div.size['height']
+        table_width = int(div.size['width'] * meta['table_width'])
+        table_height = int(div.size['height'] * meta['table_height'])
+        # driver.close()
 
         paper_layer = paper.generate((table_width, table_height))
         base64_image = image_util.image_to_base64(paper_layer.image)
-
-        driver.close()
 
         driver = webdriver.Chrome('chromedriver', options=options)
         driver.implicitly_wait(0.5)
         add_styles(self.global_style,
                    {'#table_wrapper': {"background-image": 'url("data:image/png;base64,{}")'.format(base64_image)}})
-        self._add_global_styles(
-            {'#table_wrapper': {"background-image": 'url("data:image/png;base64,{}")'.format(base64_image)}})
+        add_styles(self.global_style,
+                   {'table': {"width": str(table_width) + "px", "height": str(table_height) + "px", }})
+
         self._write_html_file(html_path)
 
         driver.get("file:///{}".format(os.path.abspath(html_path)))
@@ -103,13 +96,13 @@ class TableLayer(Layer):
         # driver.set_window_size(table_width, table_height)
         driver.close()
 
-    def render_table(self, image=None, tmp_path=None, paper=None):
+    def render_table(self, image=None, tmp_path=None, paper=None, meta=None):
         if not image:
             image_path = os.path.join(tmp_path, str(uuid.uuid4()) + ".png")
             html_path = os.path.join(tmp_path, str(uuid.uuid4()) + ".html")
 
             try:
-                self._render_table_selenium(html_path, image_path, paper)
+                self._render_table_selenium(html_path, image_path, paper, meta)
             except Exception as e:
                 if os.path.isfile(image_path):
                     os.unlink(image_path)

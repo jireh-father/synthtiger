@@ -44,16 +44,18 @@ document:
               light: []
             background:
               paper:
-                image:
-                  paths: [ resources/paper ]
-                  weights: [ 1 ]
-                  alpha: [ 0, 0.2 ]
-                  grayscale: 0.5
-                  crop: 1
+                weight: 1
+                paths: [ resources/paper ]
+                weights: [ 1 ]
+                alpha: [ 0, 0.2 ]
+                grayscale: 0.5
+                crop: 1
               color:
+                weight: 0
                 striped: []
                 random: []
-              gradient: [ ]
+              gradient:
+                weight: 0
             border:
               paper_style: []
               row: []
@@ -85,13 +87,15 @@ document:
               #text-shadow: 4px 4px 5px red;
               #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
             table:
-              margin: []
-              width: []
-              height: []
+              margin:
+                prob: 0.5
+                values: [1, 50]
+              width: [1.0, 1.3]
+              height: [1.0, 1.3]
             cell:
-              padding: []
-              width: [ ]
-              height: [ ]
+              padding: [0, 20]
+#              width: []
+#              height: [ ]
             #table 템플릿 몇개 정하기
             # bg 템플릿
             # 라인 템플릿

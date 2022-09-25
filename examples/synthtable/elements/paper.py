@@ -8,7 +8,7 @@ from synthtiger import components, layers
 
 class Paper:
     def __init__(self, config):
-        self.image = components.BaseTexture(**config.get("image", {}))
+        self.image = components.BaseTexture(**config)
 
     def generate(self, size):
         paper_layer = layers.RectLayer(size, (255, 255, 255, 255))

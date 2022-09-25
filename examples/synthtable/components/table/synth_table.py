@@ -9,6 +9,8 @@ from utils.selector import Selector
 from elements.paper import Paper
 from collections import defaultdict
 from utils import html_style
+from utils.switch import BoolSwitch
+import numpy as np
 
 
 class SynthTable(Component):
@@ -18,6 +20,11 @@ class SynthTable(Component):
 
         # styles
         self.paper = Paper(style["global"]["background"]["paper"])
+        self.margin_switch = BoolSwitch(style["global"]["table"]["margin"]["prob"])
+        self.margin_selector = Selector(style["global"]["table"]["margin"]["values"], postfix="px")
+
+        self.table_width_selector = Selector(style["global"]["table"]['width'])
+        self.table_height_selector = Selector(style["global"]["table"]['height'])
 
         self.text_style_selectors = html_style.parse_html_style(style["global"]["text"])
 
@@ -33,6 +40,23 @@ class SynthTable(Component):
         self.has_row_span = BoolSwitch(common['has_row_span'])
         self.tmp_path = common['tmp_path']
         os.makedirs(self.tmp_path, exist_ok=True)
+
+    def sample_global_style(self):
+        # synth style
+        global_style = defaultdict(dict)
+        global_style['#table_wrapper']["display"] = "inline-block"
+        # text styles
+        for k in self.text_style_selectors:
+            selector = self.text_style_selectors[k]
+            value = selector.select()
+            global_style['table'][k] = value
+
+        if self.margin_switch.on():
+            global_style['table']['left'] = self.margin_selector.select()
+            global_style['table']['right'] = self.margin_selector.select()
+            global_style['table']['top'] = self.margin_selector.select()
+            global_style['table']['bottom'] = self.margin_selector.select()
+        return global_style
 
     def sample(self, meta=None):
         if meta is None:
@@ -50,6 +74,11 @@ class SynthTable(Component):
             meta['nums_row'] = html_json['nums_row']
         meta['synth_structure'] = synth_structure
         meta['synth_content'] = synth_content
+
+        meta['global_style'] = self.sample_global_style()
+
+        meta['table_width'] = self.table_width_selector.select()
+        meta['table_height'] = self.table_height_selector.select()
 
         return meta
 
@@ -87,18 +116,9 @@ class SynthTable(Component):
         else:
             pass
 
-        # synth style
-        global_style = defaultdict(dict)
-        global_style['#table_wrapper']["display"] = "inline-block"
-        # text styles
-        for k in self.text_style_selectors:
-            selector = self.text_style_selectors[k]
-            value = selector.select()
-            global_style['table'][k] = value
-
         # rendering
         for layer in layers:
             layer.plain_html = html
             layer.plain_html_with_styles = html
-            layer.global_style = global_style
-            layer.render_table(tmp_path=self.tmp_path, paper=self.paper)
+            layer.global_style = meta['global_style']
+            layer.render_table(tmp_path=self.tmp_path, paper=self.paper, meta=meta)
