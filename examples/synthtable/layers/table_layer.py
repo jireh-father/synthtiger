@@ -73,11 +73,20 @@ class TableLayer(Layer):
 
         table_element = driver.find_element(By.TAG_NAME, 'table')
         # todo: get div size and apply
+        print("ori table", table_element.size['width'], table_element.size['height'])
         table_width = int(table_element.size['width'] * meta['table_width'])
         table_height = int(table_element.size['height'] * meta['table_height'])
+        print("table expand", meta['table_width'], meta['table_height'])
+        print("aft table", table_width, table_height)
+
+        print("margin_width", meta['margin_width'])
+        print("margin_height", meta['margin_height'])
+
         # driver.close()
         image_width = table_width + meta['margin_width']
         image_height = table_height + meta['margin_height']
+        print("image", image_width, image_height)
+        print("global style", self.global_style)
 
         paper_layer = paper.generate((image_width, image_height))
         base64_image = image_util.image_to_base64(paper_layer.image)
