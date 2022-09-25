@@ -100,12 +100,11 @@ class TableLayer(Layer):
                    {'#table_wrapper': {"background-image": 'url("data:image/png;base64,{}")'.format(base64_image)}})
 
         self._write_html_file(html_path)
-        print(self.plain_html_with_styles)
 
         driver.get("file:///{}".format(os.path.abspath(html_path)))
         driver.set_window_size(image_width, image_height)
         div_element = driver.find_element(By.ID, 'table_wrapper')
-        print("last div size", div_element)
+        print("last div size", div_element.size['width'], div_element.size['height'])
         div_element.screenshot(image_path)
         # driver.set_window_size(table_width, table_height)
         driver.close()
