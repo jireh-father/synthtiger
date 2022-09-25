@@ -63,6 +63,9 @@ class SynthTable(Component):
             global_style['table']['margin-bottom'] = self.margin_selector.select()
             meta['margin_width'] = global_style['table']['margin-left'] + global_style['table']['margin-right']
             meta['margin_height'] = global_style['table']['margin-top'] + global_style['table']['margin-bottom']
+        else:
+            meta['margin_width'] = 0
+            meta['margin_height'] = 0
         return global_style, meta
 
     def sample(self, meta=None):
