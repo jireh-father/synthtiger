@@ -71,10 +71,10 @@ class TableLayer(Layer):
         required_height = driver.execute_script('return document.body.parentNode.scrollHeight')
         driver.set_window_size(required_width, required_height)
 
-        div = driver.find_element(By.ID, 'table_wrapper')
+        table_element = driver.find_element(By.ID, 'table_wrapper')
         # todo: get div size and apply
-        table_width = int(div.size['width'] * meta['table_width'])
-        table_height = int(div.size['height'] * meta['table_height'])
+        table_width = int(table_element.size['width'] * meta['table_width'])
+        table_height = int(table_element.size['height'] * meta['table_height'])
         # driver.close()
         image_width = table_width + meta['margin_width']
         image_height = table_height + meta['margin_height']
@@ -93,8 +93,8 @@ class TableLayer(Layer):
 
         driver.get("file:///{}".format(os.path.abspath(html_path)))
         driver.set_window_size(image_width, image_height)
-        div = driver.find_element(By.ID, 'table_wrapper')
-        div.screenshot(image_path)
+        div_element = driver.find_element(By.ID, 'table_wrapper')
+        div_element.screenshot(image_path)
         # driver.set_window_size(table_width, table_height)
         driver.close()
 
