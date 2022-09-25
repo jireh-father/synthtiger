@@ -90,6 +90,7 @@ class TableLayer(Layer):
                    {'table': {"width": str(table_width) + "px", "height": str(table_height) + "px", }})
 
         self._write_html_file(html_path)
+        print(self.plain_html_with_styles)
 
         driver.get("file:///{}".format(os.path.abspath(html_path)))
         driver.set_window_size(image_width, image_height)

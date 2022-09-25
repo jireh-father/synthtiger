@@ -24,7 +24,7 @@ class SynthTable(Component):
             del style["global"]["background"]["paper"]['weight']
         self.paper = Paper(style["global"]["background"]["paper"])
         self.margin_switch = BoolSwitch(style["global"]["table"]["margin"]["prob"])
-        self.margin_selector = Selector(style["global"]["table"]["margin"]["values"], postfix="px")
+        self.margin_selector = Selector(style["global"]["table"]["margin"]["values"])
 
         self.table_width_selector = Selector(style["global"]["table"]['width'])
         self.table_height_selector = Selector(style["global"]["table"]['height'])
@@ -57,12 +57,16 @@ class SynthTable(Component):
             meta['table_' + k] = value
 
         if self.margin_switch.on():
-            global_style['table']['margin-left'] = self.margin_selector.select()
-            global_style['table']['margin-right'] = self.margin_selector.select()
-            global_style['table']['margin-top'] = self.margin_selector.select()
-            global_style['table']['margin-bottom'] = self.margin_selector.select()
-            meta['margin_width'] = global_style['table']['margin-left'] + global_style['table']['margin-right']
-            meta['margin_height'] = global_style['table']['margin-top'] + global_style['table']['margin-bottom']
+            margin_left = self.margin_selector.select()
+            margin_right = self.margin_selector.select()
+            margin_top = self.margin_selector.select()
+            margin_bottom = self.margin_selector.select()
+            global_style['table']['margin-left'] = str(margin_left) + "px"
+            global_style['table']['margin-right'] = str(margin_right) + "px"
+            global_style['table']['margin-top'] = str(margin_top) + "px"
+            global_style['table']['margin-bottom'] = str(margin_bottom) + "px"
+            meta['margin_width'] = margin_left + margin_right
+            meta['margin_height'] = margin_top + margin_bottom
         else:
             meta['margin_width'] = 0
             meta['margin_height'] = 0
