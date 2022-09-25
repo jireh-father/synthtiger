@@ -71,7 +71,7 @@ class TableLayer(Layer):
         required_height = driver.execute_script('return document.body.parentNode.scrollHeight')
         driver.set_window_size(required_width, required_height)
 
-        table_element = driver.find_element(By.ID, 'table_wrapper')
+        table_element = driver.find_element(By.TAG_NAME, 'table')
         # todo: get div size and apply
         table_width = int(table_element.size['width'] * meta['table_width'])
         table_height = int(table_element.size['height'] * meta['table_height'])
