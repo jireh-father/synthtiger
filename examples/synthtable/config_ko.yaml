@@ -167,24 +167,6 @@ document:
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
                 #              width: []
                 #              height: [ ]
-#          row_striped:
-#            weight: 1
-#            background_color: []
-#          dark:
-#            weight: 1
-#            theads: [ ]
-#            line_template: [ ]
-#          random:
-#            weight: 4
-#            table: []
-#            thead: []
-#            tbody: []
-#            tr: []
-#            td: []
-#            local:
-#              prob: 0.4
-#              tr: []
-#              td: []
           common:
             background:
               paper:

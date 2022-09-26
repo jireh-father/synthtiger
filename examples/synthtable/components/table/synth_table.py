@@ -31,6 +31,8 @@ def parse_html_style_values(values):
 def parse_html_style(config):
     selectors = {}
     for k in config:
+        if k == "prob":
+            continue
         v = config[k]
         selectors[k] = parse_html_style_values(v)
     return selectors
@@ -54,7 +56,6 @@ class SynthTable(Component):
         local_css_configs = style["local"]['css']
         for css_selector in local_css_configs:
             prob = local_css_configs[css_selector]['prob']
-            del local_css_configs[css_selector]['prob']
             self.local_css_selectors[css_selector] = BoolSwitch(prob, parse_html_style(local_css_configs[css_selector]))
 
         self.relative_style = {}
