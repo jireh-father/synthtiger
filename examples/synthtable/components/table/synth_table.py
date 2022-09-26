@@ -143,7 +143,7 @@ class SynthTable(Component):
                     selectors = self.local_css_selectors['td'].get()
                     style_attr, td_meta = make_style_attribute(selectors, "td")
                     td['style'] = style_attr
-                    meta.update(td)
+                    meta.update(td_meta)
         return str(bs), meta
 
     def sample(self, meta=None):
