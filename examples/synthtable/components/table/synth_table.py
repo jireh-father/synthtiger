@@ -26,12 +26,14 @@ class SynthTable(Component):
         self.margin_switch = BoolSwitch(style["global"]["table"]["margin"]["prob"])
         self.margin_selector = Selector(style["global"]["table"]["margin"]["values"])
 
-        self.cell_padding_selector = Selector(style["global"]["cell"]["padding"])
+        self.relative_style = {}
+        for key in style["global"]["relative"]:
+            self.relative_style[key] = Selector(style["global"]["relative"][key])
 
-        self.table_width_selector = Selector(style["global"]["table"]['width'])
-        self.table_height_selector = Selector(style["global"]["table"]['height'])
-
-        self.text_style_selectors = html_style.parse_html_style(style["global"]["text"])
+        css_configs = html_style.parse_html_style(style["global"]['css'])
+        self.css_selectors = {}
+        for css_selector in css_configs:
+            self.css_selectors[css_selector] = html_style.parse_html_style(css_configs[css_selector])
 
         self.synth_structure_prob = BoolSwitch(html['synth_structure_prob'])
         self.synth_content_prob = BoolSwitch(html['synth_content_prob'])
@@ -46,17 +48,20 @@ class SynthTable(Component):
         self.tmp_path = common['tmp_path']
         os.makedirs(self.tmp_path, exist_ok=True)
 
-    def sample_global_style(self):
+    def sample_global_styles(self):
         # synth style
         global_style = defaultdict(dict)
         global_style['#table_wrapper']["display"] = "inline-block"
         # text styles
         meta = {}
-        for k in self.text_style_selectors:
-            selector = self.text_style_selectors[k]
-            value = selector.select()
-            global_style['table'][k] = value
-            meta['table_' + k] = value
+        for css_selector in self.css_selectors:
+            for css_key in self.css_selectors[css_selector]:
+                selector = self.css_selectors[css_selector][css_key]
+                value = selector.select()
+                if value is None:
+                    continue
+                global_style[css_selector][css_key] = value
+                meta[css_selector + '_' + css_key] = value
 
         if self.margin_switch.on():
             margin_left = self.margin_selector.select()
@@ -73,8 +78,6 @@ class SynthTable(Component):
             meta['margin_width'] = 0
             meta['margin_height'] = 0
 
-        global_style['td']['padding'] = self.cell_padding_selector.select()
-        meta['td_padding'] = self.cell_padding_selector.select()
         return global_style, meta
 
     def sample(self, meta=None):
@@ -94,12 +97,14 @@ class SynthTable(Component):
         meta['synth_structure'] = synth_structure
         meta['synth_content'] = synth_content
 
-        meta['global_style'], global_style_meta = self.sample_global_style()
+        meta['global_style'], global_style_meta = self.sample_global_styles()
         meta.update(global_style_meta)
 
-        meta['table_width'] = self.table_width_selector.select()
-        meta['table_height'] = self.table_height_selector.select()
+        relative_style = {}
+        for key in self.relative_style:
+            relative_style[key] = self.relative_style[key].select()
 
+        meta['relative_style'] = relative_style
         return meta
 
     def _sample_html_path(self):

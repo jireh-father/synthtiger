@@ -10,8 +10,9 @@ def add_styles(target_styles, new_styles):
 def parse_html_style_values_dict(dict_values):
     weights = dict_values['weights'] if 'weights' in dict_values else None
     postfix = dict_values['postfix'] if 'postfix' in dict_values else None
+    prob = dict_values['prob'] if 'prob' in dict_values else None
 
-    return dict_values['values'], weights, postfix
+    return dict_values['values'], weights, postfix, prob
 
 
 def parse_html_style_values(values):

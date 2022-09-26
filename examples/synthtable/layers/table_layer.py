@@ -73,19 +73,12 @@ class TableLayer(Layer):
 
         table_element = driver.find_element(By.TAG_NAME, 'table')
         # todo: get div size and apply
-        print("ori table", table_element.size['width'], table_element.size['height'])
-        table_width = int(table_element.size['width'] * meta['table_width'])
-        table_height = int(table_element.size['height'] * meta['table_height'])
-        print("table expand", meta['table_width'], meta['table_height'])
-        print("aft table", table_width, table_height)
-
-        print("margin_width", meta['margin_width'])
-        print("margin_height", meta['margin_height'])
+        table_width = int(table_element.size['width'] * meta['relative_style']['table_width_scale'])
+        table_height = int(table_element.size['height'] * meta['relative_style']['table_height_scale'])
 
         # driver.close()
         image_width = table_width + meta['margin_width']
         image_height = table_height + meta['margin_height']
-        print("image", image_width, image_height)
 
         paper_layer = paper.generate((image_width, image_height))
         base64_image = image_util.image_to_base64(paper_layer.image)
@@ -95,7 +88,6 @@ class TableLayer(Layer):
 
         add_styles(self.global_style,
                    {'table': {"width": str(table_width) + "px", "height": str(table_height) + "px", }})
-        print("global style", self.global_style)
         add_styles(self.global_style,
                    {'#table_wrapper': {"background-image": 'url("data:image/png;base64,{}")'.format(base64_image)}})
 
@@ -104,7 +96,6 @@ class TableLayer(Layer):
         driver.get("file:///{}".format(os.path.abspath(html_path)))
         driver.set_window_size(int(image_width * 1.1), int(image_height * 1.1))
         div_element = driver.find_element(By.ID, 'table_wrapper')
-        print("last div size", div_element.size['width'], div_element.size['height'])
         div_element.screenshot(image_path)
         driver.close()
 
