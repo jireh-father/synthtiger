@@ -208,5 +208,6 @@ class SynthTable(Component):
         for layer in layers:
             layer.plain_html = html
             layer.plain_html_with_styles = meta['html_with_local_style']
+            print(layer.plain_html_with_styles)
             layer.global_style = meta['global_style']
             layer.render_table(tmp_path=self.tmp_path, paper=self.paper, meta=meta)
