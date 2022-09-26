@@ -30,7 +30,7 @@ class SynthTable(Component):
         for key in style["global"]["relative"]:
             self.relative_style[key] = Selector(style["global"]["relative"][key])
 
-        css_configs = html_style.parse_html_style(style["global"]['css'])
+        css_configs = style["global"]['css']
         self.css_selectors = {}
         for css_selector in css_configs:
             self.css_selectors[css_selector] = html_style.parse_html_style(css_configs[css_selector])
