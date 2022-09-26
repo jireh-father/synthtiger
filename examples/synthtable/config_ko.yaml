@@ -70,7 +70,9 @@ document:
                   postfix: "px"
   #              text-align: [left, right, center]
                 text-align: [left, center]
-                #vertical-align: [top, middle, bottom]
+                vertical-align:
+                  values: [top, middle, bottom]
+                  weights: [1,10,1]
   #              font-weight: [lighter, bold, normal]
                 font-weight: [lighter, normal]
                 font-style:
@@ -79,7 +81,7 @@ document:
                 text-decoration:
   #                values: [ none, underline, line-through ]
                   values: [ none, underline ]
-                  weights: [ 10, 1, 1 ]
+                  weights: [ 10, 1 ]
                 letter-spacing:
                   values: [0, 5]
                   postfix: "px"
@@ -107,26 +109,33 @@ document:
             # bg & fg 컬러 템플릿
           local:
             prob: 0.5
-            css:
+            relative:
               tr:
                 prob: 0.1
+                font_size: [0.8, 1.2]
+              td:
+                prob: 0.1
+                font_size: [0.8, 1.2]
+            css:
+#              thead:
+#                prob: 0.2
+#              tbody:
+#                prob: 0.2
+              tr:
+                prob: 0.5
                 #              color: [] # font color
                 #              font: []
-                font-size:
-                  values: [ 8, 30 ]
-                  postfix: "px"
-                #              text-align: [left, right, center]
-                text-align: [ left, center ]
-                #vertical-align: [top, middle, bottom]
+                text-align:
+                  values: [ left, center ]
+                  prob: 0.1
+                vertical-align: [top, middle, bottom]
                 #              font-weight: [lighter, bold, normal]
                 font-weight: [ lighter, normal ]
-                font-style:
-                  values: [ normal, italic ]
-                  weights: [ 9, 1 ]
+                font-style: [ normal, italic ]
                 text-decoration:
                   #                values: [ none, underline, line-through ]
                   values: [ none, underline ]
-                  weights: [ 10, 1, 1 ]
+                  weights: [ 10, 5 ]
                 letter-spacing:
                   values: [ 0, 5 ]
                   postfix: "px"
@@ -137,23 +146,15 @@ document:
                 #text-shadow: 4px 4px 5px red;
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
               td:
-                prob: 0.1
+                prob: 0.5
                 #              color: [] # font color
                 #              font: []
-                font-size:
-                  values: [ 8, 30 ]
-                  postfix: "px"
-                #              text-align: [left, right, center]
                 text-align: [ left, center ]
-                #vertical-align: [top, middle, bottom]
-                #              font-weight: [lighter, bold, normal]
-                font-weight: [ lighter, normal ]
-                font-style:
-                  values: [ normal, italic ]
-                  weights: [ 9, 1 ]
+                vertical-align: [top, middle, bottom]
+                font-weight: [lighter, bold, normal]
+                font-style: [ normal, italic ]
                 text-decoration:
-                  #                values: [ none, underline, line-through ]
-                  values: [ none, underline ]
+                  values: [ none, underline, line-through ]
                   weights: [ 10, 1, 1 ]
                 letter-spacing:
                   values: [ 0, 5 ]

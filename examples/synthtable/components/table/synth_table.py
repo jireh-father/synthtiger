@@ -8,9 +8,32 @@ from PIL import Image
 from utils.selector import Selector
 from elements.paper import Paper
 from collections import defaultdict
-from utils import html_style
 from utils.switch import BoolSwitch
 import numpy as np
+from bs4 import BeautifulSoup
+
+
+def parse_html_style_values_dict(dict_values):
+    weights = dict_values['weights'] if 'weights' in dict_values else None
+    postfix = dict_values['postfix'] if 'postfix' in dict_values else None
+    prob = dict_values['prob'] if 'prob' in dict_values else None
+
+    return dict_values['values'], weights, postfix, prob
+
+
+def parse_html_style_values(values):
+    if isinstance(values, list):
+        return Selector(values)
+    elif isinstance(values, dict):
+        return Selector(*parse_html_style_values_dict(values))
+
+
+def parse_html_style(config):
+    selectors = {}
+    for k in config:
+        v = config[k]
+        selectors[k] = parse_html_style_values(v)
+    return selectors
 
 
 class SynthTable(Component):
@@ -26,6 +49,14 @@ class SynthTable(Component):
         self.margin_switch = BoolSwitch(style["global"]["table"]["margin"]["prob"])
         self.margin_selector = Selector(style["global"]["table"]["margin"]["values"])
 
+        self.local_style_switch = BoolSwitch(style["local"]["prob"])
+        self.local_css_selectors = {}
+        local_css_configs = style["local"]['css']
+        for css_selector in local_css_configs:
+            prob = local_css_configs[css_selector]['prob']
+            del local_css_configs[css_selector]['prob']
+            self.local_css_selectors[css_selector] = BoolSwitch(prob, parse_html_style(local_css_configs[css_selector]))
+
         self.relative_style = {}
         for key in style["global"]["relative"]:
             self.relative_style[key] = Selector(style["global"]["relative"][key])
@@ -33,7 +64,7 @@ class SynthTable(Component):
         css_configs = style["global"]['css']
         self.css_selectors = {}
         for css_selector in css_configs:
-            self.css_selectors[css_selector] = html_style.parse_html_style(css_configs[css_selector])
+            self.css_selectors[css_selector] = parse_html_style(css_configs[css_selector])
 
         self.synth_structure_prob = BoolSwitch(html['synth_structure_prob'])
         self.synth_content_prob = BoolSwitch(html['synth_content_prob'])
@@ -80,6 +111,35 @@ class SynthTable(Component):
 
         return global_style, meta
 
+    def sample_local_styles(self, html):
+        meta = {}
+        if not self.local_style_switch.on():
+            return html, meta
+
+        bs = BeautifulSoup(html, 'html.parser')
+
+        for tr in bs.find_all('tr'):
+            if self.local_css_selectors['tr'].on():
+                selectors = self.local_css_selectors['tr'].get()
+                for css_key in selectors:
+                    selector = selectors[css_key]
+                    css_val = selector.select()
+                    if css_val is None:
+                        continue
+                    tr[css_key] = css_val
+                    meta['local_tr_' + css_key] = css_val
+            for td in tr.find_all("td"):
+                if self.local_css_selectors['td'].on():
+                    selectors = self.local_css_selectors['td'].get()
+                    for css_key in selectors:
+                        selector = selectors[css_key]
+                        css_val = selector.select()
+                        if css_val is None:
+                            continue
+                        td[css_key] = css_val
+                        meta['local_td_' + css_key] = css_val
+        return str(bs)
+
     def sample(self, meta=None):
         if meta is None:
             meta = {}
@@ -99,6 +159,8 @@ class SynthTable(Component):
 
         meta['global_style'], global_style_meta = self.sample_global_styles()
         meta.update(global_style_meta)
+        meta['html_with_local_style'], local_style_meta = self.sample_local_styles(meta['html'])
+        meta.update(local_style_meta)
 
         relative_style = {}
         for key in self.relative_style:
@@ -144,6 +206,6 @@ class SynthTable(Component):
         # rendering
         for layer in layers:
             layer.plain_html = html
-            layer.plain_html_with_styles = html
+            layer.plain_html_with_styles = meta['html_local_style']
             layer.global_style = meta['global_style']
             layer.render_table(tmp_path=self.tmp_path, paper=self.paper, meta=meta)

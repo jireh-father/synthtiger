@@ -86,10 +86,9 @@ class TableLayer(Layer):
         # driver = webdriver.Chrome('chromedriver', options=options)
         # driver.implicitly_wait(0.5)
 
-        add_styles(self.global_style,
-                   {'table': {"width": str(table_width) + "px", "height": str(table_height) + "px", }})
-        add_styles(self.global_style,
-                   {'#table_wrapper': {"background-image": 'url("data:image/png;base64,{}")'.format(base64_image)}})
+        self.global_style['table']['width'] = str(table_width) + "px"
+        self.global_style['table']['height'] = str(table_height) + "px"
+        self.global_style['#table_wrapper']['background-image'] = 'url("data:image/png;base64,{}")'.format(base64_image)
 
         self._write_html_file(html_path)
 

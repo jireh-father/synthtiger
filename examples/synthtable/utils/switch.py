@@ -13,8 +13,12 @@ class Switch:
 
 
 class BoolSwitch:
-    def __init__(self, prob=1):
+    def __init__(self, prob=1, data=None):
         self.prob = prob
+        self.data = data
 
     def on(self):
         return np.random.rand() < self.prob
+
+    def get(self):
+        return self.data
