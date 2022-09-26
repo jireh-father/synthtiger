@@ -48,7 +48,7 @@ def make_style_attribute(selectors, tag_name):
             continue
         styles.append("{}: {}".format(css_key, css_val))
         meta['local_{}_{}'.format(tag_name, css_key)] = css_val
-    return ";".join(styles)
+    return ";".join(styles), meta
 
 
 class SynthTable(Component):
