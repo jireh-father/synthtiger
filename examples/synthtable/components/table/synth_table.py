@@ -38,6 +38,19 @@ def parse_html_style(config):
     return selectors
 
 
+def make_style_attribute(selectors, tag_name):
+    meta = {}
+    styles = []
+    for css_key in selectors:
+        selector = selectors[css_key]
+        css_val = selector.select()
+        if css_val is None:
+            continue
+        styles.append("{}: {}".format(css_key, css_val))
+        meta['local_{}_{}'.format(tag_name, css_key)] = css_val
+    return ";".join(styles)
+
+
 class SynthTable(Component):
     def __init__(self, html, style, common, **kwargs):
         super().__init__()
@@ -122,23 +135,15 @@ class SynthTable(Component):
         for tr in bs.find_all('tr'):
             if self.local_css_selectors['tr'].on():
                 selectors = self.local_css_selectors['tr'].get()
-                for css_key in selectors:
-                    selector = selectors[css_key]
-                    css_val = selector.select()
-                    if css_val is None:
-                        continue
-                    tr[css_key] = css_val
-                    meta['local_tr_' + css_key] = css_val
+                style_attr, tr_meta = make_style_attribute(selectors, "tr")
+                tr['style'] = style_attr
+                meta.update(tr_meta)
             for td in tr.find_all("td"):
                 if self.local_css_selectors['td'].on():
                     selectors = self.local_css_selectors['td'].get()
-                    for css_key in selectors:
-                        selector = selectors[css_key]
-                        css_val = selector.select()
-                        if css_val is None:
-                            continue
-                        td[css_key] = css_val
-                        meta['local_td_' + css_key] = css_val
+                    style_attr, td_meta = make_style_attribute(selectors, "td")
+                    td['style'] = style_attr
+                    meta.update(td)
         return str(bs), meta
 
     def sample(self, meta=None):

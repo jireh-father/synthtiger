@@ -146,7 +146,7 @@ document:
                 #text-shadow: 4px 4px 5px red;
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
               td:
-                prob: 1.0
+                prob: 0.5
                 #              color: [] # font color
                 #              font: []
                 text-align: [ left, center ]
