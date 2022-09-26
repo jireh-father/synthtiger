@@ -139,7 +139,7 @@ class SynthTable(Component):
                             continue
                         td[css_key] = css_val
                         meta['local_td_' + css_key] = css_val
-        return str(bs)
+        return str(bs), meta
 
     def sample(self, meta=None):
         if meta is None:
