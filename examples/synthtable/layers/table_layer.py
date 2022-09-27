@@ -59,6 +59,7 @@ class TableLayer(Layer):
     def _get_margin_vertical_and_horizontal(self):
         margin_vertical = 0
         margin_horizontal = 0
+        print(self.global_style['table'])
         if 'margin-left' in self.global_style['table']:
             margin_horizontal += int(self.global_style['table']['margin-left'].split("px")[0])
         elif 'margin' in self.global_style['table']:
