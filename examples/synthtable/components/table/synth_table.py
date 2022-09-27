@@ -58,9 +58,8 @@ class SynthTable(Component):
 
         # styles
         # todo: select parer or other backgrounds
-        if 'weight' in style["global"]["background"]["paper"]:
-            del style["global"]["background"]["paper"]['weight']
-        self.paper = Paper(style["global"]["background"]["paper"])
+        self.paper = Paper({k: style["global"]["absoulte"]["background"]["paper"][k] for k in
+                            style["global"]["absoulte"]["background"]["paper"] if k != "weight"})
 
         self.local_style_switch = BoolSwitch(style["local"]["prob"])
         self.local_css_selectors = {}
@@ -107,7 +106,6 @@ class SynthTable(Component):
                     continue
                 global_style[css_selector][css_key] = value
                 meta[css_selector + '_' + css_key] = value
-
 
         return global_style, meta
 
@@ -198,7 +196,7 @@ class SynthTable(Component):
 
         # rendering
         for layer in layers:
-            #todo : remove tag in cell
+            # todo : remove tag in cell
             layer.plain_html = html
             layer.plain_html_with_styles = meta['html_with_local_style']
             print(layer.plain_html_with_styles)
