@@ -36,33 +36,65 @@ document:
           synth_structure: []
           synth_content: []
         style:
+          color_set:
+            dark: [black, red, blue, green, orange, purple, navy, gray]
+            light: [white]
           global:
-            thead:
-              prob: 0.5
-              dark: []
-              light: []
-            background:
-              paper:
-                weight: 1
-                paths: [ resources/paper ]
-                weights: [ 1 ]
-                alpha: [ 0, 0.2 ]
-                grayscale: 0.5
-                crop: 1
-              color:
-                weight: 0
-                striped: []
-                random: []
-              gradient:
-                weight: 0
-            border:
-              empty:
-                bodrer-
-              paper_style: []
-              row: []
-              col: []
-              all: []
-#              border-radius: 6px
+            ### 밝은색, 어두운색 각각 세트 지정하고, (모든 경우의 수를 조합해도 글씨가 잘보이도록 각각 컬러 선정해야함.)
+            ### 다크 모드일경우와 라이트 모드일 경우에 맞게 글자가 잘 보이도록 각 컬러를 랜덤으로 선정.
+            ## color attrs
+            # border-color
+            # color
+            # background-color
+            ## color targets
+            # table
+            # thead
+            # tbody
+            ## dark color세트 세팅(배경, )
+            ## second dark 어두운색 세트 세팅
+            ## light color 밝은색 세트 세팅
+            ## 컬러 반전 여부
+            absolute:
+              thead:
+                prob: 0.5
+                color_mode: [dark, light]
+              background:
+                paper:
+                  weight: 1
+                  paths: [ resources/paper ]
+                  weights: [ 1 ]
+                  alpha: [ 0, 0.2 ]
+                  grayscale: 0.5
+                  crop: 1
+                solid:
+                  weight: 0
+                gradient:
+                  weight: 0
+                  type: [linear, radial, conic, repeating]
+                  angle: [0, 359] # angle은 linear와,repeating만
+                  num_colors: [2, 5]
+                  use_random_stops:
+                    prob: 0.3
+                striped:
+                  weight: 0
+                striped_all_highlight:
+                  weight: 0
+              border:
+                empty: []
+                paper_style: []
+                row: []
+                col: []
+                all: []
+  #              border-radius: 6px
+            table:
+              color_mode: [ dark, light ]
+              margin:
+                prob: 0.5
+                values: [ 1, 50 ]
+            relative:
+              table:
+                width_scale: [ 1.0, 1.3 ]
+                height_scale: [ 1.0, 1.3 ]
             css:
               table:
   #              color: [] # font color
@@ -95,13 +127,6 @@ document:
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
               td:
                 padding: [2, 20]
-            relative:
-              table_width_scale: [ 1.0, 1.3 ]
-              table_height_scale: [ 1.0, 1.3 ]
-            table:
-              margin:
-                prob: 0.5
-                values: [1, 50]
 
 #              width: []
 #              height: [ ]
@@ -111,6 +136,11 @@ document:
             # bg & fg 컬러 템플릿
           local:
             prob: 0.5
+            absolute:
+              tr:
+                color_mode: [light, dark]
+              td:
+                color_mode: [light, dark]
             relative:
               tr:
                 prob: 0.1
@@ -156,31 +186,26 @@ document:
                   values: [ 0, 4 ]
                   postfix: "px"
                 border-style: [ solid ]
-                border-color: [ black ]
                 border-top-width:
                   prob: 0.2
                   values: [ 0, 4 ]
                   postfix: "px"
                 border-top-style: [ solid ]
-                border-top-color: [ black ]
                 border-left-width:
                   prob: 0.2
                   values: [ 0, 4 ]
                   postfix: "px"
                 border-left-style: [ solid ]
-                border-left-color: [ black ]
                 border-right-width:
                   prob: 0.2
                   values: [ 0, 4 ]
                   postfix: "px"
                 border-right-style: [ solid ]
-                border-right-color: [ black ]
                 border-bottom-width:
                   prob: 0.2
                   values: [ 0, 4 ]
                   postfix: "px"
                 border-bottom-style: [ solid ]
-                border-bottom-color: [ black ]
                 #text-shadow
                 #text-shadow: 4px 4px 5px red;
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
@@ -206,31 +231,26 @@ document:
                   values: [ 0, 4 ]
                   postfix: "px"
                 border-style: [solid]
-                border-color: [black]
                 border-top-width:
                   prob: 0.2
                   values: [ 0, 4 ]
                   postfix: "px"
                 border-top-style: [ solid ]
-                border-top-color: [ black ]
                 border-left-width:
                   prob: 0.2
                   values: [ 0, 4 ]
                   postfix: "px"
                 border-left-style: [ solid ]
-                border-left-color: [ black ]
                 border-right-width:
                   prob: 0.2
                   values: [ 0, 4 ]
                   postfix: "px"
                 border-right-style: [ solid ]
-                border-right-color: [ black ]
                 border-bottom-width:
                   prob: 0.2
                   values: [ 0, 4 ]
                   postfix: "px"
                 border-bottom-style: [ solid ]
-                border-bottom-color: [ black ]
                 #text-shadow
                 #text-shadow: 4px 4px 5px red;
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;

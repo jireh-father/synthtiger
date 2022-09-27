@@ -72,8 +72,8 @@ class TableLayer(Layer):
 
         table_element = driver.find_element(By.TAG_NAME, 'table')
         # todo: get div size and apply
-        table_width = int(table_element.size['width'] * meta['relative_style']['table_width_scale'])
-        table_height = int(table_element.size['height'] * meta['relative_style']['table_height_scale'])
+        table_width = int(table_element.size['width'] * meta['relative_style']['table']['width_scale'])
+        table_height = int(table_element.size['height'] * meta['relative_style']['table']['height_scale'])
 
         # driver.close()
         image_width = table_width + meta['margin_width']

@@ -71,9 +71,10 @@ class SynthTable(Component):
             prob = local_css_configs[css_selector]['prob']
             self.local_css_selectors[css_selector] = BoolSwitch(prob, parse_html_style(local_css_configs[css_selector]))
 
-        self.relative_style = {}
-        for key in style["global"]["relative"]:
-            self.relative_style[key] = Selector(style["global"]["relative"][key])
+        self.relative_style = defaultdict(dict)
+        for selector in style["global"]["relative"]:
+            for key in style["global"]["relative"][selector]:
+                self.relative_style[selector][key] = Selector(style["global"]["relative"][selector][key])
 
         css_configs = style["global"]['css']
         self.css_selectors = {}
@@ -169,9 +170,10 @@ class SynthTable(Component):
         meta['html_with_local_style'], local_style_meta = self.sample_local_styles(meta['html'])
         meta.update(local_style_meta)
 
-        relative_style = {}
-        for key in self.relative_style:
-            relative_style[key] = self.relative_style[key].select()
+        relative_style = defaultdict(dict)
+        for selector in self.relative_style:
+            for key in self.relative_style[selector]:
+                relative_style[selector][key] = self.relative_style[selector][key].select()
 
         meta['relative_style'] = relative_style
         return meta
