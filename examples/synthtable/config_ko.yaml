@@ -86,11 +86,8 @@ document:
                 col: []
                 all: []
   #              border-radius: 6px
-            table:
-              color_mode: [ dark, light ]
-              margin:
-                prob: 0.5
-                values: [ 1, 50 ]
+              table:
+                color_mode: [ dark, light ]
             relative:
               table:
                 width_scale: [ 1.0, 1.3 ]
@@ -99,6 +96,21 @@ document:
               table:
   #              color: [] # font color
   #              font: []
+                margin:
+                  prob: 0.5
+                  values: [ 1, 50 ]
+                margin-left:
+                  prob: 0.5
+                  values: [ 1, 50 ]
+                margin-right:
+                  prob: 0.5
+                  values: [ 1, 50 ]
+                margin-top:
+                  prob: 0.5
+                  values: [ 1, 50 ]
+                margin-bottom:
+                  prob: 0.5
+                  values: [ 1, 50 ]
                 font-size:
                   values: [8, 30]
                   postfix: "px"

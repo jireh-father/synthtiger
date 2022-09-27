@@ -56,6 +56,30 @@ class TableLayer(Layer):
             html = html_template.format(self._convert_global_style_to_css(), self.plain_html_with_styles)
             html_file.write(html)
 
+    def _get_margin_vertical_and_horizontal(self):
+        margin_vertical = 0
+        margin_horizontal = 0
+        if 'margin-left' in self.global_style['table']:
+            margin_horizontal += int(self.global_style['table']['margin-left'].split("px")[0])
+        elif 'margin' in self.global_style['table']:
+            margin_horizontal += int(self.global_style['table']['margin'].split("px")[0]) / 2
+
+        if 'margin-right' in self.global_style['table']:
+            margin_horizontal += int(self.global_style['table']['margin-right'].split("px")[0])
+        elif 'margin' in self.global_style['table']:
+            margin_horizontal += int(self.global_style['table']['margin'].split("px")[0]) / 2
+
+        if 'margin-top' in self.global_style['table']:
+            margin_vertical += int(self.global_style['table']['margin-top'].split("px")[0])
+        elif 'margin' in self.global_style['table']:
+            margin_vertical += int(self.global_style['table']['margin'].split("px")[0]) / 2
+
+        if 'margin-bottom' in self.global_style['table']:
+            margin_vertical += int(self.global_style['table']['margin-bottom'].split("px")[0])
+        elif 'margin' in self.global_style['table']:
+            margin_vertical += int(self.global_style['table']['margin'].split("px")[0]) / 2
+        return margin_horizontal, margin_vertical
+
     def _render_table_selenium(self, html_path, image_path, paper, meta):
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
@@ -76,8 +100,9 @@ class TableLayer(Layer):
         table_height = int(table_element.size['height'] * meta['relative_style']['table']['height_scale'])
 
         # driver.close()
-        image_width = table_width + meta['margin_width']
-        image_height = table_height + meta['margin_height']
+        margin_horizontal, margin_vertical = self._get_margin_vertical_and_horizontal()
+        image_width = table_width + margin_horizontal  # meta['margin_width']
+        image_height = table_height + margin_vertical  # meta['margin_height']
 
         paper_layer = paper.generate((image_width, image_height))
         base64_image = image_util.image_to_base64(paper_layer.image)

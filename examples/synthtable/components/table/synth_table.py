@@ -61,8 +61,6 @@ class SynthTable(Component):
         if 'weight' in style["global"]["background"]["paper"]:
             del style["global"]["background"]["paper"]['weight']
         self.paper = Paper(style["global"]["background"]["paper"])
-        self.margin_switch = BoolSwitch(style["global"]["table"]["margin"]["prob"])
-        self.margin_selector = Selector(style["global"]["table"]["margin"]["values"])
 
         self.local_style_switch = BoolSwitch(style["local"]["prob"])
         self.local_css_selectors = {}
@@ -110,20 +108,6 @@ class SynthTable(Component):
                 global_style[css_selector][css_key] = value
                 meta[css_selector + '_' + css_key] = value
 
-        if self.margin_switch.on():
-            margin_left = self.margin_selector.select()
-            margin_right = self.margin_selector.select()
-            margin_top = self.margin_selector.select()
-            margin_bottom = self.margin_selector.select()
-            global_style['table']['margin-left'] = str(margin_left) + "px"
-            global_style['table']['margin-right'] = str(margin_right) + "px"
-            global_style['table']['margin-top'] = str(margin_top) + "px"
-            global_style['table']['margin-bottom'] = str(margin_bottom) + "px"
-            meta['margin_width'] = margin_left + margin_right
-            meta['margin_height'] = margin_top + margin_bottom
-        else:
-            meta['margin_width'] = 0
-            meta['margin_height'] = 0
 
         return global_style, meta
 
