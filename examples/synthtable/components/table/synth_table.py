@@ -76,6 +76,7 @@ class SynthTable(Component):
             self.relative_style[key] = Selector(style["global"]["relative"][key])
 
         css_configs = style["global"]['css']
+        print(css_configs)
         self.css_selectors = {}
         for css_selector in css_configs:
             self.css_selectors[css_selector] = parse_html_style(css_configs[css_selector])
