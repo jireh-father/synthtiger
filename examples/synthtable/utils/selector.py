@@ -37,7 +37,6 @@ class Selector:
             return np.random.uniform(**self.components_or_names)
         else:
             idx = np.random.choice(len(self._probs), replace=False, p=self._probs)
-            print(self.postfix)
             if self.postfix:
                 return str(self.components_or_names[idx]) + self.postfix
             return self.components_or_names[idx]
