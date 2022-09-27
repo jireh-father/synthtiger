@@ -8,7 +8,7 @@ background:
   effect:
     args:
       # gaussian blur
-      - prob: 1
+      - prob: 0.7
         args:
           sigma: [0, 10]
 
@@ -93,6 +93,7 @@ document:
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
               td:
                 padding: [2, 20]
+                border: "1px solid black"
             relative:
               table_width_scale: [ 1.0, 1.3 ]
               table_height_scale: [ 1.0, 1.3 ]
@@ -117,18 +118,25 @@ document:
                 prob: 0.1
                 font_size: [0.8, 1.2]
             css:
-#              thead:
-#                prob: 0.2
-#              tbody:
-#                prob: 0.2
+              thead:
+                prob: 0.5
+                font-weight: [ bold, normal ]
+                text-align:
+                  values: [ left, center ]
+                  prob: 0.5
+              tbody:
+                prob: 0.5
+                text-align:
+                  values: [ left, center ]
+                  prob: 0.5
               tr:
                 prob: 0.5
                 #              color: [] # font color
                 #              font: []
-                text-align:
-                  values: [ left, center ]
-                  prob: 0.1
-                vertical-align: [top, middle, bottom]
+#                text-align:
+#                  values: [ left, center ]
+#                  prob: 0.1
+#                vertical-align: [top, middle, bottom]
                 #              font-weight: [lighter, bold, normal]
                 font-weight: [ lighter, normal ]
                 font-style: [ normal, italic ]
@@ -149,8 +157,8 @@ document:
                 prob: 0.5
                 #              color: [] # font color
                 #              font: []
-                text-align: [ left, center ]
-                vertical-align: [top, middle, bottom]
+#                text-align: [ left, center ]
+#                vertical-align: [top, middle, bottom]
                 font-weight: [lighter, bold, normal]
                 font-style: [ normal, italic ]
                 text-decoration:
@@ -167,189 +175,13 @@ document:
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
                 #              width: []
                 #              height: [ ]
-          common:
-            background:
-              paper:
-                image:
-                  paths: [ resources/paper ]
-                  weights: [ 1 ]
-                  alpha: [ 0, 0.2 ]
-                  grayscale: 0.5
-                  crop: 1
-              color: []
-              gradient: []
-            border: []
-            text: []
-            bg: []
-            padding: []
-            size: []
-            margin: []
-            round: []
       common:
-        image_border:
-          color: [ 1,3 ]
-          top: [ 1,3 ]
-          bottom: [ 1,3 ]
-          left: [ 1,3 ]
-          right: [ 1,3 ]
-          width: [ 1,3 ]
-          same_width: 0.5
-        image_margin:
-          color: [ 1,3 ]
-          top: [ 1,3 ]
-          bottom: [ 1,3 ]
-          left: [ 1,3 ]
-          right: [ 1,3 ]
-          width: [ 1,1 ]
-          same_width: 1
         rows: [2, 10]
         cols: [2, 10]
         has_span: 0.5
         has_col_span: 0.5
         has_row_span: 0.5
         tmp_path: tmp
-
-
-
-#      weights: [10,90]
-#      args:
-#        # HtmlAndImageFile iterator
-#        - args:
-#          # HtmlAndImageFile
-#          - html_paths: [ resources/table_html ]
-#            image_paths: [ resources/table_image ]
-#            weights: [ 1 ]
-#          # Image Border Switch
-#          - prob: 0.5
-#            args:
-#              width: []
-#              color: []
-#          # Image Margin Switch
-#          - prob: 0.5
-#            args:
-#              # margin selector
-#              weights: [5,5]
-#              args:
-#                # 위,아래,왼,우 동일하게 적용
-#                - length: [ ]
-#                # 위,아래,왼,우 각각 적용
-#                - left: [ ]
-#                  top: [ ]
-#                  right: [ ]
-#                  bottom: [ ]
-#        # Synth htmls and images iterator:
-#        - args:
-#          # table html selector
-#          - weights: []
-#            args:
-#              # html file and synth contents iterator
-#              - args:
-#                # html file
-#                - paths: []
-#                  weights: [1]
-#                # synth table content switch
-#                - prob: 0.5
-#                  args:
-#                    # synth table content selector
-#                    - weights: []
-#                      args:
-#                        # corpus
-#                        - paths: []
-#                          weights: []
-#                        # synth text
-#                        - paths: [ ]
-#                          weights: [ ]
-#                        # key value corpus
-#                        - paths: [ ]
-#                          weights: [ ]
-#              # synth table structure and contents iterator
-#              - args:
-#                # synth table structure html
-#                - rows: [ ]
-#                  cols: [ ]
-#                # synth table content selector
-#                - weights: [ ]
-#                  args:
-#                    # corpus
-#                    - paths: [ ]
-#                      weights: [ ]
-#                    # synth text
-#                    - paths: [ ]
-#                      weights: [ ]
-#                    # key value corpus
-#                    - paths: [ ]
-#                      weights: [ ]
-#          # table styles iterator
-#          - args:
-#            # table global styles template selector
-#            - weights: []
-#              args:
-#                # table global random synth styles iterator
-#                - args:
-#                  # table tag global style iterator
-#                  - args:
-#                    # bg selector
-#                    - weights: [ 1,1,1,1 ]
-#                      args:
-#                        # color
-#                        # gradient
-#                        # image
-#                        # paper
-#                        - paths: [ resources/paper ]
-#                          weights: [ 1 ]
-#                          alpha: [ 0, 0.2 ]
-#                          grayscale: 1
-#                          crop: 1
-#                  # thead tag global style iterator
-#                  # tbody tag global style iterator
-#                  # tr tag global style iterator
-#                  # td tag global style iterator
-#                # striped rows
-#                - args:
-#                # simple table styles
-#            # tr individually style switch
-#            - prob: 0.3
-#              args:
-#            # td individually style switch
-#            - prob: 0.3
-#              args:
-
-
-#        - html:
-#            paths: [ resources/html ]
-#            weights: [ 1 ]
-#            table:
-#              cols: [ 2,20 ]
-#              rows: [ 2,20 ]
-#              header:
-#                prob: 0.5
-#                args:
-#                  rows: [ 1, 2 ]
-#              style:
-#              background:
-#                weights: [ 1,1,1,1 ]
-#                color:
-#                gradient:
-#                image:
-#                paper:
-#                  image:
-#                    paths: [ resources/paper ]
-#                    weights: [ 1 ]
-#                    alpha: [ 0, 0.2 ]
-#                    grayscale: 1
-#                    crop: 1
-#              thead:
-#                background:
-#                  weights: [ 1,1,1,1 ]
-#                  color:
-#                  gradient:
-#                tr:
-#                  td:
-#              tbody:
-#                tr:
-#                  td:
-
-
     text:
       path: resources/corpus/kowiki.txt
     font:

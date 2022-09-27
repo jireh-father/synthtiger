@@ -97,6 +97,7 @@ class SynthTable(Component):
         # synth style
         global_style = defaultdict(dict)
         global_style['#table_wrapper']["display"] = "inline-block"
+        global_style['table']["border-collapse"] = "collapse"
         # text styles
         meta = {}
         for css_selector in self.css_selectors:
@@ -211,6 +212,7 @@ class SynthTable(Component):
 
         # rendering
         for layer in layers:
+            #todo : remove tag in cell
             layer.plain_html = html
             layer.plain_html_with_styles = meta['html_with_local_style']
             print(layer.plain_html_with_styles)
