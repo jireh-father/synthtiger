@@ -58,8 +58,8 @@ class SynthTable(Component):
 
         # styles
         # todo: select parer or other backgrounds
-        self.paper = Paper({k: style["global"]["absoulte"]["background"]["paper"][k] for k in
-                            style["global"]["absoulte"]["background"]["paper"] if k != "weight"})
+        self.paper = Paper({k: style["global"]["absolute"]["background"]["paper"][k] for k in
+                            style["global"]["absolute"]["background"]["paper"] if k != "weight"})
 
         self.local_style_switch = BoolSwitch(style["local"]["prob"])
         self.local_css_selectors = {}
