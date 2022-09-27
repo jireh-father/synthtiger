@@ -56,6 +56,8 @@ document:
               gradient:
                 weight: 0
             border:
+              empty:
+                bodrer-
               paper_style: []
               row: []
               col: []
@@ -78,10 +80,10 @@ document:
                 font-style:
                   values: [normal, italic]
                   weights: [9, 1]
-                text-decoration:
-  #                values: [ none, underline, line-through ]
-                  values: [ none, underline ]
-                  weights: [ 10, 1 ]
+#                text-decoration:
+#  #                values: [ none, underline, line-through ]
+#                  values: [ none, underline ]
+#                  weights: [ 10, 1 ]
                 letter-spacing:
                   values: [0, 5]
                   postfix: "px"
@@ -93,9 +95,6 @@ document:
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
               td:
                 padding: [2, 20]
-                border-width: [1px]
-                border-style: [solid]
-                border-color: [black]
             relative:
               table_width_scale: [ 1.0, 1.3 ]
               table_height_scale: [ 1.0, 1.3 ]
@@ -172,6 +171,11 @@ document:
                 word-spacing:
                   values: [ 0, 5 ]
                   postfix: "px"
+                border-width:
+                  values: [ 0, 3 ]
+                  postfix: "px"
+                border-style: [solid]
+                border-color: [black]
                 #text-shadow
                 #text-shadow: 4px 4px 5px red;
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
