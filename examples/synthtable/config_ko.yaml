@@ -99,18 +99,23 @@ document:
                 margin:
                   prob: 0.5
                   values: [ 1, 50 ]
+                  postfix: "px"
                 margin-left:
                   prob: 0.5
                   values: [ 1, 50 ]
+                  postfix: "px"
                 margin-right:
                   prob: 0.5
                   values: [ 1, 50 ]
+                  postfix: "px"
                 margin-top:
                   prob: 0.5
                   values: [ 1, 50 ]
+                  postfix: "px"
                 margin-bottom:
                   prob: 0.5
                   values: [ 1, 50 ]
+                  postfix: "px"
                 font-size:
                   values: [8, 30]
                   postfix: "px"
