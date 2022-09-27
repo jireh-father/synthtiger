@@ -104,6 +104,7 @@ class SynthTable(Component):
                 value = selector.select()
                 if value is None:
                     continue
+                print(css_selector, css_key, value)
                 global_style[css_selector][css_key] = value
                 meta[css_selector + '_' + css_key] = value
 
