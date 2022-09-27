@@ -151,6 +151,36 @@ document:
                 word-spacing:
                   values: [ 0, 5 ]
                   postfix: "px"
+                border-width:
+                  prob: 0.2
+                  values: [ 0, 4 ]
+                  postfix: "px"
+                border-style: [ solid ]
+                border-color: [ black ]
+                border-top-width:
+                  prob: 0.2
+                  values: [ 0, 4 ]
+                  postfix: "px"
+                border-top-style: [ solid ]
+                border-top-color: [ black ]
+                border-left-width:
+                  prob: 0.2
+                  values: [ 0, 4 ]
+                  postfix: "px"
+                border-left-style: [ solid ]
+                border-left-color: [ black ]
+                border-right-width:
+                  prob: 0.2
+                  values: [ 0, 4 ]
+                  postfix: "px"
+                border-right-style: [ solid ]
+                border-right-color: [ black ]
+                border-bottom-width:
+                  prob: 0.2
+                  values: [ 0, 4 ]
+                  postfix: "px"
+                border-bottom-style: [ solid ]
+                border-bottom-color: [ black ]
                 #text-shadow
                 #text-shadow: 4px 4px 5px red;
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
@@ -172,10 +202,35 @@ document:
                   values: [ 0, 5 ]
                   postfix: "px"
                 border-width:
-                  values: [ 0, 3 ]
+                  prob: 0.2
+                  values: [ 0, 4 ]
                   postfix: "px"
                 border-style: [solid]
                 border-color: [black]
+                border-top-width:
+                  prob: 0.2
+                  values: [ 0, 4 ]
+                  postfix: "px"
+                border-top-style: [ solid ]
+                border-top-color: [ black ]
+                border-left-width:
+                  prob: 0.2
+                  values: [ 0, 4 ]
+                  postfix: "px"
+                border-left-style: [ solid ]
+                border-left-color: [ black ]
+                border-right-width:
+                  prob: 0.2
+                  values: [ 0, 4 ]
+                  postfix: "px"
+                border-right-style: [ solid ]
+                border-right-color: [ black ]
+                border-bottom-width:
+                  prob: 0.2
+                  values: [ 0, 4 ]
+                  postfix: "px"
+                border-bottom-style: [ solid ]
+                border-bottom-color: [ black ]
                 #text-shadow
                 #text-shadow: 4px 4px 5px red;
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
