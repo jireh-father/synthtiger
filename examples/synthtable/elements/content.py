@@ -88,6 +88,5 @@ class Content:
         layout_height = max(height - layout_top * 2, 0)
         layout_bbox = [layout_left, layout_top, layout_width, layout_height]
 
-
         table_layer = self.table.generate(size, max_size)
         return table_layer

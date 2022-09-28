@@ -46,6 +46,7 @@ class SynthTable(templates.Template):
         table_layer, bg_size = self.document.generate()
 
         bg_layer = self.background.generate(bg_size)
+        # todo: remove etc tag in td cell(ex: <td><b>contents</b></td>)
         table_html = table_layer.plain_html
 
         document_space = np.clip(bg_size - table_layer.size, 0, None)

@@ -7,7 +7,7 @@ import traceback
 
 import components as comps
 from layers import *
-from utils.selector import Selector
+from utils.selector import Selector, parse_config
 
 
 class Table():
@@ -56,6 +56,10 @@ class Table():
         # width, height
         # margin table
         # round
+
+        self.selectors = parse_config(config)
+        print(self.selectors)
+
         self.static = comps.StaticTable(**config["static"], common=config["common"])
         self.synth = comps.SynthTable(**config["synth"], common=config["common"])
 

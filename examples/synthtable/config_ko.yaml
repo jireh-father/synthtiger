@@ -26,6 +26,27 @@ document:
         image_paths: [ resources/table_image ]
         path_weights: [1]
         lower_image_size_ratios: [0.9]
+        rows: [ 2, 10 ]
+        cols: [ 2, 10 ]
+        has_span: 0.5
+        has_col_span: 0.5
+        has_row_span: 0.5
+        tmp_path: tmp
+        image:
+          paths: [ resources/table_image ]
+          lower_image_size_ratios: [0.9]
+        html:
+          paths: [ resources/table_html ]
+          weights: [ 1 ]
+          rows: [ 2, 10 ]
+          cols: [ 2, 10 ]
+          has_span:
+            prob: 0.5
+          has_col_span:
+            prob: 0.5
+          has_row_span:
+            prob: 0.5
+          tmp_path: tmp
       synth:
         weight: 5
         html:
@@ -35,10 +56,22 @@ document:
           synth_content_prob: 0.0
           synth_structure: []
           synth_content: []
+          rows: [ 2, 10 ]
+          cols: [ 2, 10 ]
+          has_span:
+            prob: 0.5
+          has_col_span:
+            prob: 0.5
+          has_row_span:
+            prob: 0.5
+          tmp_path: tmp
         style:
+          font:
+            paths: [ ]
+            weights: []
           color_set:
-            dark: [black, red, blue, green, orange, purple, navy, gray]
-            light: [white]
+            dark: [black, red, blue, green, orange, purple, navy, gray, BlueViolet, Brown, CadetBlue, Chocolate, CornflowerBlue, Crimson, DarkBlue, DarkCyan, DarkGoldenRod, DarkGreen, darkmagenta, darkolivegreen, darkorchid, darkred, darkslateblue, darkslategray, darkturquoise, darkviolet, deeppink, deepskyblue, dimgray, dodgerblue, firebrick, forestgreen, fuchsia, indianred, indigo, lightseagreen, lightslategray, limegreen, magenta, maroon, mediumblue, mediumorchid, tomato, violet]
+            light: [white, AliceBlue, AntiqueWhite, Aqua, Aquamarine, Azure, Beige, Bisque, BlancedAlmond, BurlyWood, Chartreuse, Coral, Cornsilk, Cyan, DarkGray, DarkGrey, darkkhaki, darkorange,darksalmon, darkseagreen, floralwhite, gainsboro, ghostwhite, gold, goldenrod, greenyellow, honeydew, hotpink, ivory, khaki,lavender, lavenderblush, lawngreen, lemonchiffon, lightblue, lightcoral, lightcyan, lightgoldenrodyellow, lightgray, lightgreen, lightpink, lightsalmon, lightskyblue, lightsteelblue, lightyellow, lime, linen, mediumaquamarine]
           global:
             ### 밝은색, 어두운색 각각 세트 지정하고, (모든 경우의 수를 조합해도 글씨가 잘보이도록 각각 컬러 선정해야함.)
             ### 다크 모드일경우와 라이트 모드일 경우에 맞게 글자가 잘 보이도록 각 컬러를 랜덤으로 선정.
@@ -56,8 +89,12 @@ document:
             ## 컬러 반전 여부
             absolute:
               thead:
-                prob: 0.5
                 color_mode: [dark, light]
+                border_type: [empty, all, bottom, top_bottom]
+                border_width: [1, 5]
+              table_outline:
+                border_type: [ empty, all, top_bottom ]
+                border_width: [ 1, 5 ]
               background:
                 paper:
                   weight: 1
@@ -66,26 +103,65 @@ document:
                   alpha: [ 0, 0.2 ]
                   grayscale: 0.5
                   crop: 1
-                solid:
-                  weight: 0
                 gradient:
                   weight: 0
                   type: [linear, radial, conic, repeating]
                   angle: [0, 359] # angle은 linear와,repeating만
                   num_colors: [2, 5]
-                  use_random_stops:
+                  use_random_stop_position:
                     prob: 0.3
+                solid:
+                  weight: 0
                 striped:
                   weight: 0
-                striped_all_highlight:
+                striped_all_dark:
+                  weight: 0
+                multi_color:
                   weight: 0
               border:
-                empty: []
-                paper_style: []
-                row: []
-                col: []
-                all: []
-  #              border-radius: 6px
+                empty:
+                  weight: 1
+                  td:
+                    border: 0px
+                inside:
+                  weight: 1
+                  table:
+                    border-style: hidden
+                  td:
+                    border-width:
+                      values: [1, 3]
+                      postfix: "px"
+                    border-style: solid
+                all:
+                  weight: 1
+                  td:
+                    border-width:
+                      values: [ 1, 3 ]
+                      postfix: "px"
+                    border-style: solid
+                row:
+                  weight: 1
+                  tr:
+                    border-bottom-width:
+                      values: [1, 3]
+                      postfix: "px"
+                    border-bottom-style: solid
+                col:
+                  weight: 1
+                  td:
+                    border-right-width:
+                      values: [ 1, 3 ]
+                      postfix: "px"
+                    border-right-style: solid
+                  table:
+                    border-style: hidden
+                outline:
+                  weight: 1
+                  table:
+                    border-width:
+                      values: [1, 3]
+                      postfix: "px"
+                    border-style: solid
               table:
                 color_mode: [ dark, light ]
             relative:
@@ -96,6 +172,10 @@ document:
               table:
   #              color: [] # font color
   #              font: []
+                border-radius:
+                  prob: 0.3
+                  values: [ 1, 10 ]
+                  postfix: "px"
                 margin:
                   prob: 0.5
                   values: [ 1, 50 ]
@@ -199,30 +279,25 @@ document:
                   values: [ 0, 5 ]
                   postfix: "px"
                 border-width:
-                  prob: 0.2
                   values: [ 0, 4 ]
                   postfix: "px"
-                border-style: [ solid ]
+                border-style: [none, solid]
                 border-top-width:
-                  prob: 0.2
                   values: [ 0, 4 ]
                   postfix: "px"
-                border-top-style: [ solid ]
+                border-top-style: [none, solid]
                 border-left-width:
-                  prob: 0.2
                   values: [ 0, 4 ]
                   postfix: "px"
-                border-left-style: [ solid ]
+                border-left-style: [none, solid]
                 border-right-width:
-                  prob: 0.2
                   values: [ 0, 4 ]
                   postfix: "px"
-                border-right-style: [ solid ]
+                border-right-style: [none, solid]
                 border-bottom-width:
-                  prob: 0.2
                   values: [ 0, 4 ]
                   postfix: "px"
-                border-bottom-style: [ solid ]
+                border-bottom-style: [none, solid]
                 #text-shadow
                 #text-shadow: 4px 4px 5px red;
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;

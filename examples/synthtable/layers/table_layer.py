@@ -112,6 +112,7 @@ class TableLayer(Layer):
 
         self.global_style['table']['width'] = str(table_width) + "px"
         self.global_style['table']['height'] = str(table_height) + "px"
+        print(self.global_style)
         self.global_style['#table_wrapper']['background-image'] = 'url("data:image/png;base64,{}")'.format(base64_image)
 
         self._write_html_file(html_path)

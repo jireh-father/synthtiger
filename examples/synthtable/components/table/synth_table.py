@@ -26,6 +26,8 @@ def parse_html_style_values(values):
         return Selector(values)
     elif isinstance(values, dict):
         return Selector(*parse_html_style_values_dict(values))
+    else:
+        return Selector(values)
 
 
 def parse_html_style(config):
@@ -61,6 +63,7 @@ class SynthTable(Component):
         self.paper = Paper({k: style["global"]["absolute"]["background"]["paper"][k] for k in
                             style["global"]["absolute"]["background"]["paper"] if k != "weight"})
 
+        # local css
         self.local_style_switch = BoolSwitch(style["local"]["prob"])
         self.local_css_selectors = {}
         local_css_configs = style["local"]['css']
@@ -68,11 +71,16 @@ class SynthTable(Component):
             prob = local_css_configs[css_selector]['prob']
             self.local_css_selectors[css_selector] = BoolSwitch(prob, parse_html_style(local_css_configs[css_selector]))
 
+        # global absolute thead
+        self.absolute_style = defaultdict(dict)
+
+        # global relative
         self.relative_style = defaultdict(dict)
         for selector in style["global"]["relative"]:
             for key in style["global"]["relative"][selector]:
                 self.relative_style[selector][key] = Selector(style["global"]["relative"][selector][key])
 
+        # global css
         css_configs = style["global"]['css']
         self.css_selectors = {}
         for css_selector in css_configs:
@@ -81,6 +89,7 @@ class SynthTable(Component):
         self.synth_structure_prob = BoolSwitch(html['synth_structure_prob'])
         self.synth_content_prob = BoolSwitch(html['synth_content_prob'])
 
+        # common styles
         self.min_rows = common['rows'][0]
         self.max_rows = common['rows'][1]
         self.min_cols = common['cols'][0]
@@ -98,6 +107,8 @@ class SynthTable(Component):
         global_style['table']["border-collapse"] = "collapse"
         # text styles
         meta = {}
+
+        # css
         for css_selector in self.css_selectors:
             for css_key in self.css_selectors[css_selector]:
                 selector = self.css_selectors[css_selector][css_key]
@@ -106,6 +117,8 @@ class SynthTable(Component):
                     continue
                 global_style[css_selector][css_key] = value
                 meta[css_selector + '_' + css_key] = value
+
+        # absolute
 
         return global_style, meta
 
@@ -199,6 +212,6 @@ class SynthTable(Component):
             # todo : remove tag in cell
             layer.plain_html = html
             layer.plain_html_with_styles = meta['html_with_local_style']
-            print(layer.plain_html_with_styles)
+            # print(layer.plain_html_with_styles)
             layer.global_style = meta['global_style']
             layer.render_table(tmp_path=self.tmp_path, paper=self.paper, meta=meta)
