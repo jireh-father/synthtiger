@@ -5,9 +5,9 @@ MIT License
 """
 import numpy as np
 from utils.switch import BoolSwitch
-import sys
-
-sys.setrecursionlimit(10 ** 6)
+# import sys
+#
+# sys.setrecursionlimit(10 ** 6)
 
 
 class Selector:
@@ -86,5 +86,6 @@ def parse_config(config):
             if not val:
                 config_selector[key] = val
             else:
+                print("make list selector")
                 config_selector[key] = Selector(val)
     return config_selector
