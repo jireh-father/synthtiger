@@ -75,6 +75,8 @@ class SynthTable(Component):
                     self.paper = Paper(paper_params)
                 elif 'gradient' in background_config:
                     self.gradient_bg = background_config['gradient']
+                elif 'striped' in background_config:
+                    self.striped_bg = background_config['striped']
 
         # color set
         self.global_dark_colors = config_selectors['style']['color_set']['dark']
@@ -105,13 +107,88 @@ class SynthTable(Component):
     def _sample_global_light_color(self):
         return self.global_light_colors.select()
 
-    def sample_global_styles(self):
+    def _sample_background(self, global_style, meta):
+        # background
+        background_config = self.config_selectors['style']['global']['absolute']['background'].select()
+        if isinstance(background_config, dict):
+            meta['background_config'] = next(iter(background_config))
+        else:
+            meta['background_config'] = background_config
+
+        color_mode = meta['color_mode']
+
+        if meta['background_config'] == 'paper':
+            paper = self.paper
+            meta['color_mode'] = "light"
+            global_style["table"]["color"] = self._sample_global_dark_color()
+        elif meta['background_config'] == 'gradient':
+            gradient_type = self.gradient_bg['type'].select()
+            angle = self.gradient_bg['angle'].select()
+            num_colors = self.gradient_bg['num_colors'].select()
+            # use_random_stop_position = self.gradient_bg['use_random_stop_position'].on()
+
+            gd_colors = []
+            for i in range(num_colors):
+                if color_mode == "dark":
+                    gd_color = self._sample_global_dark_color()
+                else:
+                    gd_color = self._sample_global_light_color()
+                gd_colors.append(gd_color)
+
+            global_style["#table_wrapper"]["background"] = "{}-gradient({}deg, {})".format(gradient_type, angle,
+                                                                                           ", ".join(gd_colors))
+            if color_mode == "dark":
+                global_style["table"]["color"] = self._sample_global_light_color()
+            else:
+                global_style["table"]["color"] = self._sample_global_dark_color()
+        elif meta['background_config'] == 'solid':
+            if color_mode == "dark":
+                global_style["#table_wrapper"]["background-color"] = self._sample_global_dark_color()
+                global_style["table"]["color"] = self._sample_global_light_color()
+            else:
+                global_style["#table_wrapper"]["background-color"] = self._sample_global_light_color()
+                global_style["table"]["color"] = self._sample_global_dark_color()
+        elif meta['background_config'] == 'striped':
+            dark_line = self.striped_bg['dark_line'].select()
+            light_line = "even" if dark_line == "odd" else "odd"
+            dark_color = self._sample_global_dark_color()
+            light_color = self._sample_global_light_color()
+            global_style["tr:nth-child({})".format(dark_line)]["background-color"] = dark_color
+            global_style["tr:nth-child({})".format(dark_line)]["color"] = light_color
+            global_style["tr:nth-child({})".format(light_line)]["background-color"] = light_color
+            global_style["tr:nth-child({})".format(light_line)]["color"] = dark_color
+        elif meta['background_config'] == 'striped_all_dark':
+            if color_mode == "dark":
+                bg_color_odd = self._sample_global_dark_color()
+                bg_color_even = self._sample_global_dark_color()
+                font_color = self._sample_global_light_color()
+            else:
+                bg_color_odd = self._sample_global_light_color()
+                bg_color_even = self._sample_global_light_color()
+                font_color = self._sample_global_dark_color()
+            global_style["tr:nth-child(odd)"]["background-color"] = bg_color_odd
+            global_style["tr:nth-child(even)"]["background-color"] = bg_color_even
+            global_style["table"]["color"] = font_color
+        elif meta['background_config'] == 'multi_color':
+            for i in range(meta['nums_row'] - 1):
+                if color_mode == "dark":
+                    global_style["tr:nth-child({})".format(i + 1)][
+                        "background-color"] = self._sample_global_dark_color()
+                    global_style["tr:nth-child({})".format(i + 1)]["color"] = self._sample_global_light_color()
+                else:
+                    global_style["tr:nth-child({})".format(i + 1)][
+                        "background-color"] = self._sample_global_light_color()
+                    global_style["tr:nth-child({})".format(i + 1)]["color"] = self._sample_global_dark_color()
+
+    def sample_global_styles(self, meta):
         # synth style
         global_style = defaultdict(dict)
         global_style['#table_wrapper']["display"] = "inline-block"
         global_style['table']["border-collapse"] = "collapse"
-        # text styles
-        meta = {}
+
+        meta['color_mode'] = self._sample_global_color_mode()
+
+        self._sample_background(global_style, meta)
 
         # css
         css_selectors = self.config_selectors['style']['global']['css']
@@ -126,12 +203,11 @@ class SynthTable(Component):
 
         # absolute
 
-        return global_style, meta
+        return global_style
 
-    def sample_local_styles(self, html):
-        meta = {}
+    def sample_local_styles(self, html, meta):
         if not self.config_selectors['style']['local'].on():
-            return html, meta
+            return html
 
         local_config = self.config_selectors['style']['local'].get()
 
@@ -149,7 +225,7 @@ class SynthTable(Component):
                     style_attr, td_meta = make_style_attribute(selectors, "td")
                     td['style'] = style_attr
                     meta.update(td_meta)
-        return str(bs), meta
+        return str(bs)
 
     def sample(self, meta=None):
         if meta is None:
@@ -167,20 +243,12 @@ class SynthTable(Component):
             meta['nums_row'] = html_json['nums_row']
         meta['synth_structure'] = synth_structure
         meta['synth_content'] = synth_content
-        # background
-        background_config = self.config_selectors['style']['global']['absolute']['background'].select()
-        if isinstance(background_config, dict):
-            meta['background_config'] = next(iter(background_config))
-        else:
-            meta['background_config'] = background_config
 
         # global styles
-        meta['global_style'], global_style_meta = self.sample_global_styles()
-        meta.update(global_style_meta)
+        meta['global_style'] = self.sample_global_styles(meta)
 
         # local styles
-        meta['html_with_local_style'], local_style_meta = self.sample_local_styles(meta['html'])
-        meta.update(local_style_meta)
+        meta['html_with_local_style'] = self.sample_local_styles(meta['html'], meta)
 
         # global relative styles
         relative_style = defaultdict(dict)
@@ -228,43 +296,12 @@ class SynthTable(Component):
         global_style = meta['global_style']
 
         if meta['background_config'] == 'paper':
-            color_mode = "light"
-        else:
-            color_mode = self._sample_global_color_mode()
-
-        # make bg
-        paper = None
-        if meta['background_config'] == 'paper':
             paper = self.paper
-        elif meta['background_config'] == 'gradient':
-            gradient_type = self.gradient_bg['type'].select()
-            angle = self.gradient_bg['angle'].select()
-            num_colors = self.gradient_bg['num_colors'].select()
-            # use_random_stop_position = self.gradient_bg['use_random_stop_position'].on()
+            global_style["table"]["color"] = self._sample_global_dark_color()
+        else:
+            paper = None
 
-            gd_colors = []
-            for i in range(num_colors):
-                if color_mode == "dark":
-                    gd_color = self._sample_global_dark_color()
-                else:
-                    gd_color = self._sample_global_light_color()
-                gd_colors.append(gd_color)
-
-            global_style["#table_wrapper"]["background"] = "{}-gradient({}deg, {})".format(gradient_type, angle,
-                                                                                           ", ".join(gd_colors))
-            if color_mode == "dark":
-                global_style["table"]["color"] = self._sample_global_light_color()
-            else:
-                global_style["table"]["color"] = self._sample_global_dark_color()
-        elif meta['background_config'] == 'solid':
-            pass
-        elif meta['background_config'] == 'striped':
-            pass
-        elif meta['background_config'] == 'striped_all_dark':
-            pass
-        elif meta['background_config'] == 'multi_color':
-            pass
-
+        # todo: thead use !important;
         # rendering
         for layer in layers:
             # todo : remove tag in cell
