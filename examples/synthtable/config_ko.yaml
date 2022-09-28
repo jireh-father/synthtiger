@@ -246,7 +246,7 @@ document:
                   values: [ left, center ]
                   prob: 0.5
               tr:
-                prob: 0.5
+                prob: 0.1
                 #              color: [] # font color
                 #              font: []
 #                text-align:

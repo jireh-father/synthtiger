@@ -118,7 +118,6 @@ class SynthTable(Component):
         color_mode = meta['color_mode']
 
         if meta['background_config'] == 'paper':
-            paper = self.paper
             meta['color_mode'] = "light"
             global_style["table"]["color"] = self._sample_global_dark_color()
         elif meta['background_config'] == 'gradient':
@@ -170,15 +169,17 @@ class SynthTable(Component):
             global_style["tr:nth-child(even)"]["background-color"] = bg_color_even
             global_style["table"]["color"] = font_color
         elif meta['background_config'] == 'multi_color':
+            dark_color = self._sample_global_dark_color()
+            light_color = self._sample_global_light_color()
             for i in range(meta['nums_row'] - 1):
                 if color_mode == "dark":
                     global_style["tr:nth-child({})".format(i + 1)][
                         "background-color"] = self._sample_global_dark_color()
-                    global_style["tr:nth-child({})".format(i + 1)]["color"] = self._sample_global_light_color()
+                    global_style["tr:nth-child({})".format(i + 1)]["color"] = light_color
                 else:
                     global_style["tr:nth-child({})".format(i + 1)][
                         "background-color"] = self._sample_global_light_color()
-                    global_style["tr:nth-child({})".format(i + 1)]["color"] = self._sample_global_dark_color()
+                    global_style["tr:nth-child({})".format(i + 1)]["color"] = dark_color
 
     def sample_global_styles(self, meta):
         # synth style
