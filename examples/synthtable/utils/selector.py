@@ -52,10 +52,7 @@ def parse_config(config):
     config_selector = {}
     for key in config:
 
-        print(key)
         val = config[key]
-        if key == "html_paths":
-            print(config)
         if isinstance(val, dict):
             if 'prob' in val:
                 if 'values' in val:
