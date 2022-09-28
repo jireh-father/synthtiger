@@ -63,7 +63,7 @@ def parse_config(config):
                 else:
                     if len(val) > 1:
                         config_selector[key] = BoolSwitch(prob=val['prob'], data=parse_config(
-                            {sub_key: val for sub_key in val if sub_key != 'prob'}))
+                            {sub_key: val[sub_key] for sub_key in val if sub_key != 'prob'}))
                     else:
                         config_selector[key] = BoolSwitch(prob=val['prob'])
             elif 'weight' in val:
@@ -73,7 +73,7 @@ def parse_config(config):
                     v = config[k]
                     weights.append(v['weight'])
                     if len(v) > 1:
-                        components.append({k: parse_config({sub_key: v for sub_key in v if sub_key != 'weight'})})
+                        components.append({k: parse_config({sub_key: v[sub_key] for sub_key in v if sub_key != 'weight'})})
                     else:
                         components.append(k)
 
