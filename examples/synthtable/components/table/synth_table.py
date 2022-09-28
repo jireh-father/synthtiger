@@ -286,7 +286,6 @@ class SynthTable(Component):
         if not self.config_selectors['style']['local'].on():
             return
 
-        local_config = self.config_selectors['style']['local'].get()
 
         self._set_css_styles(global_style, 'thead', 'thead')
         self._set_css_styles(global_style, 'tbody', 'tbody')
