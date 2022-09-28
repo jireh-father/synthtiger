@@ -67,20 +67,6 @@ document:
             dark: [black, red, blue, green, orange, purple, navy, gray, BlueViolet, Brown, CadetBlue, Chocolate, CornflowerBlue, Crimson, DarkBlue, DarkCyan, DarkGoldenRod, DarkGreen, darkmagenta, darkolivegreen, darkorchid, darkred, darkslateblue, darkslategray, darkturquoise, darkviolet, deeppink, deepskyblue, dimgray, dodgerblue, firebrick, forestgreen, fuchsia, indianred, indigo, lightseagreen, lightslategray, limegreen, magenta, maroon, mediumblue, mediumorchid, tomato, violet]
             light: [white, AliceBlue, AntiqueWhite, Aqua, Aquamarine, Azure, Beige, Bisque, BlancedAlmond, BurlyWood, Chartreuse, Coral, Cornsilk, Cyan, DarkGray, DarkGrey, darkkhaki, darkorange,darksalmon, darkseagreen, floralwhite, gainsboro, ghostwhite, gold, goldenrod, greenyellow, honeydew, hotpink, ivory, khaki,lavender, lavenderblush, lawngreen, lemonchiffon, lightblue, lightcoral, lightcyan, lightgoldenrodyellow, lightgray, lightgreen, lightpink, lightsalmon, lightskyblue, lightsteelblue, lightyellow, lime, linen, mediumaquamarine]
           global:
-            ### 밝은색, 어두운색 각각 세트 지정하고, (모든 경우의 수를 조합해도 글씨가 잘보이도록 각각 컬러 선정해야함.)
-            ### 다크 모드일경우와 라이트 모드일 경우에 맞게 글자가 잘 보이도록 각 컬러를 랜덤으로 선정.
-            ## color attrs
-            # border-color
-            # color
-            # background-color
-            ## color targets
-            # table
-            # thead
-            # tbody
-            ## dark color세트 세팅(배경, )
-            ## second dark 어두운색 세트 세팅
-            ## light color 밝은색 세트 세팅
-            ## 컬러 반전 여부
             absolute:
               thead:
                 color_mode: [dark, light]
@@ -98,8 +84,8 @@ document:
                   grayscale: 0.5
                   crop: 1
                 gradient:
-                  weight: 0
-                  type: [linear, radial, conic, repeating]
+                  weight: 1
+                  type: [linear, radial, conic, repeating-linear]
                   angle: [0, 359] # angle은 linear와,repeating만
                   num_colors: [2, 5]
                   use_random_stop_position:

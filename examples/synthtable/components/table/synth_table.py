@@ -62,17 +62,24 @@ class SynthTable(Component):
 
         # styles
         # todo: select parser or other backgrounds
-        background_config = config_selectors['style']['global']['absolute']['background'].select()
-        if isinstance(background_config, dict):
-            if 'paper' in background_config:
-                paper_params = {
-                    'paths': background_config['paper']['paths'].values,
-                    'weights': background_config['paper']['weights'].values,
-                    'alpha': background_config['paper']['alpha'].values,
-                    'grayscale': background_config['paper']['grayscale'].select(),
-                    'crop': background_config['paper']['crop'].select()
-                }
-                self.paper = Paper(paper_params)
+        for background_config in config_selectors['style']['global']['absolute']['background'].values:
+            if isinstance(background_config, dict):
+                if 'paper' in background_config:
+                    paper_params = {
+                        'paths': background_config['paper']['paths'].values,
+                        'weights': background_config['paper']['weights'].values,
+                        'alpha': background_config['paper']['alpha'].values,
+                        'grayscale': background_config['paper']['grayscale'].select(),
+                        'crop': background_config['paper']['crop'].select()
+                    }
+                    self.paper = Paper(paper_params)
+                elif 'gradient' in background_config:
+                    self.gradient_bg = background_config['gradient']
+
+        # color set
+        self.global_dark_colors = config_selectors['style']['color_set']['dark']
+        self.global_light_colors = config_selectors['style']['color_set']['light']
+        self.global_color_mode = config_selectors['style']['global']['absolute']['table']['color_mode']
 
         # global absolute thead
         self.absolute_style = defaultdict(dict)
@@ -88,6 +95,15 @@ class SynthTable(Component):
         self.has_row_span = config_selectors['html']['has_row_span']
         self.tmp_path = config_selectors['html']['tmp_path'].select()
         os.makedirs(self.tmp_path, exist_ok=True)
+
+    def _sample_global_color_mode(self):
+        return self.global_color_mode.select()
+
+    def _sample_global_dark_color(self):
+        return self.global_dark_colors.select()
+
+    def _sample_global_light_color(self):
+        return self.global_light_colors.select()
 
     def sample_global_styles(self):
         # synth style
@@ -151,12 +167,22 @@ class SynthTable(Component):
             meta['nums_row'] = html_json['nums_row']
         meta['synth_structure'] = synth_structure
         meta['synth_content'] = synth_content
+        # background
+        background_config = self.config_selectors['style']['global']['absolute']['background'].select()
+        if isinstance(background_config, dict):
+            meta['background_config'] = next(iter(background_config))
+        else:
+            meta['background_config'] = background_config
 
+        # global styles
         meta['global_style'], global_style_meta = self.sample_global_styles()
         meta.update(global_style_meta)
+
+        # local styles
         meta['html_with_local_style'], local_style_meta = self.sample_local_styles(meta['html'])
         meta.update(local_style_meta)
 
+        # global relative styles
         relative_style = defaultdict(dict)
         relative_style_config = self.config_selectors['style']['global']['relative']
         for selector in relative_style_config:
@@ -199,6 +225,45 @@ class SynthTable(Component):
             pass
         else:
             pass
+        global_style = meta['global_style']
+
+        if meta['background_config'] == 'paper':
+            color_mode = "light"
+        else:
+            color_mode = self._sample_global_color_mode()
+
+        # make bg
+        paper = None
+        if meta['background_config'] == 'paper':
+            paper = self.paper
+        elif meta['background_config'] == 'gradient':
+            gradient_type = self.gradient_bg['type'].select()
+            angle = self.gradient_bg['angle'].select()
+            num_colors = self.gradient_bg['num_colors'].select()
+            # use_random_stop_position = self.gradient_bg['use_random_stop_position'].on()
+
+            gd_colors = []
+            for i in range(num_colors):
+                if color_mode == "dark":
+                    gd_color = self._sample_global_dark_color()
+                else:
+                    gd_color = self._sample_global_light_color()
+                gd_colors.append(gd_color)
+
+            global_style["#table_wrapper"]["background"] = "{}-gradient({}deg, {})".format(gradient_type, angle,
+                                                                                           ", ".join(gd_colors))
+            if color_mode == "dark":
+                global_style["table"]["color"] = self._sample_global_light_color()
+            else:
+                global_style["table"]["color"] = self._sample_global_dark_color()
+        elif meta['background_config'] == 'solid':
+            pass
+        elif meta['background_config'] == 'striped':
+            pass
+        elif meta['background_config'] == 'striped_all_dark':
+            pass
+        elif meta['background_config'] == 'multi_color':
+            pass
 
         # rendering
         for layer in layers:
@@ -206,5 +271,5 @@ class SynthTable(Component):
             layer.plain_html = html
             layer.plain_html_with_styles = meta['html_with_local_style']
             # print(layer.plain_html_with_styles)
-            layer.global_style = meta['global_style']
-            layer.render_table(tmp_path=self.tmp_path, paper=self.paper, meta=meta)
+            layer.global_style = global_style
+            layer.render_table(tmp_path=self.tmp_path, paper=paper, meta=meta)
