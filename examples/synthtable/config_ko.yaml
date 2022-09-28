@@ -22,24 +22,16 @@ document:
     table:
       static:
         weight: 1
-        html_paths: [ resources/table_html ]
-        image_paths: [ resources/table_image ]
-        path_weights: [1]
-        lower_image_size_ratios: [0.9]
-        rows: [ 2, 10 ]
-        cols: [ 2, 10 ]
-        has_span: 0.5
-        has_col_span: 0.5
-        has_row_span: 0.5
-        tmp_path: tmp
         image:
           paths: [ resources/table_image ]
-          lower_image_size_ratios: [0.9]
+          lower_image_size_ratios: 0.9
         html:
           paths: [ resources/table_html ]
           weights: [ 1 ]
-          rows: [ 2, 10 ]
-          cols: [ 2, 10 ]
+          min_row: 2
+          max_row: 10
+          min_col: 2
+          max_col: 10
           has_span:
             prob: 0.5
           has_col_span:
@@ -48,7 +40,7 @@ document:
             prob: 0.5
           tmp_path: tmp
       synth:
-        weight: 5
+        weight: 0
         html:
           paths: [ resources/table_html ]
           weights: [1]

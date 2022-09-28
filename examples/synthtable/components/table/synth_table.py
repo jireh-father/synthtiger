@@ -54,7 +54,8 @@ def make_style_attribute(selectors, tag_name):
 
 
 class SynthTable(Component):
-    def __init__(self, html, style, **kwargs):
+    # def __init__(self, html, style, **kwargs):
+    def __init__(self, config_selectors):
         super().__init__()
         self.html_path_selector = PathSelector(html["paths"], html["weights"], exts=['.json'])
 

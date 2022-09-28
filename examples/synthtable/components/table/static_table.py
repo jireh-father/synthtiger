@@ -1,34 +1,34 @@
-import io
 import os.path
-import sys
 import json
 import traceback
 
-import numpy as np
 from PIL import Image
 from utils import image_util
-from synthtiger import utils
 from synthtiger.components.component import Component
-from synthtiger import components
 
-from utils.switch import BoolSwitch
 from utils.path_selector import PathSelector
 
 
 class StaticTable(Component):
-    def __init__(self, html_paths, image_paths, path_weights, lower_image_size_ratios, html, **kwargs):
-        super(StaticTable, self).__init__()
-        self.html_path_selector = PathSelector(html_paths, path_weights, exts=['.json'])
-        self.image_path_selector = PathSelector(image_paths, path_weights, exts=['.jpg', '.png'])
-        self.lower_image_size_ratios = lower_image_size_ratios
+    # def __init__(self, html_paths, image_paths, path_weights, lower_image_size_ratios, html, **kwargs):
+    def __init__(self, config_selectors):
 
-        self.min_rows = html['rows'][0]
-        self.max_rows = html['rows'][1]
-        self.min_cols = html['cols'][0]
-        self.max_cols = html['cols'][1]
-        self.has_span = BoolSwitch(html['has_span']['prob'])
-        self.has_col_span = BoolSwitch(html['has_col_span']['prob'])
-        self.has_row_span = BoolSwitch(html['has_row_span']['prob'])
+        super(StaticTable, self).__init__()
+        self.html_path_selector = PathSelector(config_selectors['html']['paths'].components_or_names,
+                                               config_selectors['html']['weights'].components_or_names, exts=['.json'])
+        self.image_path_selector = PathSelector(config_selectors['image']['paths'].select(), None,
+                                                exts=['.jpg', '.png'])
+        self.lower_image_size_ratios = config_selectors['image']['lower_image_size_ratios'].select()
+
+        self.min_rows = config_selectors['html']['min_row'].selct()
+        self.max_rows = config_selectors['html']['max_row'].selct()
+        self.min_cols = config_selectors['html']['min_col'].selct()
+        self.max_cols = config_selectors['html']['max_row'].selct()
+        self.config_selectors = config_selectors
+
+        self.has_span = self.config_selectors['html']['has_span']
+        self.has_col_span = self.config_selectors['html']['has_col_span']
+        self.has_row_span = self.config_selectors['html']['has_row_span']
 
     def _get_image_path(self, html_path, key):
         html_file_name = os.path.splitext(os.path.basename(html_path))[0]
