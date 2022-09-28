@@ -24,7 +24,7 @@ document:
         weight: 1
         image:
           paths: [ resources/table_image ]
-          lower_image_size_ratios: 0.9
+          lower_image_size_ratios: [ 0.9 ]
         html:
           paths: [ resources/table_html ]
           weights: [ 1 ]

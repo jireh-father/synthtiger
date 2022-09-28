@@ -18,7 +18,7 @@ class StaticTable(Component):
                                                config_selectors['html']['weights'].components_or_names, exts=['.json'])
         self.image_path_selector = PathSelector(config_selectors['image']['paths'].components_or_names, None,
                                                 exts=['.jpg', '.png'])
-        self.lower_image_size_ratios = config_selectors['image']['lower_image_size_ratios'].select()
+        self.lower_image_size_ratios = config_selectors['image']['lower_image_size_ratios'].components_or_names
 
         self.min_rows = config_selectors['html']['min_row'].select()
         self.max_rows = config_selectors['html']['max_row'].select()

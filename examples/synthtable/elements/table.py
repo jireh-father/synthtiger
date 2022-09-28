@@ -58,7 +58,6 @@ class Table():
         # round
 
         self.table_selector = parse_config(config)
-        print(self.table_selector)
 
         # self.static = comps.StaticTable(**{k: config["static"][k] for k in config["static"] if k != 'weight'})
         # self.synth = comps.SynthTable(**{k: config["synth"][k] for k in config["synth"] if k != 'weight'})
