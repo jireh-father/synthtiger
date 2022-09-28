@@ -93,12 +93,12 @@ document:
                 solid:
                   weight: 1
                 striped:
-                  weight: 0
+                  weight: 1
                   dark_line: [odd, even]
                 striped_all_colors:
-                  weight: 0
+                  weight: 1
                 multi_color:
-                  weight: 0
+                  weight: 1
               border:
                 empty:
                   weight: 1
