@@ -195,6 +195,7 @@ class SynthTable(Component):
                 global_style['thead']['background-color'] = light_color
                 global_style['thead']['color'] = dark_color
         else:
+            meta['thead_color_mode'] = 'light'
             global_style['thead']['color'] = self._sample_dark_color()
 
     def _sample_table_outline(self, global_style, meta):
