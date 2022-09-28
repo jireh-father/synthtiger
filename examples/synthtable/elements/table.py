@@ -80,7 +80,6 @@ class Table():
 
         # table_creator = self.table_selector.select()
         table_config = self.table_selector.select()
-        print(table_config)
         try:
             for table_type in table_config:
                 if table_type == "static":

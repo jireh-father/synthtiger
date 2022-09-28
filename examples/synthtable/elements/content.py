@@ -72,6 +72,7 @@ class Content:
         # self.reader = TextReader(**config.get("text", {}))
 
         self.table = Table(config.get("table", {}))
+        print(self.table)
 
         # self.font = components.BaseFont(**config.get("font", {}))
         # self.layout = GridStack(config.get("layout", {}))
@@ -88,5 +89,6 @@ class Content:
         layout_height = max(height - layout_top * 2, 0)
         layout_bbox = [layout_left, layout_top, layout_width, layout_height]
 
+        print("genrate table")
         table_layer = self.table.generate(size, max_size)
         return table_layer
