@@ -63,14 +63,15 @@ class Table():
         # self.static = comps.StaticTable(**{k: config["static"][k] for k in config["static"] if k != 'weight'})
         # self.synth = comps.SynthTable(**{k: config["synth"][k] for k in config["synth"] if k != 'weight'})
         for selector_dict in self.table_selector.components_or_names:
+            print(selector_dict)
             for k in selector_dict:
+                print(k)
                 assert k in ['static', 'synth']
                 if k == 'static':
                     self.static = comps.StaticTable(selector_dict[k])
                 else:
                     self.synth = comps.SynthTable(selector_dict[k])
                 break
-        print('haha')
         # self.static = comps.StaticTable(self.selector)
         # self.synth = comps.SynthTable(**{k: config["synth"][k] for k in config["synth"] if k != 'weight'})
 
