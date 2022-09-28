@@ -16,7 +16,6 @@ class StaticTable(Component):
         super(StaticTable, self).__init__()
         self.html_path_selector = PathSelector(config_selectors['html']['paths'].components_or_names,
                                                config_selectors['html']['weights'].components_or_names, exts=['.json'])
-        print(self.html_path_selector)
         self.image_path_selector = PathSelector(config_selectors['image']['paths'].select(), None,
                                                 exts=['.jpg', '.png'])
         self.lower_image_size_ratios = config_selectors['image']['lower_image_size_ratios'].select()
@@ -63,6 +62,7 @@ class StaticTable(Component):
             except Exception as e:
                 traceback.print_exc()
                 continue
+            print(meta)
             html_json_path = meta['html_path']
             html_json = json.load(open(html_json_path), encoding='utf-8')
             if self.min_cols > html_json['nums_col'] or self.max_cols < html_json['nums_col']:
