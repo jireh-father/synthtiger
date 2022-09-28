@@ -14,6 +14,7 @@ class StaticTable(Component):
     def __init__(self, config_selectors):
 
         super(StaticTable, self).__init__()
+        print(1)
         self.html_path_selector = PathSelector(config_selectors['html']['paths'].components_or_names,
                                                config_selectors['html']['weights'].components_or_names, exts=['.json'])
         self.image_path_selector = PathSelector(config_selectors['image']['paths'].select(), None,
@@ -29,6 +30,7 @@ class StaticTable(Component):
         self.has_span = self.config_selectors['html']['has_span']
         self.has_col_span = self.config_selectors['html']['has_col_span']
         self.has_row_span = self.config_selectors['html']['has_row_span']
+        print(10)
 
     def _get_image_path(self, html_path, key):
         html_file_name = os.path.splitext(os.path.basename(html_path))[0]
