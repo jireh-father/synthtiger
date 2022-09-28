@@ -20,11 +20,12 @@ class StaticTable(Component):
                                                 exts=['.jpg', '.png'])
         self.lower_image_size_ratios = config_selectors['image']['lower_image_size_ratios'].components_or_names
 
+        self.config_selectors = config_selectors
+
         self.min_rows = config_selectors['html']['min_row'].select()
         self.max_rows = config_selectors['html']['max_row'].select()
         self.min_cols = config_selectors['html']['min_col'].select()
         self.max_cols = config_selectors['html']['max_row'].select()
-        self.config_selectors = config_selectors
 
         self.has_span = self.config_selectors['html']['has_span']
         self.has_col_span = self.config_selectors['html']['has_col_span']

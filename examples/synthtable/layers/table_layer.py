@@ -104,16 +104,17 @@ class TableLayer(Layer):
         image_width = table_width + margin_horizontal  # meta['margin_width']
         image_height = table_height + margin_vertical  # meta['margin_height']
 
-        paper_layer = paper.generate((image_width, image_height))
-        base64_image = image_util.image_to_base64(paper_layer.image)
-
-        # driver = webdriver.Chrome('chromedriver', options=options)
-        # driver.implicitly_wait(0.5)
-
         self.global_style['table']['width'] = str(table_width) + "px"
         self.global_style['table']['height'] = str(table_height) + "px"
         print(self.global_style)
-        self.global_style['#table_wrapper']['background-image'] = 'url("data:image/png;base64,{}")'.format(base64_image)
+
+        if paper is not None:
+            paper_layer = paper.generate((image_width, image_height))
+            base64_image = image_util.image_to_base64(paper_layer.image)
+            self.global_style['#table_wrapper']['background-image'] = 'url("data:image/png;base64,{}")'.format(
+                base64_image)
+        # driver = webdriver.Chrome('chromedriver', options=options)
+        # driver.implicitly_wait(0.5)
 
         self._write_html_file(html_path)
 

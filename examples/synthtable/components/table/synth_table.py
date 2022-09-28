@@ -57,49 +57,31 @@ class SynthTable(Component):
     # def __init__(self, html, style, **kwargs):
     def __init__(self, config_selectors):
         super().__init__()
-        # self.html_path_selector = PathSelector(html["paths"], html["weights"], exts=['.json'])
-        #
-        # # styles
-        # # todo: select parer or other backgrounds
-        # self.paper = Paper({k: style["global"]["absolute"]["background"]["paper"][k] for k in
-        #                     style["global"]["absolute"]["background"]["paper"] if k != "weight"})
-        #
-        # # local css
-        # self.local_style_switch = BoolSwitch(style["local"]["prob"])
-        # self.local_css_selectors = {}
-        # local_css_configs = style["local"]['css']
-        # for css_selector in local_css_configs:
-        #     prob = local_css_configs[css_selector]['prob']
-        #     self.local_css_selectors[css_selector] = BoolSwitch(prob, parse_html_style(local_css_configs[css_selector]))
-        #
-        # # global absolute thead
-        # self.absolute_style = defaultdict(dict)
-        #
-        # # global relative
-        # self.relative_style = defaultdict(dict)
-        # for selector in style["global"]["relative"]:
-        #     for key in style["global"]["relative"][selector]:
-        #         self.relative_style[selector][key] = Selector(style["global"]["relative"][selector][key])
-        #
-        # # global css
-        # css_configs = style["global"]['css']
-        # self.css_selectors = {}
-        # for css_selector in css_configs:
-        #     self.css_selectors[css_selector] = parse_html_style(css_configs[css_selector])
-        #
-        # self.synth_structure_prob = BoolSwitch(html['synth_structure_prob'])
-        # self.synth_content_prob = BoolSwitch(html['synth_content_prob'])
-        #
-        # # common styles
-        # self.min_rows = html['rows'][0]
-        # self.max_rows = html['rows'][1]
-        # self.min_cols = html['cols'][0]
-        # self.max_cols = html['cols'][1]
-        # self.has_span = BoolSwitch(html['has_span']['prob'])
-        # self.has_col_span = BoolSwitch(html['has_col_span']['prob'])
-        # self.has_row_span = BoolSwitch(html['has_row_span']['prob'])
-        # self.tmp_path = html['tmp_path']
-        # os.makedirs(self.tmp_path, exist_ok=True)
+        self.config_selectors = config_selectors
+        self.html_path_selector = PathSelector(config_selectors['html']['paths'].components_or_names,
+                                               config_selectors['html']['weights'].components_or_names, exts=['.json'])
+
+        # styles
+        # todo: select parser or other backgrounds
+        background_config = config_selectors['style']['global']['absolute']['background'].select()
+        if isinstance(background_config, dict):
+            if 'paper' in background_config:
+                self.paper = Paper(background_config['paper'])
+
+        # global absolute thead
+        self.absolute_style = defaultdict(dict)
+
+        # common styles
+        self.min_rows = config_selectors['html']['min_row'].select()
+        self.max_rows = config_selectors['html']['max_row'].select()
+        self.min_cols = config_selectors['html']['min_col'].select()
+        self.max_cols = config_selectors['html']['max_row'].select()
+
+        self.has_span = config_selectors['html']['has_span']
+        self.has_col_span = config_selectors['html']['has_col_span']
+        self.has_row_span = config_selectors['html']['has_row_span']
+        self.tmp_path = config_selectors['html']['tmp_path'].select()
+        os.makedirs(self.tmp_path, exist_ok=True)
 
     def sample_global_styles(self):
         # synth style
@@ -110,9 +92,10 @@ class SynthTable(Component):
         meta = {}
 
         # css
-        for css_selector in self.css_selectors:
-            for css_key in self.css_selectors[css_selector]:
-                selector = self.css_selectors[css_selector][css_key]
+        css_selectors = self.config_selectors['style']['global']['css']
+        for css_selector in css_selectors:
+            for css_key in css_selectors[css_selector]:
+                selector = css_selectors[css_selector][css_key]
                 value = selector.select()
                 if value is None:
                     continue
@@ -125,20 +108,22 @@ class SynthTable(Component):
 
     def sample_local_styles(self, html):
         meta = {}
-        if not self.local_style_switch.on():
+        if not self.config_selectors['style']['local'].on():
             return html, meta
+
+        local_config = self.config_selectors['style']['local'].get()
 
         bs = BeautifulSoup(html, 'html.parser')
 
         for tr in bs.find_all('tr'):
-            if self.local_css_selectors['tr'].on():
-                selectors = self.local_css_selectors['tr'].get()
+            if local_config['css']['tr'].on():
+                selectors = local_config['css']['tr'].get()
                 style_attr, tr_meta = make_style_attribute(selectors, "tr")
                 tr['style'] = style_attr
                 meta.update(tr_meta)
             for td in tr.find_all("td"):
-                if self.local_css_selectors['td'].on():
-                    selectors = self.local_css_selectors['td'].get()
+                if local_config['css']['td'].on():
+                    selectors = local_config['css']['td'].get()
                     style_attr, td_meta = make_style_attribute(selectors, "td")
                     td['style'] = style_attr
                     meta.update(td_meta)
@@ -147,8 +132,8 @@ class SynthTable(Component):
     def sample(self, meta=None):
         if meta is None:
             meta = {}
-        synth_structure = self.synth_structure_prob.on()
-        synth_content = self.synth_content_prob.on()
+        synth_structure = self.config_selectors['html']['synth_structure'].on()
+        synth_content = self.config_selectors['html']['synth_content'].on()
         if synth_structure:
             pass
         else:
@@ -167,9 +152,10 @@ class SynthTable(Component):
         meta.update(local_style_meta)
 
         relative_style = defaultdict(dict)
-        for selector in self.relative_style:
-            for key in self.relative_style[selector]:
-                relative_style[selector][key] = self.relative_style[selector][key].select()
+        relative_style_config = self.config_selectors['style']['global']['relative']
+        for selector in relative_style_config:
+            for key in relative_style_config[selector]:
+                relative_style[selector][key] = relative_style_config[selector][key].select()
 
         meta['relative_style'] = relative_style
         return meta
