@@ -5,6 +5,8 @@ MIT License
 """
 import numpy as np
 from utils.switch import BoolSwitch
+
+
 # import sys
 #
 # sys.setrecursionlimit(10 ** 6)
@@ -70,13 +72,16 @@ def parse_config(config):
                     v = config[k]
                     weights.append(v['weight'])
                     if len(v) > 1:
-                        components.append({k: parse_config({sub_key: v[sub_key] for sub_key in v if sub_key != 'weight'})})
+                        components.append(
+                            {k: parse_config({sub_key: v[sub_key] for sub_key in v if sub_key != 'weight'})})
                     else:
                         components.append(k)
 
                 return Selector(components, weights)
             elif 'values' in val:
-                config_selector[key] = Selector(**val)
+                weights = val['weights'] if 'weights' in val else None
+                postfix = val['postfix'] if 'postfix' in val else None
+                config_selector[key] = Selector(components_or_names=val['values'], weights=weights, postfix=postfix)
             else:
                 config_selector[key] = parse_config(val)
         # elif isinstance(val, list):
@@ -85,6 +90,5 @@ def parse_config(config):
             if not val:
                 config_selector[key] = val
             else:
-                print("make list selector")
                 config_selector[key] = Selector(val)
     return config_selector
