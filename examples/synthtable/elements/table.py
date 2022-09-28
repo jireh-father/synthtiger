@@ -70,6 +70,7 @@ class Table():
                 else:
                     self.synth = comps.SynthTable(selector_dict[k])
                 break
+        print('haha')
         # self.static = comps.StaticTable(self.selector)
         # self.synth = comps.SynthTable(**{k: config["synth"][k] for k in config["synth"] if k != 'weight'})
 
