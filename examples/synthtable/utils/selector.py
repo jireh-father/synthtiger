@@ -51,6 +51,7 @@ class Selector:
 def parse_config(config):
     config_selector = {}
     for key in config:
+
         print(key)
         val = config[key]
         if isinstance(val, dict):
