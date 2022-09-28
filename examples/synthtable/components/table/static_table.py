@@ -14,6 +14,8 @@ class StaticTable(Component):
     def __init__(self, config_selectors):
 
         super(StaticTable, self).__init__()
+        print(config_selectors['html']['paths'].components_or_names)
+        print(config_selectors['html']['weights'].components_or_names)
         self.html_path_selector = PathSelector(config_selectors['html']['paths'].components_or_names,
                                                config_selectors['html']['weights'].components_or_names, exts=['.json'])
         self.image_path_selector = PathSelector(config_selectors['image']['paths'].select(), None,
