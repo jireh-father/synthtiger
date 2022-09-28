@@ -78,5 +78,8 @@ def parse_config(config):
         # elif isinstance(val, list):
         #     pass
         else:
-            config_selector[key] = Selector(val)
+            if not val:
+                config_selector[key] = val
+            else:
+                config_selector[key] = Selector(val)
     return config_selector
