@@ -396,8 +396,6 @@ class SynthTable(Component):
         # rendering
         for layer in layers:
             # todo : remove tag in cell
-            layer.plain_html = html
-            layer.plain_html_with_styles = meta['html_with_local_style']
-            # print(layer.plain_html_with_styles)
+            layer.html = html
             layer.global_style = global_style
             layer.render_table(tmp_path=self.tmp_path, paper=paper, meta=meta)

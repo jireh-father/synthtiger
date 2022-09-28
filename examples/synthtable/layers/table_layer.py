@@ -12,9 +12,7 @@ from utils import image_util
 class TableLayer(Layer):
     def __init__(self, size):
         self.table_size = size
-        self.html = {}
-        self.plain_html = None
-        self.plain_html_with_styles = None
+        self.html = None
         self.global_style = {}
 
     def _convert_global_style_to_css(self):
@@ -53,7 +51,7 @@ class TableLayer(Layer):
         </html>
         """
         with open(html_path, "w+") as html_file:
-            html = html_template.format(self._convert_global_style_to_css(), self.plain_html_with_styles)
+            html = html_template.format(self._convert_global_style_to_css(), self.html)
             html_file.write(html)
 
     def _get_margin_vertical_and_horizontal(self):
