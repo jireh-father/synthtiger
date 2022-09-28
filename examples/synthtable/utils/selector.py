@@ -7,24 +7,19 @@ import numpy as np
 from utils.switch import BoolSwitch
 
 
-# import sys
-#
-# sys.setrecursionlimit(10 ** 6)
-
-
 class Selector:
-    def __init__(self, components_or_names, weights=None, postfix=None, prob=None):
-        if isinstance(components_or_names, list):
-            if len(components_or_names) == 2 and all(isinstance(c, float) for c in components_or_names):
-                self.components_or_names = {'low': components_or_names[0], 'high': components_or_names[1]}
-            elif len(components_or_names) == 2 and all(isinstance(c, int) for c in components_or_names):
-                self.components_or_names = list(range(components_or_names[0], components_or_names[1] + 1))
+    def __init__(self, values, weights=None, postfix=None, prob=None):
+        if isinstance(values, list):
+            if len(values) == 2 and all(isinstance(c, float) for c in values):
+                self.values = {'low': values[0], 'high': values[1]}
+            elif len(values) == 2 and all(isinstance(c, int) for c in values):
+                self.values = list(range(values[0], values[1] + 1))
             else:
-                self.components_or_names = components_or_names
+                self.values = values
         else:
-            self.components_or_names = [components_or_names]
+            self.values = [values]
         if weights is None:
-            weights = [1] * len(self.components_or_names)
+            weights = [1] * len(self.values)
         self._probs = np.array(weights) / sum(weights)
         self.postfix = postfix
         if prob:
@@ -33,21 +28,21 @@ class Selector:
             self.bool_switch = None
 
     def apply(self, layers, meta=None):
-        assert isinstance(self.components_or_names, list)
-        idx = np.random.choice(len(self.components_or_names), replace=False, p=self._probs)
-        return self.components_or_names[idx].apply(layers, meta)
+        assert isinstance(self.values, list)
+        idx = np.random.choice(len(self.values), replace=False, p=self._probs)
+        return self.values[idx].apply(layers, meta)
 
     def select(self):
         if self.bool_switch and not self.bool_switch.on():
             return None
 
-        if isinstance(self.components_or_names, dict):
-            return np.random.uniform(**self.components_or_names)
+        if isinstance(self.values, dict):
+            return np.random.uniform(**self.values)
         else:
             idx = np.random.choice(len(self._probs), replace=False, p=self._probs)
             if self.postfix:
-                return str(self.components_or_names[idx]) + self.postfix
-            return self.components_or_names[idx]
+                return str(self.values[idx]) + self.postfix
+            return self.values[idx]
 
 
 def parse_config(config):
@@ -58,10 +53,7 @@ def parse_config(config):
         if isinstance(val, dict):
             if 'prob' in val:
                 if 'values' in val:
-                    weights = val['weights'] if 'weights' in val else None
-                    postfix = val['postfix'] if 'postfix' in val else None
-                    config_selector[key] = Selector(components_or_names=val['values'], weights=weights, postfix=postfix,
-                                                    prob=val['prob'])
+                    config_selector[key] = Selector(**val)
                 else:
                     if len(val) > 1:
                         config_selector[key] = BoolSwitch(prob=val['prob'], data=parse_config(
@@ -82,9 +74,7 @@ def parse_config(config):
 
                 return Selector(components, weights)
             elif 'values' in val:
-                weights = val['weights'] if 'weights' in val else None
-                postfix = val['postfix'] if 'postfix' in val else None
-                config_selector[key] = Selector(components_or_names=val['values'], weights=weights, postfix=postfix)
+                config_selector[key] = Selector(**val)
             else:
                 config_selector[key] = parse_config(val)
         # elif isinstance(val, list):

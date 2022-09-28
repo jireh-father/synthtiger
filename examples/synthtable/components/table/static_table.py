@@ -14,11 +14,11 @@ class StaticTable(Component):
     def __init__(self, config_selectors):
 
         super(StaticTable, self).__init__()
-        self.html_path_selector = PathSelector(config_selectors['html']['paths'].components_or_names,
-                                               config_selectors['html']['weights'].components_or_names, exts=['.json'])
-        self.image_path_selector = PathSelector(config_selectors['image']['paths'].components_or_names, None,
+        self.html_path_selector = PathSelector(config_selectors['html']['paths'].values,
+                                               config_selectors['html']['weights'].values, exts=['.json'])
+        self.image_path_selector = PathSelector(config_selectors['image']['paths'].values, None,
                                                 exts=['.jpg', '.png'])
-        self.lower_image_size_ratios = config_selectors['image']['lower_image_size_ratios'].components_or_names
+        self.lower_image_size_ratios = config_selectors['image']['lower_image_size_ratios'].values
 
         self.config_selectors = config_selectors
 

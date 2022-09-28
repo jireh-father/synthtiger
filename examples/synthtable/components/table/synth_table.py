@@ -58,15 +58,22 @@ class SynthTable(Component):
     def __init__(self, config_selectors):
         super().__init__()
         self.config_selectors = config_selectors
-        self.html_path_selector = PathSelector(config_selectors['html']['paths'].components_or_names,
-                                               config_selectors['html']['weights'].components_or_names, exts=['.json'])
+        self.html_path_selector = PathSelector(config_selectors['html']['paths'].values,
+                                               config_selectors['html']['weights'].values, exts=['.json'])
 
         # styles
         # todo: select parser or other backgrounds
         background_config = config_selectors['style']['global']['absolute']['background'].select()
         if isinstance(background_config, dict):
             if 'paper' in background_config:
-                self.paper = Paper(background_config['paper'])
+                paper_params = {
+                    'paths': background_config['paper']['paths'].values,
+                    'weights': background_config['paper']['weights'].values,
+                    'alpha': background_config['paper']['alpha'].values,
+                    'grayscale': background_config['paper']['grayscale'].select(),
+                    'crop': background_config['paper']['crop'].select()
+                }
+                self.paper = Paper(paper_params)
 
         # global absolute thead
         self.absolute_style = defaultdict(dict)
