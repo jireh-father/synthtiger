@@ -186,7 +186,9 @@ document:
                   values: [top, middle, bottom]
                   weights: [1,10,1]
   #              font-weight: [lighter, bold, normal]
-                font-weight: [lighter, normal]
+                font-weight:
+                  values: [lighter, normal, bold]
+                  weights: [10, 10, 5]
                 font-style:
                   values: [normal, italic]
                   weights: [9, 1]
@@ -203,6 +205,11 @@ document:
                 #text-shadow
                 #text-shadow: 4px 4px 5px red;
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
+              thead:
+                font-weight:
+                  values: [ bold, normal ]
+                  weights: [ 5, 1 ]
+                text-align: [ left, center ]
               td:
                 padding: [2, 20]
 
@@ -228,13 +235,13 @@ document:
                 font_size: [0.8, 1.2]
             css:
               thead:
-                prob: 0.5
+                prob: 0.2
                 font-weight: [ bold, normal ]
                 text-align:
                   values: [ left, center ]
                   prob: 0.5
               tbody:
-                prob: 0.5
+                prob: 0.2
                 text-align:
                   values: [ left, center ]
                   prob: 0.5
