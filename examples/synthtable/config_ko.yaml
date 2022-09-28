@@ -70,10 +70,10 @@ document:
             absolute:
               thead:
                 color_mode: [dark, light]
-                border_type: [empty, all, bottom, top_bottom]
-                border_width: [1, 5]
               table_outline:
-                border_type: [ empty, all, top_bottom ]
+                border_type: [ empty, all, top_bottom, left_right]
+                empty_thead_border_type: [empty, all, top_bottom, bottom]
+                etc_thead_border_type: [empty, bottom]
                 border_width: [ 1, 5 ]
               background:
                 paper:
