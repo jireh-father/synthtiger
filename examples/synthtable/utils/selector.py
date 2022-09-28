@@ -54,6 +54,7 @@ def parse_config(config):
 
         print(key)
         val = config[key]
+        print(isinstance(val))
         if isinstance(val, dict):
             if 'prob' in val:
                 if 'values' in val:
