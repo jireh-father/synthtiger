@@ -47,7 +47,7 @@ class SynthTable(templates.Template):
 
         bg_layer = self.background.generate(bg_size)
         # todo: remove etc tag in td cell(ex: <td><b>contents</b></td>)
-        table_html = table_layer.plain_html
+        table_html = table_layer.html
 
         document_space = np.clip(bg_size - table_layer.size, 0, None)
         table_layer.left = np.random.randint(document_space[0] + 1)
