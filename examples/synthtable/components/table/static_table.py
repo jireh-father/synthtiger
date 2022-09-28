@@ -55,7 +55,6 @@ class StaticTable(Component):
         return meta
 
     def apply(self, layers, meta=None):
-        print("in apply")
         target_size = meta['size']
         while True:
             try:
@@ -63,7 +62,6 @@ class StaticTable(Component):
             except Exception as e:
                 traceback.print_exc()
                 continue
-            print(meta)
             html_json_path = meta['html_path']
             html_json = json.load(open(html_json_path), encoding='utf-8')
             if self.min_cols > html_json['nums_col'] or self.max_cols < html_json['nums_col']:
