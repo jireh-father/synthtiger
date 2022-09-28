@@ -271,52 +271,30 @@ class SynthTable(Component):
 
         return global_style
 
+    def _set_css_styles(self, global_style, config_key, css_selector_name):
+        local_config = self.config_selectors['style']['local'].get()
+        if local_config['css'][config_key].on():
+            selectors = local_config['css'][config_key].get()
+            for css_selector in selectors:
+                css_val = selectors[css_selector]
+                val = css_val.select()
+                if val is None:
+                    continue
+                global_style[css_selector_name][css_selector] = val
+
     def sample_local_styles(self, global_style, meta):
         if not self.config_selectors['style']['local'].on():
             return
 
         local_config = self.config_selectors['style']['local'].get()
 
-        for row_idx in range(1, meta['nums_row'] + 1):
-            if local_config['css']['tr'].on():
-                selectors = local_config['css']['tr'].get()
-                for css_selector in selectors:
-                    css_val = selectors[css_selector]
-                    val = css_val.select()
-                    if val is None:
-                        continue
-                    global_style["tr:nth-child({})".format(row_idx)][css_selector] = val
-            for col_idx in range(1, meta['nums_col'] + 1):
-                if local_config['css']['td'].on():
-                    selectors = local_config['css']['td'].get()
-                    for css_selector in selectors:
-                        css_val = selectors[css_selector]
-                        val = css_val.select()
-                        if val is None:
-                            continue
-                        global_style["tr:nth-child({}) td:nth-child({})".format(row_idx, col_idx)][css_selector] = val
+        self._set_css_styles(global_style, 'thead', 'thead')
+        self._set_css_styles(global_style, 'tbody', 'tbody')
 
-    # def sample_local_styles(self, html, meta):
-    #     if not self.config_selectors['style']['local'].on():
-    #         return html
-    #
-    #     local_config = self.config_selectors['style']['local'].get()
-    #
-    #     bs = BeautifulSoup(html, 'html.parser')
-    #
-    #     for tr in bs.find_all('tr'):
-    #         if local_config['css']['tr'].on():
-    #             selectors = local_config['css']['tr'].get()
-    #             style_attr, tr_meta = make_style_attribute(selectors, "tr")
-    #             tr['style'] = style_attr
-    #             meta.update(tr_meta)
-    #         for td in tr.find_all("td"):
-    #             if local_config['css']['td'].on():
-    #                 selectors = local_config['css']['td'].get()
-    #                 style_attr, td_meta = make_style_attribute(selectors, "td")
-    #                 td['style'] = style_attr
-    #                 meta.update(td_meta)
-    #     return str(bs)
+        for row_idx in range(1, meta['nums_row'] + 1):
+            self._set_css_styles(global_style, 'tr', "tr:nth-child({})".format(row_idx))
+            for col_idx in range(1, meta['nums_col'] + 1):
+                self._set_css_styles(global_style, 'td', "tr:nth-child({}) td:nth-child({})".format(row_idx, col_idx))
 
     def sample(self, meta=None):
         if meta is None:
