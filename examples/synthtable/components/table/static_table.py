@@ -55,6 +55,7 @@ class StaticTable(Component):
         return meta
 
     def apply(self, layers, meta=None):
+        print("in apply")
         target_size = meta['size']
         while True:
             try:
