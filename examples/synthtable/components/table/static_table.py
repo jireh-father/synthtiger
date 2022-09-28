@@ -14,23 +14,21 @@ class StaticTable(Component):
     def __init__(self, config_selectors):
 
         super(StaticTable, self).__init__()
-        print(1)
         self.html_path_selector = PathSelector(config_selectors['html']['paths'].components_or_names,
                                                config_selectors['html']['weights'].components_or_names, exts=['.json'])
         self.image_path_selector = PathSelector(config_selectors['image']['paths'].select(), None,
                                                 exts=['.jpg', '.png'])
         self.lower_image_size_ratios = config_selectors['image']['lower_image_size_ratios'].select()
 
-        self.min_rows = config_selectors['html']['min_row'].selct()
-        self.max_rows = config_selectors['html']['max_row'].selct()
-        self.min_cols = config_selectors['html']['min_col'].selct()
-        self.max_cols = config_selectors['html']['max_row'].selct()
+        self.min_rows = config_selectors['html']['min_row'].select()
+        self.max_rows = config_selectors['html']['max_row'].select()
+        self.min_cols = config_selectors['html']['min_col'].select()
+        self.max_cols = config_selectors['html']['max_row'].select()
         self.config_selectors = config_selectors
 
         self.has_span = self.config_selectors['html']['has_span']
         self.has_col_span = self.config_selectors['html']['has_col_span']
         self.has_row_span = self.config_selectors['html']['has_row_span']
-        print(10)
 
     def _get_image_path(self, html_path, key):
         html_file_name = os.path.splitext(os.path.basename(html_path))[0]
