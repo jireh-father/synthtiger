@@ -58,7 +58,10 @@ def parse_config(config):
         if isinstance(val, dict):
             if 'prob' in val:
                 if 'values' in val:
-                    config_selector[key] = Selector(**val)
+                    weights = val['weights'] if 'weights' in val else None
+                    postfix = val['postfix'] if 'postfix' in val else None
+                    config_selector[key] = Selector(components_or_names=val['values'], weights=weights, postfix=postfix,
+                                                    prob=val['prob'])
                 else:
                     if len(val) > 1:
                         config_selector[key] = BoolSwitch(prob=val['prob'], data=parse_config(
