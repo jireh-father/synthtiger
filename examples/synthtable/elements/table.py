@@ -60,8 +60,8 @@ class Table():
         self.selectors = parse_config(config)
         print(self.selectors)
 
-        self.static = comps.StaticTable(**config["static"], common=config["common"])
-        self.synth = comps.SynthTable(**config["synth"], common=config["common"])
+        self.static = comps.StaticTable(**{k: config["static"][k] for k in config["static"] if k != 'weight'})
+        self.synth = comps.SynthTable(**{k: config["synth"][k] for k in config["synth"] if k != 'weight'})
 
         weights = [config["static"]["weight"], config["synth"]["weight"]]
         self.table_selector = Selector(["static", "synth"], weights)

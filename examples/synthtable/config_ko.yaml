@@ -348,13 +348,6 @@ document:
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
                 #              width: []
                 #              height: [ ]
-      common:
-        rows: [2, 10]
-        cols: [2, 10]
-        has_span: 0.5
-        has_col_span: 0.5
-        has_row_span: 0.5
-        tmp_path: tmp
     text:
       path: resources/corpus/kowiki.txt
     font:

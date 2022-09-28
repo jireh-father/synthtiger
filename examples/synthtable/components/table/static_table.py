@@ -16,19 +16,19 @@ from utils.path_selector import PathSelector
 
 
 class StaticTable(Component):
-    def __init__(self, html_paths, image_paths, path_weights, lower_image_size_ratios, common, **kwargs):
+    def __init__(self, html_paths, image_paths, path_weights, lower_image_size_ratios, html, **kwargs):
         super(StaticTable, self).__init__()
         self.html_path_selector = PathSelector(html_paths, path_weights, exts=['.json'])
         self.image_path_selector = PathSelector(image_paths, path_weights, exts=['.jpg', '.png'])
         self.lower_image_size_ratios = lower_image_size_ratios
 
-        self.min_rows = common['rows'][0]
-        self.max_rows = common['rows'][1]
-        self.min_cols = common['cols'][0]
-        self.max_cols = common['cols'][1]
-        self.has_span = BoolSwitch(common['has_span'])
-        self.has_col_span = BoolSwitch(common['has_col_span'])
-        self.has_row_span = BoolSwitch(common['has_row_span'])
+        self.min_rows = html['rows'][0]
+        self.max_rows = html['rows'][1]
+        self.min_cols = html['cols'][0]
+        self.max_cols = html['cols'][1]
+        self.has_span = BoolSwitch(html['has_span']['prob'])
+        self.has_col_span = BoolSwitch(html['has_col_span']['prob'])
+        self.has_row_span = BoolSwitch(html['has_row_span']['prob'])
 
     def _get_image_path(self, html_path, key):
         html_file_name = os.path.splitext(os.path.basename(html_path))[0]

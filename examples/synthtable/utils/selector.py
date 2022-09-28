@@ -5,6 +5,9 @@ MIT License
 """
 import numpy as np
 from utils.switch import BoolSwitch
+import sys
+
+sys.setrecursionlimit(10 ** 6)
 
 
 class Selector:

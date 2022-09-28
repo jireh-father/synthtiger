@@ -54,7 +54,7 @@ def make_style_attribute(selectors, tag_name):
 
 
 class SynthTable(Component):
-    def __init__(self, html, style, common, **kwargs):
+    def __init__(self, html, style, **kwargs):
         super().__init__()
         self.html_path_selector = PathSelector(html["paths"], html["weights"], exts=['.json'])
 
@@ -90,14 +90,14 @@ class SynthTable(Component):
         self.synth_content_prob = BoolSwitch(html['synth_content_prob'])
 
         # common styles
-        self.min_rows = common['rows'][0]
-        self.max_rows = common['rows'][1]
-        self.min_cols = common['cols'][0]
-        self.max_cols = common['cols'][1]
-        self.has_span = BoolSwitch(common['has_span'])
-        self.has_col_span = BoolSwitch(common['has_col_span'])
-        self.has_row_span = BoolSwitch(common['has_row_span'])
-        self.tmp_path = common['tmp_path']
+        self.min_rows = html['rows'][0]
+        self.max_rows = html['rows'][1]
+        self.min_cols = html['cols'][0]
+        self.max_cols = html['cols'][1]
+        self.has_span = BoolSwitch(html['has_span']['prob'])
+        self.has_col_span = BoolSwitch(html['has_col_span']['prob'])
+        self.has_row_span = BoolSwitch(html['has_row_span']['prob'])
+        self.tmp_path = html['tmp_path']
         os.makedirs(self.tmp_path, exist_ok=True)
 
     def sample_global_styles(self):
