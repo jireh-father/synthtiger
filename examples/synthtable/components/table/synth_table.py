@@ -321,9 +321,10 @@ class SynthTable(Component):
         if local_config['css'][config_key].on():
             if use_color_mode:
                 color_mode = local_config['absolute'][config_key]['color_mode'].select()
-            if use_relative:
+            font_size_scale = None
+            if use_relative and local_config['relative'][config_key].on():
                 # todo:
-                font_size_scale = local_config['relative'][config_key]['font_size'].select()
+                font_size_scale = local_config['relative'][config_key].get()['font_size'].select()
 
             selectors = local_config['css'][config_key].get()
             for css_selector in selectors:
@@ -332,7 +333,7 @@ class SynthTable(Component):
                 if val is None:
                     continue
                 global_style[css_selector_name][css_selector] = val
-                if use_relative:
+                if font_size_scale:
                     font_size = int(round(float(meta["table_font-size"].split("px")[0]) * font_size_scale))
                     global_style[css_selector_name]['font-size'] = str(font_size) + "px"
                 if use_color_mode:
