@@ -314,9 +314,11 @@ class SynthTable(Component):
                 global_style[css_selector][css_key] = value
                 meta[css_selector + '_' + css_key] = value
 
-    def _set_local_css_styles(self, global_style, config_key, css_selector_name, color_mode=None):
+    def _set_local_css_styles(self, global_style, config_key, css_selector_name, use_color_mode=False):
         local_config = self.config_selectors['style']['local'].get()
         if local_config['css'][config_key].on():
+            if use_color_mode:
+                color_mode = local_config['absolute'][config_key]['color_mode'].select()
             selectors = local_config['css'][config_key].get()
             for css_selector in selectors:
                 css_val = selectors[css_selector]
@@ -324,6 +326,25 @@ class SynthTable(Component):
                 if val is None:
                     continue
                 global_style[css_selector_name][css_selector] = val
+                if use_color_mode:
+                    if color_mode == "dark":
+                        global_style[css_selector_name]['color'] = self._sample_light_color()
+                        global_style[css_selector_name]['background-color'] = self._sample_dark_color()
+                        border_color = self._sample_light_color()
+                        global_style[css_selector_name]['border-color'] = border_color
+                        global_style[css_selector_name]['border-top-color'] = border_color
+                        global_style[css_selector_name]['border-left-color'] = border_color
+                        global_style[css_selector_name]['border-right-color'] = border_color
+                        global_style[css_selector_name]['border-bottom-color'] = border_color
+                    else:
+                        global_style[css_selector_name]['color'] = self._sample_dark_color()
+                        global_style[css_selector_name]['background-color'] = self._sample_light_color()
+                        border_color = self._sample_dark_color()
+                        global_style[css_selector_name]['border-color'] = border_color
+                        global_style[css_selector_name]['border-top-color'] = border_color
+                        global_style[css_selector_name]['border-left-color'] = border_color
+                        global_style[css_selector_name]['border-right-color'] = border_color
+                        global_style[css_selector_name]['border-bottom-color'] = border_color
 
     def sample_local_styles(self, global_style, meta):
         if not self.config_selectors['style']['local'].on():
@@ -333,12 +354,10 @@ class SynthTable(Component):
         self._set_local_css_styles(global_style, 'tbody', 'tbody')
 
         for row_idx in range(1, meta['nums_row'] + 1):
-            tr_color_mode = self.config_selectors['style']['local']['absolute']['tr'].color_mode.select()
-            self._set_local_css_styles(global_style, 'tr', "tr:nth-child({})".format(row_idx), tr_color_mode)
+            self._set_local_css_styles(global_style, 'tr', "tr:nth-child({})".format(row_idx), True)
             for col_idx in range(1, meta['nums_col'] + 1):
-                td_color_mode = self.config_selectors['style']['local']['absolute']['td'].color_mode.select()
                 self._set_local_css_styles(global_style, 'td',
-                                           "tr:nth-child({}) td:nth-child({})".format(row_idx, col_idx), td_color_mode)
+                                           "tr:nth-child({}) td:nth-child({})".format(row_idx, col_idx), True)
 
     def sample(self, meta=None):
         if meta is None:
