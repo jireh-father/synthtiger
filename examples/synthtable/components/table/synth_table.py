@@ -234,7 +234,7 @@ class SynthTable(Component):
         font_size_scale = self.config_selectors['style']['global']['relative']['thead']['font_size'].select()
 
         head_font_size = int(round(float(meta["table_font-size"].split("px")[0]) * font_size_scale))
-        global_style['thead tr']['font-size'] = head_font_size
+        global_style['thead tr']['font-size'] = str(head_font_size) + "px"
 
     def _sample_table_outline(self, global_style, meta):
         if meta['background_config'] != 'paper':
@@ -314,11 +314,17 @@ class SynthTable(Component):
                 global_style[css_selector][css_key] = value
                 meta[css_selector + '_' + css_key] = value
 
-    def _set_local_css_styles(self, global_style, config_key, css_selector_name, use_color_mode=False):
+    def _set_local_css_styles(self, global_style, config_key, css_selector_name, meta):
         local_config = self.config_selectors['style']['local'].get()
+        use_color_mode = config_key in local_config['absolute']
+        use_relative = config_key in local_config['relative']
         if local_config['css'][config_key].on():
             if use_color_mode:
                 color_mode = local_config['absolute'][config_key]['color_mode'].select()
+            if use_relative:
+                # todo:
+                font_size_scale = local_config['relative'][config_key]['font_size'].select()
+
             selectors = local_config['css'][config_key].get()
             for css_selector in selectors:
                 css_val = selectors[css_selector]
@@ -326,6 +332,9 @@ class SynthTable(Component):
                 if val is None:
                     continue
                 global_style[css_selector_name][css_selector] = val
+                if use_relative:
+                    font_size = int(round(float(meta["table_font-size"].split("px")[0]) * font_size_scale))
+                    global_style[css_selector_name]['font-size'] = str(font_size) + "px"
                 if use_color_mode:
                     if color_mode == "dark":
                         global_style[css_selector_name]['color'] = self._sample_light_color()
@@ -350,14 +359,14 @@ class SynthTable(Component):
         if not self.config_selectors['style']['local'].on():
             return
 
-        self._set_local_css_styles(global_style, 'thead', 'thead')
-        self._set_local_css_styles(global_style, 'tbody', 'tbody')
+        self._set_local_css_styles(global_style, 'thead', 'thead', meta)
+        self._set_local_css_styles(global_style, 'tbody', 'tbody', meta)
 
         for row_idx in range(1, meta['nums_row'] + 1):
-            self._set_local_css_styles(global_style, 'tr', "tr:nth-child({})".format(row_idx), True)
+            self._set_local_css_styles(global_style, 'tr', "tr:nth-child({})".format(row_idx), meta)
             for col_idx in range(1, meta['nums_col'] + 1):
                 self._set_local_css_styles(global_style, 'td',
-                                           "tr:nth-child({}) td:nth-child({})".format(row_idx, col_idx), True)
+                                           "tr:nth-child({}) td:nth-child({})".format(row_idx, col_idx), meta)
 
     def sample(self, meta=None):
         if meta is None:
