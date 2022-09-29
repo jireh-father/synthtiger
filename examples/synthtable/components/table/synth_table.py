@@ -231,6 +231,11 @@ class SynthTable(Component):
             meta['thead_color_mode'] = 'light'
             global_style['thead tr']['color'] = self._sample_dark_color()
 
+        font_size_scale = self.config_selectors['style']['global']['relative']['thead']['font_size'].select()
+
+        head_font_size = int(round(float(meta["table_font-size"].split("px")[0]) * font_size_scale))
+        global_style['thead tr']['font-size'] = head_font_size
+
     def _sample_table_outline(self, global_style, meta):
         if meta['background_config'] != 'paper':
             color_mode = meta['color_mode']
@@ -282,6 +287,10 @@ class SynthTable(Component):
         # absolutes
         meta['color_mode'] = self._sample_global_color_mode()
 
+        # css
+        css_selectors = self.config_selectors['style']['global']['css']
+        self._set_css_to_global_style(css_selectors, global_style, meta)
+
         self._sample_background(global_style, meta)
 
         self._sample_thead(global_style, meta)
@@ -289,10 +298,6 @@ class SynthTable(Component):
         self._sample_table_outline(global_style, meta)
 
         self._sample_border(global_style, meta)
-
-        # css
-        css_selectors = self.config_selectors['style']['global']['css']
-        self._set_css_to_global_style(css_selectors, global_style, meta)
 
         # local style
         self.sample_local_styles(global_style, meta)
@@ -309,7 +314,7 @@ class SynthTable(Component):
                 global_style[css_selector][css_key] = value
                 meta[css_selector + '_' + css_key] = value
 
-    def _set_local_css_styles(self, global_style, config_key, css_selector_name):
+    def _set_local_css_styles(self, global_style, config_key, css_selector_name, color_mode=None):
         local_config = self.config_selectors['style']['local'].get()
         if local_config['css'][config_key].on():
             selectors = local_config['css'][config_key].get()
@@ -328,10 +333,12 @@ class SynthTable(Component):
         self._set_local_css_styles(global_style, 'tbody', 'tbody')
 
         for row_idx in range(1, meta['nums_row'] + 1):
-            self._set_local_css_styles(global_style, 'tr', "tr:nth-child({})".format(row_idx))
+            tr_color_mode = self.config_selectors['style']['local']['absolute']['tr'].color_mode.select()
+            self._set_local_css_styles(global_style, 'tr', "tr:nth-child({})".format(row_idx), tr_color_mode)
             for col_idx in range(1, meta['nums_col'] + 1):
+                td_color_mode = self.config_selectors['style']['local']['absolute']['td'].color_mode.select()
                 self._set_local_css_styles(global_style, 'td',
-                                           "tr:nth-child({}) td:nth-child({})".format(row_idx, col_idx))
+                                           "tr:nth-child({}) td:nth-child({})".format(row_idx, col_idx), td_color_mode)
 
     def sample(self, meta=None):
         if meta is None:
