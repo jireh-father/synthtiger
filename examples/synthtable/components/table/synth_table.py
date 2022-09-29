@@ -140,6 +140,13 @@ class SynthTable(Component):
                 global_style["table"]["color"] = self._sample_light_color()
             else:
                 global_style["table"]["color"] = self._sample_dark_color()
+        elif meta['background_config'] == 'empty':
+            if color_mode == "dark":
+                global_style["#table_wrapper"]["background-color"] = 'black'
+                global_style["table"]["color"] = 'white'
+            else:
+                global_style["#table_wrapper"]["background-color"] = 'white'
+                global_style["table"]["color"] = 'black'
         elif meta['background_config'] == 'solid':
             if color_mode == "dark":
                 global_style["#table_wrapper"]["background-color"] = self._sample_dark_color()
@@ -152,10 +159,10 @@ class SynthTable(Component):
             light_line = "even" if dark_line == "odd" else "odd"
             dark_color = self._sample_dark_color()
             light_color = self._sample_light_color()
-            global_style["tr:nth-child({})".format(dark_line)]["background-color"] = dark_color
-            global_style["tr:nth-child({})".format(dark_line)]["color"] = light_color
-            global_style["tr:nth-child({})".format(light_line)]["background-color"] = light_color
-            global_style["tr:nth-child({})".format(light_line)]["color"] = dark_color
+            global_style["tbody tr:nth-child({})".format(dark_line)]["background-color"] = dark_color
+            global_style["tbody tr:nth-child({})".format(dark_line)]["color"] = light_color
+            global_style["tbody tr:nth-child({})".format(light_line)]["background-color"] = light_color
+            global_style["tbody tr:nth-child({})".format(light_line)]["color"] = dark_color
         elif meta['background_config'] == 'striped_all_dark':
             if color_mode == "dark":
                 bg_color_odd = self._sample_dark_color()
@@ -165,21 +172,47 @@ class SynthTable(Component):
                 bg_color_odd = self._sample_light_color()
                 bg_color_even = self._sample_light_color()
                 font_color = self._sample_dark_color()
-            global_style["tr:nth-child(odd)"]["background-color"] = bg_color_odd
-            global_style["tr:nth-child(even)"]["background-color"] = bg_color_even
+            global_style["tbody tr:nth-child(odd)"]["background-color"] = bg_color_odd
+            global_style["tbody tr:nth-child(even)"]["background-color"] = bg_color_even
             global_style["table"]["color"] = font_color
         elif meta['background_config'] == 'multi_color':
             dark_color = self._sample_dark_color()
             light_color = self._sample_light_color()
             for i in range(meta['nums_row'] - 1):
                 if color_mode == "dark":
-                    global_style["tr:nth-child({})".format(i + 1)][
+                    global_style["tbody tr:nth-child({})".format(i + 1)][
                         "background-color"] = self._sample_dark_color()
-                    global_style["tr:nth-child({})".format(i + 1)]["color"] = light_color
+                    global_style["tbody tr:nth-child({})".format(i + 1)]["color"] = light_color
                 else:
-                    global_style["tr:nth-child({})".format(i + 1)][
+                    global_style["tbody tr:nth-child({})".format(i + 1)][
                         "background-color"] = self._sample_light_color()
-                    global_style["tr:nth-child({})".format(i + 1)]["color"] = dark_color
+                    global_style["tbody tr:nth-child({})".format(i + 1)]["color"] = dark_color
+
+    def _sample_border(self, global_style, meta):
+        # background
+        border_config = self.config_selectors['style']['global']['absolute']['border'].select()
+        border_type = next(iter(border_config))
+        meta['border_config'] = border_type
+        border_css = border_config[border_type]
+
+        self._set_css_to_global_style(border_css, global_style, meta)
+
+        color_mode = meta['color_mode']
+        if color_mode == "dark":
+            border_color = self._sample_light_color()
+        else:
+            border_color = self._sample_dark_color()
+
+        if border_type == 'inside':
+            global_style["td"]["border-color"] = border_color
+        elif border_type == 'all':
+            global_style["td"]["border-color"] = border_color
+        elif border_type == 'row':
+            global_style["tr"]["border-bottom-color"] = border_color
+        elif border_type == 'col':
+            global_style["td"]["border-right-color"] = border_color
+        elif border_type == 'outline':
+            global_style["table"]["border-color"] = border_color
 
     def _sample_thead(self, global_style, meta):
         if meta['background_config'] != 'paper':
@@ -189,14 +222,14 @@ class SynthTable(Component):
             dark_color = self._sample_dark_color()
 
             if color_mode == "dark":
-                global_style['thead']['background-color'] = dark_color
-                global_style['thead']['color'] = light_color
+                global_style['thead tr']['background-color'] = dark_color
+                global_style['thead tr']['color'] = light_color
             else:
-                global_style['thead']['background-color'] = light_color
-                global_style['thead']['color'] = dark_color
+                global_style['thead tr']['background-color'] = light_color
+                global_style['thead tr']['color'] = dark_color
         else:
             meta['thead_color_mode'] = 'light'
-            global_style['thead']['color'] = self._sample_dark_color()
+            global_style['thead tr']['color'] = self._sample_dark_color()
 
     def _sample_table_outline(self, global_style, meta):
         if meta['background_config'] != 'paper':
@@ -255,8 +288,18 @@ class SynthTable(Component):
 
         self._sample_table_outline(global_style, meta)
 
+        self._sample_border(global_style, meta)
+
         # css
         css_selectors = self.config_selectors['style']['global']['css']
+        self._set_css_to_global_style(css_selectors, global_style, meta)
+
+        # local style
+        self.sample_local_styles(global_style, meta)
+
+        return global_style
+
+    def _set_css_to_global_style(self, css_selectors, global_style, meta):
         for css_selector in css_selectors:
             for css_key in css_selectors[css_selector]:
                 selector = css_selectors[css_selector][css_key]
@@ -266,12 +309,7 @@ class SynthTable(Component):
                 global_style[css_selector][css_key] = value
                 meta[css_selector + '_' + css_key] = value
 
-        # local style
-        self.sample_local_styles(global_style, meta)
-
-        return global_style
-
-    def _set_css_styles(self, global_style, config_key, css_selector_name):
+    def _set_local_css_styles(self, global_style, config_key, css_selector_name):
         local_config = self.config_selectors['style']['local'].get()
         if local_config['css'][config_key].on():
             selectors = local_config['css'][config_key].get()
@@ -286,14 +324,14 @@ class SynthTable(Component):
         if not self.config_selectors['style']['local'].on():
             return
 
-
-        self._set_css_styles(global_style, 'thead', 'thead')
-        self._set_css_styles(global_style, 'tbody', 'tbody')
+        self._set_local_css_styles(global_style, 'thead', 'thead')
+        self._set_local_css_styles(global_style, 'tbody', 'tbody')
 
         for row_idx in range(1, meta['nums_row'] + 1):
-            self._set_css_styles(global_style, 'tr', "tr:nth-child({})".format(row_idx))
+            self._set_local_css_styles(global_style, 'tr', "tr:nth-child({})".format(row_idx))
             for col_idx in range(1, meta['nums_col'] + 1):
-                self._set_css_styles(global_style, 'td', "tr:nth-child({}) td:nth-child({})".format(row_idx, col_idx))
+                self._set_local_css_styles(global_style, 'td',
+                                           "tr:nth-child({}) td:nth-child({})".format(row_idx, col_idx))
 
     def sample(self, meta=None):
         if meta is None:

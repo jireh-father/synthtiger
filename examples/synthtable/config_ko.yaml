@@ -90,6 +90,8 @@ document:
                   num_colors: [2, 5]
                   use_random_stop_position:
                     prob: 0.3
+                empty:
+                  weight: 1
                 solid:
                   weight: 1
                 striped:
