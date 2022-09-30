@@ -17,11 +17,6 @@ class TableLayer(Layer):
         self.global_style = {}
 
     def _convert_global_style_to_css(self):
-        # table {
-        #   width: 600px;
-        #   border-collapse: collapse;
-        # }
-
         css_list = []
         for selector in self.global_style:
             styles = []
@@ -44,9 +39,7 @@ class TableLayer(Layer):
         </head>
         <body>
             <div id="table_wrapper">
-                <table>
                 {}
-                </table>
             </div>
         </body>
         </html>

@@ -11,7 +11,8 @@ from collections import defaultdict
 from utils.switch import BoolSwitch
 import numpy as np
 from bs4 import BeautifulSoup
-
+import re
+from utils import html_util
 
 def parse_html_style_values_dict(dict_values):
     weights = dict_values['weights'] if 'weights' in dict_values else None
@@ -375,7 +376,10 @@ class SynthTable(Component):
         else:
             html_path, html_json = self._sample_html_path()
             meta['html_path'] = html_path
-            meta['html'] = html_json['html']
+            html = html_json['html'].strip()
+            # insert tbody
+            html = html_util.insert_tbody_tag(html)
+            meta['html'] = html
             meta['nums_col'] = html_json['nums_col']
             meta['nums_row'] = html_json['nums_row']
         meta['synth_structure'] = synth_structure

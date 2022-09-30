@@ -13,14 +13,18 @@ import numpy as np
 from elements import Background, Document
 from PIL import Image
 from synthtiger import components, layers, templates
+import argparse
+import re
+from utils import html_util
 
 
 class SynthTable(templates.Template):
-    def __init__(self, config=None, split_ratio: List[float] = [0.8, 0.1, 0.1]):
+    def __init__(self, config=None):
         super().__init__(config)
         if config is None:
             config = {}
 
+        self.html_output = config.get("html_output")
         self.quality = config.get("quality", [50, 95])
         self.save_meta = config.get("save_meta", False)
         self.background = Background(config.get("background", {}))
@@ -37,12 +41,32 @@ class SynthTable(templates.Template):
             **config.get("effect", {}),
         )
 
-        # config for splits (output_filename, split_ratio etc)
-        # self.splits = ["train", "validation", "test"]
-        # self.split_indexes = [0, 0, 0]
-        # self.split_ratio = [sum(split_ratio[: i + 1]) for i in range(0, len(split_ratio))]
+    def _filter_html(self, html):
+        if self.html_output["remove_close_tag"]:
+            html = html_util.remove_close_tags(html)
+
+        if self.html_output["remove_thead_tbody"]:
+            html = html_util.remove_thead_tbody_tag(html)
+
+        if self.html_output["remove_tag_in_content"]:
+            html = html_util.remove_tag_in_table_cell(html)
+        return html
 
     def generate(self):
+        # todo:
+        '''
+        폰트구현
+         - 웹에서 지원안되는 폰트들 제외 (어떻게 확인?)
+         - glyphs 뽑아내기 실행
+
+        생성한 이미지 max_width, aspect_ratio에 따라 이미지 자동 리사이징 혹은 삭제
+
+        meta 넣어서 static 이미지 만들기
+        
+        # meta data 보고 버그없는지 디버깅
+         - 폰트때문에 텍스트 깨지는거 있는지 확인
+        '''
+
         table_layer, bg_size = self.document.generate()
 
         bg_layer, bg_image_meta, bg_effect_meta = self.background.generate(bg_size)
@@ -50,7 +74,7 @@ class SynthTable(templates.Template):
         table_layer.meta['bg_effect'] = bg_effect_meta
 
         # todo: remove etc tag in td cell(ex: <td><b>contents</b></td>)
-        table_html = table_layer.html
+        table_html = self._filter_html(table_layer.html)
 
         document_space = np.clip(bg_size - table_layer.size, 0, None)
         table_layer.left = np.random.randint(document_space[0] + 1)
@@ -146,5 +170,16 @@ class SynthTable(templates.Template):
         metadata = {"file_name": image_filename, "ground_truth": gt_parse_str}
         return metadata
 
-    def test(self, config):
-        pass
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('--model_path', type=str, default=None)
+    parser.add_argument('--csv_file', type=str, default=None)
+    parser.add_argument('--model_name', type=str, default='efficientnet-b2')
+    parser.add_argument('--input_size', type=int, default=260)
+    parser.add_argument('--line_width', type=int, default=1)
+    parser.add_argument('--use_cuda', action='store_true', default=False)
+
+    synth_table = SynthTable()
+    synth_table.generate_static(config)
