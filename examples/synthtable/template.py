@@ -65,6 +65,7 @@ class SynthTable(templates.Template):
             "label": table_html,
             "quality": quality,
             "roi": roi,
+            "meta": table_layer.meta
         }
 
         return data
@@ -78,6 +79,7 @@ class SynthTable(templates.Template):
         label = data["label"]
         quality = data["quality"]
         roi = data["roi"]
+        meta = data["meta"]
 
         # split
         # output_dirpath = os.path.join(root, "train")
@@ -99,6 +101,10 @@ class SynthTable(templates.Template):
         os.makedirs(os.path.dirname(image_filepath), exist_ok=True)
         image = Image.fromarray(image[..., :3].astype(np.uint8))
         image.save(image_filepath, quality=quality)
+
+        meta_filename = f"image_{file_idx}_meta.json"
+        meta_filepath = os.path.join(output_dirpath, meta_filename)
+        json.dump(meta, open(meta_filepath, "w+", encoding='utf-8'))
 
         # save metadata (gt_json)
         metadata_filename = "metadata.jsonl"

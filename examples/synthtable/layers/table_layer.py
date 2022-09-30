@@ -13,6 +13,7 @@ class TableLayer(Layer):
     def __init__(self, size):
         self.table_size = size
         self.html = None
+        self.meta = None
         self.global_style = {}
 
     def _convert_global_style_to_css(self):
@@ -78,7 +79,7 @@ class TableLayer(Layer):
             margin_vertical += int(self.global_style['table']['margin'].split("px")[0]) / 2
         return margin_horizontal, margin_vertical
 
-    def _render_table_selenium(self, html_path, image_path, paper, meta):
+    def _render_table_selenium(self, html_path, image_path, paper):
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
         options.add_argument('--no-sandbox')
@@ -94,8 +95,8 @@ class TableLayer(Layer):
 
         table_element = driver.find_element(By.TAG_NAME, 'table')
         # todo: get div size and apply
-        table_width = int(table_element.size['width'] * meta['relative_style']['table']['width_scale'])
-        table_height = int(table_element.size['height'] * meta['relative_style']['table']['height_scale'])
+        table_width = int(table_element.size['width'] * self.meta['relative_style']['table']['width_scale'])
+        table_height = int(table_element.size['height'] * self.meta['relative_style']['table']['height_scale'])
 
         # driver.close()
         margin_horizontal, margin_vertical = self._get_margin_vertical_and_horizontal()
@@ -122,13 +123,18 @@ class TableLayer(Layer):
         div_element.screenshot(image_path)
         driver.close()
 
-    def render_table(self, image=None, tmp_path=None, paper=None, meta=None):
+    def render_table(self, image=None, paper=None, meta=None):
+        self.meta = meta
+        self.html = meta['html']
+
         if not image:
+            tmp_path = meta['tmp_path']
             image_path = os.path.join(tmp_path, str(uuid.uuid4()) + ".png")
             html_path = os.path.join(tmp_path, str(uuid.uuid4()) + ".html")
 
             try:
-                self._render_table_selenium(html_path, image_path, paper, meta)
+                self.global_style = meta['global_style']
+                self._render_table_selenium(html_path, image_path, paper)
             except Exception as e:
                 if os.path.isfile(image_path):
                     os.unlink(image_path)

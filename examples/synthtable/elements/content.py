@@ -80,13 +80,13 @@ class Content:
         # self.content_color = components.Switch(components.Gray(), **config.get("content_color", {}))
 
     def generate(self, size, max_size):
-        width, height = size
-
-        layout_left = width * np.random.uniform(self.margin[0], self.margin[1])
-        layout_top = height * np.random.uniform(self.margin[0], self.margin[1])
-        layout_width = max(width - layout_left * 2, 0)
-        layout_height = max(height - layout_top * 2, 0)
-        layout_bbox = [layout_left, layout_top, layout_width, layout_height]
+        # width, height = size
+        #
+        # layout_left = width * np.random.uniform(self.margin[0], self.margin[1])
+        # layout_top = height * np.random.uniform(self.margin[0], self.margin[1])
+        # layout_width = max(width - layout_left * 2, 0)
+        # layout_height = max(height - layout_top * 2, 0)
+        # layout_bbox = [layout_left, layout_top, layout_width, layout_height]
 
         table_layer = self.table.generate(size, max_size)
         return table_layer

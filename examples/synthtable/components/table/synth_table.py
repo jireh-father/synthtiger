@@ -95,8 +95,8 @@ class SynthTable(Component):
         self.has_span = config_selectors['html']['has_span']
         self.has_col_span = config_selectors['html']['has_col_span']
         self.has_row_span = config_selectors['html']['has_row_span']
-        self.tmp_path = config_selectors['html']['tmp_path'].select()
-        os.makedirs(self.tmp_path, exist_ok=True)
+        tmp_path = config_selectors['html']['tmp_path'].select()
+        os.makedirs(tmp_path, exist_ok=True)
 
     def _sample_global_color_mode(self):
         return self.global_color_mode.select()
@@ -385,7 +385,6 @@ class SynthTable(Component):
             html_path, html_json = self._sample_html_path()
             meta['html_path'] = html_path
             meta['html'] = html_json['html']
-            meta['html_json'] = html_json
             meta['nums_col'] = html_json['nums_col']
             meta['nums_row'] = html_json['nums_row']
         meta['synth_structure'] = synth_structure
@@ -405,6 +404,8 @@ class SynthTable(Component):
                 relative_style[selector][key] = relative_style_config[selector][key].select()
 
         meta['relative_style'] = relative_style
+
+        meta['tmp_path'] = self.config_selectors['html']['tmp_path'].select()
         return meta
 
     def _sample_html_path(self):
@@ -440,11 +441,10 @@ class SynthTable(Component):
             pass
         else:
             pass
-        global_style = meta['global_style']
 
         if meta['background_config'] == 'paper':
             paper = self.paper
-            global_style["table"]["color"] = self._sample_dark_color()
+            meta['global_style']["table"]["color"] = self._sample_dark_color()
         else:
             paper = None
 
@@ -452,6 +452,4 @@ class SynthTable(Component):
         # rendering
         for layer in layers:
             # todo : remove tag in cell
-            layer.html = html
-            layer.global_style = global_style
-            layer.render_table(tmp_path=self.tmp_path, paper=paper, meta=meta)
+            layer.render_table(paper=paper, meta=meta)

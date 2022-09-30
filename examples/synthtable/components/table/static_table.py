@@ -51,6 +51,9 @@ class StaticTable(Component):
         meta["html_path"] = html_path
         meta["image_path"] = image_path
         meta["lower_image_size_ratio"] = self.lower_image_size_ratios[key]
+        meta['has_span'] = self.has_span.on()
+        meta['has_row_span'] = self.has_row_span.on()
+        meta['has_col_span'] = self.has_col_span.on()
 
         return meta
 
@@ -68,8 +71,8 @@ class StaticTable(Component):
                 continue
             if self.min_rows > html_json['nums_row'] or self.max_rows < html_json['nums_row']:
                 continue
-            has_span = self.has_span.on()
-            if has_span != html_json['has_span']:
+
+            if meta['has_span'] != html_json['has_span']:
                 continue
 
             width_limit = html_json['width'] * meta["lower_image_size_ratio"]
@@ -80,13 +83,21 @@ class StaticTable(Component):
             if width_limit > target_width or height_limit > target_height:
                 continue
 
-            if has_span:
-                if self.has_row_span.on() and not html_json['has_row_span']:
+            if meta['has_span']:
+                if meta['has_row_span'] and not html_json['has_row_span']:
                     continue
-                if self.has_col_span.on() and not html_json['has_col_span']:
+                if meta['has_col_span'] and not html_json['has_col_span']:
                     continue
 
             html = html_json['html']
+            meta['html'] = html
+            meta['has_span'] = html_json['has_span']
+            meta['nums_col'] = html_json['nums_col']
+            meta['nums_row'] = html_json['nums_row']
+            meta['width'] = html_json['width']
+            meta['height'] = html_json['height']
+            meta['has_row_span'] = html_json['has_row_span']
+            meta['has_col_span'] = html_json['has_col_span']
             image_path = meta['image_path']
             break
 
@@ -95,5 +106,4 @@ class StaticTable(Component):
             image = image.convert("RGB")
         image, target_size = image_util.resize_keeping_aspect_ratio(image, target_size, Image.ANTIALIAS)
         for layer in layers:
-            layer.plain_html = html
-            layer.render_table(image=image)
+            layer.render_table(image=image, meta=meta)
