@@ -50,20 +50,21 @@ class SynthTable(Component):
         # styles
         # todo: select parser or other backgrounds
         for background_config in config_selectors['style']['global']['absolute']['background'].values:
-            if isinstance(background_config, dict):
-                if 'paper' in background_config:
-                    paper_params = {
-                        'paths': background_config['paper']['paths'].values,
-                        'weights': background_config['paper']['weights'].values,
-                        'alpha': background_config['paper']['alpha'].values,
-                        'grayscale': background_config['paper']['grayscale'].select(),
-                        'crop': background_config['paper']['crop'].select()
-                    }
-                    self.paper = Paper(paper_params)
-                elif 'gradient' in background_config:
-                    self.gradient_bg = background_config['gradient']
-                elif 'striped' in background_config:
-                    self.striped_bg = background_config['striped']
+            name = background_config['name']
+
+            if name == 'paper':
+                paper_params = {
+                    'paths': background_config['data']['paper']['paths'].values,
+                    'weights': background_config['data']['paper']['weights'].values,
+                    'alpha': background_config['data']['paper']['alpha'].values,
+                    'grayscale': background_config['data']['paper']['grayscale'].select(),
+                    'crop': background_config['data']['paper']['crop'].select()
+                }
+                self.paper = Paper(paper_params)
+            elif name == 'gradient':
+                self.gradient_bg = background_config['data']['gradient']
+            elif name == 'striped':
+                self.striped_bg = background_config['data']['striped']
 
         # color set
         self.dark_colors = config_selectors['style']['color_set']['dark']
@@ -97,10 +98,7 @@ class SynthTable(Component):
     def _sample_background(self, global_style, meta):
         # background
         background_config = self.config_selectors['style']['global']['absolute']['background'].select()
-        if isinstance(background_config, dict):
-            meta['background_config'] = next(iter(background_config))
-        else:
-            meta['background_config'] = background_config
+        meta['background_config'] = background_config['name']
 
         color_mode = meta['color_mode']
 
@@ -176,11 +174,10 @@ class SynthTable(Component):
                     global_style["tbody tr:nth-child({})".format(i + 1)]["color"] = dark_color
 
     def _sample_border(self, global_style, meta):
-        # background
         border_config = self.config_selectors['style']['global']['absolute']['border'].select()
-        border_type = next(iter(border_config))
+        border_type = border_config['name']
         meta['border_config'] = border_type
-        border_css = border_config[border_type]
+        border_css = border_config['data']
 
         self._set_css_to_global_style(border_css, global_style, meta)
 

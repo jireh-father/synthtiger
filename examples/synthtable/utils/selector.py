@@ -67,10 +67,12 @@ def parse_config(config):
                     v = config[k]
                     weights.append(v['weight'])
                     if len(v) > 1:
-                        components.append(
-                            {k: parse_config({sub_key: v[sub_key] for sub_key in v if sub_key != 'weight'})})
+                        components.append({
+                            'name': k,
+                            'config': parse_config({sub_key: v[sub_key] for sub_key in v if sub_key != 'weight'})
+                        })
                     else:
-                        components.append(k)
+                        components.append({'name': k})
 
                 return Selector(components, weights)
             elif 'values' in val:
