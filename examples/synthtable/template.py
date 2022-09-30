@@ -22,6 +22,7 @@ class SynthTable(templates.Template):
             config = {}
 
         self.quality = config.get("quality", [50, 95])
+        self.save_meta = config.get("save_meta", False)
         self.background = Background(config.get("background", {}))
         self.document = Document(config.get("document", {}))
         self.effect = components.Iterator(
@@ -63,13 +64,14 @@ class SynthTable(templates.Template):
 
         image = layer.output(bbox=[0, 0, *bg_size])
         quality = np.random.randint(self.quality[0], self.quality[1] + 1)
-
+        table_layer.meta['quality'] = quality
         data = {
             "image": image,
             "label": table_html,
             "quality": quality,
             "roi": roi,
-            "meta": table_layer.meta
+            "meta": table_layer.meta,
+            "save_meta": self.save_meta
         }
 
         return data
@@ -84,6 +86,7 @@ class SynthTable(templates.Template):
         quality = data["quality"]
         roi = data["roi"]
         meta = data["meta"]
+        save_meta = data['save_meta']
 
         # split
         # output_dirpath = os.path.join(root, "train")
@@ -106,9 +109,11 @@ class SynthTable(templates.Template):
         image = Image.fromarray(image[..., :3].astype(np.uint8))
         image.save(image_filepath, quality=quality)
 
-        meta_filename = f"image_{file_idx}_meta.json"
-        meta_filepath = os.path.join(output_dirpath, meta_filename)
-        json.dump(meta, open(meta_filepath, "w+", encoding='utf-8'))
+        # save meta json file
+        if save_meta:
+            meta_filename = f"image_{file_idx}_meta.json"
+            meta_filepath = os.path.join(output_dirpath, meta_filename)
+            json.dump(meta, open(meta_filepath, "w+", encoding='utf-8'))
 
         # save metadata (gt_json)
         metadata_filename = "metadata.jsonl"

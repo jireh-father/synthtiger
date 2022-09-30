@@ -1,5 +1,7 @@
 quality: [50, 95]
 
+save_meta: true
+
 background:
   image:
     paths: [resources/background]
