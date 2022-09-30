@@ -278,6 +278,11 @@ class SynthTable(Component):
             if thead_border_type == "bottom":
                 global_style['thead']['border-bottom'] = "{}px solid {}".format(border_width, border_color)
 
+            if self.config_selectors['style']['global']['absolute']['table_outline']['round'].on():
+                round_config = self.config_selectors['style']['global']['absolute']['table_outline']['round'].get()
+                global_style['table']['border-collapse'] = round_config['border-collapse'].select()
+                global_style['table']['border-radius'] = round_config['border-radius'].select()
+
     def sample_global_styles(self, meta):
         # static style
         global_style = defaultdict(dict)

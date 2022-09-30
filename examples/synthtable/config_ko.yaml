@@ -75,6 +75,12 @@ document:
                 empty_thead_border_type: [empty, all, top_bottom, bottom]
                 etc_thead_border_type: [empty, bottom]
                 border_width: [ 1, 5 ]
+                round:
+                  prob: 0.5
+                  border-collapse: separate
+                  border-radius:
+                    values: [ 3, 10 ]
+                    postfix: "px"
               background:
                 paper:
                   weight: 1
@@ -157,10 +163,6 @@ document:
               table:
   #              color: [] # font color
   #              font: []
-                border-radius:
-                  prob: 0.3
-                  values: [ 1, 10 ]
-                  postfix: "px"
                 margin:
                   prob: 0.5
                   values: [ 1, 50 ]
