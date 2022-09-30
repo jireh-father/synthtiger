@@ -15,7 +15,6 @@ from PIL import Image
 from synthtiger import components, layers, templates
 
 
-
 class SynthTable(templates.Template):
     def __init__(self, config=None, split_ratio: List[float] = [0.8, 0.1, 0.1]):
         super().__init__(config)
@@ -45,7 +44,10 @@ class SynthTable(templates.Template):
     def generate(self):
         table_layer, bg_size = self.document.generate()
 
-        bg_layer = self.background.generate(bg_size)
+        bg_layer, bg_image_meta, bg_effect_meta = self.background.generate(bg_size)
+        table_layer.meta['bg_image'] = bg_image_meta
+        table_layer.meta['bg_effect'] = bg_effect_meta
+
         # todo: remove etc tag in td cell(ex: <td><b>contents</b></td>)
         table_html = table_layer.html
 
@@ -55,7 +57,9 @@ class SynthTable(templates.Template):
         roi = np.array(table_layer.quad, dtype=int)
 
         layer = layers.Group([table_layer, bg_layer]).merge()
-        self.effect.apply([layer])
+        effect_meta = self.effect.apply([layer])
+
+        table_layer.meta['template_effect'] = effect_meta
 
         image = layer.output(bbox=[0, 0, *bg_size])
         quality = np.random.randint(self.quality[0], self.quality[1] + 1)

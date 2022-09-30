@@ -18,7 +18,7 @@ class Background:
 
     def generate(self, size):
         bg_layer = layers.RectLayer(size, (255, 255, 255, 255))
-        self.image.apply([bg_layer])
-        self.effect.apply([bg_layer])
+        bg_image_meta = self.image.apply([bg_layer])
+        bg_effect_meta = self.effect.apply([bg_layer])
 
-        return bg_layer
+        return bg_layer, bg_image_meta, bg_effect_meta

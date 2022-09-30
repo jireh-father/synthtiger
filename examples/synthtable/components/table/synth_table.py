@@ -40,19 +40,6 @@ def parse_html_style(config):
     return selectors
 
 
-def make_style_attribute(selectors, tag_name):
-    meta = {}
-    styles = []
-    for css_key in selectors:
-        selector = selectors[css_key]
-        css_val = selector.select()
-        if css_val is None:
-            continue
-        styles.append("{}: {}".format(css_key, css_val))
-        meta['local_{}_{}'.format(tag_name, css_key)] = css_val
-    return ";".join(styles), meta
-
-
 class SynthTable(Component):
     def __init__(self, config_selectors):
         super().__init__()
@@ -233,7 +220,7 @@ class SynthTable(Component):
 
         font_size_scale = self.config_selectors['style']['global']['relative']['thead']['font_size'].select()
 
-        head_font_size = int(round(float(meta["table_font-size"].split("px")[0]) * font_size_scale))
+        head_font_size = int(round(float(global_style['table']['font-size'].split("px")[0]) * font_size_scale))
         global_style['thead tr']['font-size'] = str(head_font_size) + "px"
 
     def _sample_table_outline(self, global_style, meta):
@@ -282,8 +269,13 @@ class SynthTable(Component):
                 round_config = self.config_selectors['style']['global']['absolute']['table_outline']['round'].get()
                 global_style['table']['border-collapse'] = round_config['border-collapse'].select()
                 global_style['table']['border-radius'] = round_config['border-radius'].select()
+                meta['table_outline_round'] = True
+                meta['table_outline_radius'] = global_style['table']['border-radius']
+        meta['table_border_type'] = border_type
+        meta['table_border_width'] = border_width
+        meta['thead_border_type'] = thead_border_type
 
-    def sample_global_styles(self, meta):
+    def sample_styles(self, meta):
         # static style
         global_style = defaultdict(dict)
         global_style['#table_wrapper']["display"] = "inline-block"
@@ -317,7 +309,6 @@ class SynthTable(Component):
                 if value is None:
                     continue
                 global_style[css_selector][css_key] = value
-                meta[css_selector + '_' + css_key] = value
 
     def _set_local_css_styles(self, global_style, config_key, css_selector_name, meta):
         local_config = self.config_selectors['style']['local'].get()
@@ -339,9 +330,12 @@ class SynthTable(Component):
                     continue
                 global_style[css_selector_name][css_selector] = val
                 if font_size_scale:
-                    font_size = int(round(float(meta["table_font-size"].split("px")[0]) * font_size_scale))
+                    font_size = int(round(float(global_style['table']['font-size'].split("px")[0]) * font_size_scale))
                     global_style[css_selector_name]['font-size'] = str(font_size) + "px"
+                    meta[css_selector_name + "_font_size_scale"] = font_size_scale
+                    meta[css_selector_name + "_font_size"] = font_size
                 if use_color_mode:
+                    meta[css_selector_name + "_color_mode"] = color_mode
                     if color_mode == "dark":
                         global_style[css_selector_name]['color'] = self._sample_light_color()
                         global_style[css_selector_name]['background-color'] = self._sample_dark_color()
@@ -390,11 +384,8 @@ class SynthTable(Component):
         meta['synth_structure'] = synth_structure
         meta['synth_content'] = synth_content
 
-        # global styles
-        meta['global_style'] = self.sample_global_styles(meta)
-
-        # local styles
-        # meta['html_with_local_style'] = self.sample_local_styles(meta['html'], meta)
+        # global absolute and css styles
+        meta['global_style'] = self.sample_styles(meta)
 
         # global relative styles
         relative_style = defaultdict(dict)

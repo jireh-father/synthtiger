@@ -58,6 +58,7 @@ class Document:
                     table_layer.table_size[1] * np.random.uniform(self.margin[0], self.margin[1]))
             bg_size = (bg_width, bg_height)
 
-        self.effect.apply([table_layer])
+        effect_meta = self.effect.apply([table_layer])
+        table_layer.meta['document_effect'] = effect_meta
 
         return table_layer, bg_size
