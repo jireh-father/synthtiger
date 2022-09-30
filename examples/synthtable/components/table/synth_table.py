@@ -54,17 +54,17 @@ class SynthTable(Component):
 
             if name == 'paper':
                 paper_params = {
-                    'paths': background_config['data']['paper']['paths'].values,
-                    'weights': background_config['data']['paper']['weights'].values,
-                    'alpha': background_config['data']['paper']['alpha'].values,
-                    'grayscale': background_config['data']['paper']['grayscale'].select(),
-                    'crop': background_config['data']['paper']['crop'].select()
+                    'paths': background_config['config']['paper']['paths'].values,
+                    'weights': background_config['config']['paper']['weights'].values,
+                    'alpha': background_config['config']['paper']['alpha'].values,
+                    'grayscale': background_config['config']['paper']['grayscale'].select(),
+                    'crop': background_config['config']['paper']['crop'].select()
                 }
                 self.paper = Paper(paper_params)
             elif name == 'gradient':
-                self.gradient_bg = background_config['data']['gradient']
+                self.gradient_bg = background_config['config']['gradient']
             elif name == 'striped':
-                self.striped_bg = background_config['data']['striped']
+                self.striped_bg = background_config['config']['striped']
 
         # color set
         self.dark_colors = config_selectors['style']['color_set']['dark']
@@ -177,7 +177,7 @@ class SynthTable(Component):
         border_config = self.config_selectors['style']['global']['absolute']['border'].select()
         border_type = border_config['name']
         meta['border_config'] = border_type
-        border_css = border_config['data']
+        border_css = border_config['config']
 
         self._set_css_to_global_style(border_css, global_style, meta)
 
