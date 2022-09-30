@@ -37,7 +37,7 @@ document:
           paths: [ resources/table_image ]
           lower_image_size_ratios: [ 0.9 ]
         html:
-          paths: [ resources/table_html ]
+          paths: [ resources/table_html/train ]
           weights: [ 1 ]
           min_row: 2
           max_row: 10
@@ -52,7 +52,7 @@ document:
       synth:
         weight: 4
         html:
-          paths: [ resources/table_html ]
+          paths: [ resources/table_html/train ]
           weights: [1]
           synth_structure:
             prob: 0.0
