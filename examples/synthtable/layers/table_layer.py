@@ -98,7 +98,6 @@ class TableLayer(Layer):
 
         self.global_style['table']['width'] = str(table_width) + "px"
         self.global_style['table']['height'] = str(table_height) + "px"
-        print(self.global_style)
 
         if paper is not None:
             paper_layer = paper.generate((image_width, image_height))
