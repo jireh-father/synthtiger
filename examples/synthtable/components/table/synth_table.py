@@ -54,17 +54,17 @@ class SynthTable(Component):
 
             if name == 'paper':
                 paper_params = {
-                    'paths': background_config['config']['paper']['paths'].values,
-                    'weights': background_config['config']['paper']['weights'].values,
-                    'alpha': background_config['config']['paper']['alpha'].values,
-                    'grayscale': background_config['config']['paper']['grayscale'].select(),
-                    'crop': background_config['config']['paper']['crop'].select()
+                    'paths': background_config['config']['paths'].values,
+                    'weights': background_config['config']['weights'].values,
+                    'alpha': background_config['config']['alpha'].values,
+                    'grayscale': background_config['config']['grayscale'].select(),
+                    'crop': background_config['config']['crop'].select()
                 }
                 self.paper = Paper(paper_params)
             elif name == 'gradient':
-                self.gradient_bg = background_config['config']['gradient']
+                self.gradient_bg = background_config['config']
             elif name == 'striped':
-                self.striped_bg = background_config['config']['striped']
+                self.striped_bg = background_config['config']
 
         # color set
         self.dark_colors = config_selectors['style']['color_set']['dark']
