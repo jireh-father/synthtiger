@@ -43,13 +43,19 @@ class SynthTable(templates.Template):
 
     def _filter_html(self, html):
         if self.html_output["remove_close_tag"]:
+            print(html)
             html = html_util.remove_close_tags(html)
+            print(html)
 
         if self.html_output["remove_thead_tbody"]:
+            print(html)
             html = html_util.remove_thead_tbody_tag(html)
+            print(html)
 
         if self.html_output["remove_tag_in_content"]:
+            print(html)
             html = html_util.remove_tag_in_table_cell(html)
+            print(html)
         return html
 
     def generate(self):
