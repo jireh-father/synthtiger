@@ -140,14 +140,15 @@ def parse_args():
         "--worker",
         metavar="NUM",
         type=int,
-        default=1,
+        default=4,
         help="Number of workers. [default: 1]",
     )
     parser.add_argument(
-        "input",
+        "--input",
         metavar="INPUT",
         type=str,
         help="Directory path containing font files.",
+        default="E:\dataset\ocr\\fonts\\fontbox_4079"
     )
     args = parser.parse_args()
 

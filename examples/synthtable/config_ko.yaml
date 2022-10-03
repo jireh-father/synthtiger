@@ -80,6 +80,8 @@ document:
             absolute:
               thead:
                 color_mode: [dark, light]
+                font:
+                  prob: 0.2
               table_outline:
                 border_type: [ empty, all, top_bottom, left_right]
                 empty_thead_border_type: [empty, all, top_bottom, bottom]
@@ -240,8 +242,12 @@ document:
             absolute:
               tr:
                 color_mode: [light, dark]
+                font:
+                  prob: 0.1
               td:
                 color_mode: [light, dark]
+                font:
+                  prob: 0.1
             relative:
               tr:
                 prob: 0.1

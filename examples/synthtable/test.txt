@@ -1,9 +1,0 @@
-AliceBlue	F0F8FF	240,248,255
-AntiqueWhite	FAEBD7	250,235,215
-Aqua	00FFFF	0,255,255
-Aquamarine	7FFFD4	127,255,212
-Azure	F0FFFF	240,255,255
-Beige	F5F5DC	245,245,220
-Bisque
-BlanchedAlmond
-BurlyWood

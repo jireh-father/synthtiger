@@ -1,6 +1,8 @@
 import os
 import traceback
 import json
+import uuid
+
 from synthtiger.components.component import Component
 from utils.switch import BoolSwitch
 from utils.path_selector import PathSelector
@@ -13,6 +15,8 @@ import numpy as np
 from bs4 import BeautifulSoup
 import re
 from utils import html_util
+from synthtiger import components
+
 
 def parse_html_style_values_dict(dict_values):
     weights = dict_values['weights'] if 'weights' in dict_values else None
@@ -42,8 +46,9 @@ def parse_html_style(config):
 
 
 class SynthTable(Component):
-    def __init__(self, config_selectors):
+    def __init__(self, config_selectors, config):
         super().__init__()
+        self.config = config
         self.config_selectors = config_selectors
         self.html_path_selector = PathSelector(config_selectors['html']['paths'].values,
                                                config_selectors['html']['weights'].values, exts=['.json'])
@@ -54,14 +59,8 @@ class SynthTable(Component):
             name = background_config['name']
 
             if name == 'paper':
-                paper_params = {
-                    'paths': background_config['config']['paths'].values,
-                    'weights': background_config['config']['weights'].values,
-                    'alpha': background_config['config']['alpha'].values,
-                    'grayscale': background_config['config']['grayscale'].select(),
-                    'crop': background_config['config']['crop'].select()
-                }
-                self.paper = Paper(paper_params)
+                paper_config = config["style"]["global"]["background"]["paper"]
+                self.paper = Paper({k: paper_config[k] for k in paper_config if k != "weight"})
             elif name == 'gradient':
                 self.gradient_bg = background_config['config']
             elif name == 'striped':
@@ -86,6 +85,8 @@ class SynthTable(Component):
         self.has_row_span = config_selectors['html']['has_row_span']
         tmp_path = config_selectors['html']['tmp_path'].select()
         os.makedirs(tmp_path, exist_ok=True)
+
+        self.font = components.BaseFont(**config["style"].get("font", {}))
 
     def _sample_global_color_mode(self):
         return self.global_color_mode.select()
@@ -221,6 +222,13 @@ class SynthTable(Component):
         head_font_size = int(round(float(global_style['table']['font-size'].split("px")[0]) * font_size_scale))
         global_style['thead tr']['font-size'] = str(head_font_size) + "px"
 
+        if self.config_selectors['style']['global']['absolute']['thead']['font'].on():
+            font_face = self._sample_font()
+            global_style['@font-face'] = [font_face]
+            global_style['thead tr']['font-family'] = font_face['font-family']
+
+
+
     def _sample_table_outline(self, global_style, meta):
         if meta['background_config'] != 'paper':
             color_mode = meta['color_mode']
@@ -273,6 +281,15 @@ class SynthTable(Component):
         meta['table_border_width'] = border_width
         meta['thead_border_type'] = thead_border_type
 
+    def _sample_font(self):
+        font_path = os.path.abspath(self.font.sample()["path"])
+        font_family = str(uuid.uuid4())
+        return {
+            'font-family': font_family,
+            'src': 'url("{}") format("truetype")'.format(font_path),
+            'font-weight': 'normal'
+        }
+
     def sample_styles(self, meta):
         # static style
         global_style = defaultdict(dict)
@@ -281,6 +298,11 @@ class SynthTable(Component):
 
         # absolutes
         meta['color_mode'] = self._sample_global_color_mode()
+
+        # font
+        font_face = self._sample_font()
+        global_style['@font-face'] = [font_face]
+        global_style['table']['font-family'] = font_face['font-family']
 
         # css
         css_selectors = self.config_selectors['style']['global']['css']
@@ -310,11 +332,13 @@ class SynthTable(Component):
 
     def _set_local_css_styles(self, global_style, config_key, css_selector_name, meta):
         local_config = self.config_selectors['style']['local'].get()
-        use_color_mode = config_key in local_config['absolute']
+        use_absolute = config_key in local_config['absolute']
         use_relative = config_key in local_config['relative']
         if local_config['css'][config_key].on():
-            if use_color_mode:
+            if use_absolute:
                 color_mode = local_config['absolute'][config_key]['color_mode'].select()
+                use_font = local_config['absolute'][config_key]['font'].on()
+
             font_size_scale = None
             if use_relative and local_config['relative'][config_key].on():
                 # todo:
@@ -332,7 +356,11 @@ class SynthTable(Component):
                     global_style[css_selector_name]['font-size'] = str(font_size) + "px"
                     meta[css_selector_name + "_font_size_scale"] = font_size_scale
                     meta[css_selector_name + "_font_size"] = font_size
-                if use_color_mode:
+                if use_absolute:
+                    if use_font:
+                        font_face = self._sample_font()
+                        global_style['@font-face'] = [font_face]
+                        global_style[css_selector_name]['font-family'] = font_face['font-family']
                     meta[css_selector_name + "_color_mode"] = color_mode
                     if color_mode == "dark":
                         global_style[css_selector_name]['color'] = self._sample_light_color()

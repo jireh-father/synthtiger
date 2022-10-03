@@ -17,9 +17,9 @@ class Table():
         for selector_dict in self.table_selector.values:
             name = selector_dict['name']
             if name == 'static':
-                self.static = comps.StaticTable(selector_dict['config'])
+                self.static = comps.StaticTable(selector_dict['config'], config["static"])
             else:
-                self.synth = comps.SynthTable(selector_dict['config'])
+                self.synth = comps.SynthTable(selector_dict['config'], config["synth"])
 
     def generate(self, size, max_size):
         table_layer = TableLayer(size)
