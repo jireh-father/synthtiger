@@ -10,7 +10,7 @@ from utils.path_selector import PathSelector
 
 
 class StaticTable(Component):
-    def __init__(self, config_selectors):
+    def __init__(self, config_selectors, config):
 
         super(StaticTable, self).__init__()
         self.html_path_selector = PathSelector(config_selectors['html']['paths'].values,
