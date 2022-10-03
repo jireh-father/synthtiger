@@ -19,12 +19,19 @@ class TableLayer(Layer):
     def _convert_global_style_to_css(self):
         css_list = []
         for selector in self.global_style:
-            styles = []
-            for key in self.global_style[selector]:
-                value = self.global_style[selector][key]
-                styles.append("{}: {};".format(key, value))
+            if selector == '@font-face':
+                for font_face_dict in self.global_style[selector]:
+                    styles = []
+                    for key in font_face_dict:
+                        styles.append("{}: {};".format(key, font_face_dict[key]))
+                    css_list.append(selector + " { " + "".join(styles) + " }")
+            else:
+                styles = []
+                for key in self.global_style[selector]:
+                    value = self.global_style[selector][key]
+                    styles.append("{}: {};".format(key, value))
 
-            css_list.append(selector + " { " + "".join(styles) + " }")
+                css_list.append(selector + " { " + "".join(styles) + " }")
 
         return "\n".join(css_list)
 

@@ -224,10 +224,8 @@ class SynthTable(Component):
 
         if self.config_selectors['style']['global']['absolute']['thead']['font'].on():
             font_face = self._sample_font()
-            global_style['@font-face'] = [font_face]
+            global_style['@font-face'].append(font_face)
             global_style['thead tr']['font-family'] = font_face['font-family']
-
-
 
     def _sample_table_outline(self, global_style, meta):
         if meta['background_config'] != 'paper':
@@ -359,7 +357,7 @@ class SynthTable(Component):
                 if use_absolute:
                     if use_font:
                         font_face = self._sample_font()
-                        global_style['@font-face'] = [font_face]
+                        global_style['@font-face'].append(font_face)
                         global_style[css_selector_name]['font-family'] = font_face['font-family']
                     meta[css_selector_name + "_color_mode"] = color_mode
                     if color_mode == "dark":
