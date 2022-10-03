@@ -59,7 +59,7 @@ class SynthTable(Component):
             name = background_config['name']
 
             if name == 'paper':
-                paper_config = config["style"]["global"]["background"]["paper"]
+                paper_config = config["style"]["global"]["absolute"]["background"]["paper"]
                 self.paper = Paper({k: paper_config[k] for k in paper_config if k != "weight"})
             elif name == 'gradient':
                 self.gradient_bg = background_config['config']
