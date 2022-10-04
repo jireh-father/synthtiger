@@ -57,8 +57,12 @@ class SynthTable(templates.Template):
         # todo:
         '''
         synth structure
-
+        
+        >> corpus: table corpus인 경우 일반 corpus처럼 파일 따로 만들어놓기 
+        
         synth contents
+        
+        
         
         html 모든 파일 순서대로 사용하도록 변경하기(process 1, html 파일 갯수 만큼 만들도록)
         

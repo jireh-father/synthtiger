@@ -100,7 +100,6 @@ class TableCorpus(Component):
             self._charset = utils.read_charset(self.charset)
 
     def _update_contents(self):
-        print("updating table corpus contents")
         self._contents_thead = []
         self._offsets_thead = []
         self._counts_thead = []
@@ -175,7 +174,6 @@ class TableCorpus(Component):
             offsets_thead.close()
             contents_tbody.close()
             offsets_tbody.close()
-        print("updated table corpus contents")
 
     def _check_length(self, text):
         if self.min_length is not None and len(text) < self.min_length:
