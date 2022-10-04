@@ -60,7 +60,7 @@ document:
                 min_length: 1
                 max_length: 25
                 textcase: [lower, upper, capitalize]
-                charset: resources/charset/en
+#                charset: resources/charset/en
               text_corpus:
                 weight: 0
                 paths: [ resources/table_html/train ]
