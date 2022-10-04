@@ -88,6 +88,17 @@ def main(args):
         else:
             val_thead_text_list.update(thead_text_set)
             val_tbody_text_list.update(tbody_text_set)
+    train_thead_text_list = list(train_thead_text_list)
+    train_thead_text_list.sort()
+
+    train_tbody_text_list = list(train_tbody_text_list)
+    train_tbody_text_list.sort()
+
+    val_thead_text_list = list(val_thead_text_list)
+    val_thead_text_list.sort()
+
+    val_tbody_text_list = list(val_tbody_text_list)
+    val_tbody_text_list.sort()
     open(train_thead_corpus_output, "w+", encoding='utf-8').writelines(
         ["\n" + text for i, text in enumerate(train_thead_text_list) if i > 0])
     open(train_tbody_corpus_output, "w+", encoding='utf-8').writelines(

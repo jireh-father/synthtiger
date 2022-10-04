@@ -66,31 +66,58 @@ document:
           synth_content:
             prob: 0.0
             corpus:
-              length_augmentable_corpus:
-                weight: 1
-                paths: [ resources/corpus/mjsynth.txt, resources/corpus/synthtext.txt ]
-                weights: [ 1, 1 ]
-                min_length: 1
-                max_length: 200
-                textcase: [ lower, upper, capitalize ]
-                augmentation: 0.1
-                augmentation_length: [ 1, 25 ]
-              char_augmentable_corpus:
-                weight: 1
-                paths: [ ]
-                weights: [ ]
-                min_length: 1
-                max_length: 200
-                textcase: [ lower, upper, capitalize ]
-                augmentation: 0
-                augmentation_charset: resources/charset/alphanum_special.txt
-              base_corpus:
-                weight: 1
-                paths: [ resources/corpus/pubtabnet ]
-                weights: [ 1 ]
-                min_length: 1
-                max_length: 200
-                textcase: [ lower, upper, capitalize ]
+              thead_corpus:
+                length_augmentable_corpus:
+                  weight: 1
+                  paths: [ resources/corpus/mjsynth.txt, resources/corpus/synthtext.txt ]
+                  weights: [ 1, 1 ]
+                  min_length: 1
+                  max_length: 200
+                  textcase: [ lower, upper, capitalize ]
+                  augmentation: 0.1
+                  augmentation_length: [ 1, 25 ]
+                char_augmentable_corpus:
+                  weight: 1
+                  paths: [ resources/corpus/pubtabnet/train_thead_corpus.txt ]
+                  weights: [ ]
+                  min_length: 1
+                  max_length: 200
+                  textcase: [ lower, upper, capitalize ]
+                  augmentation: 0.1
+                  augmentation_charset: resources/charset/alphanum_special.txt
+                base_corpus:
+                  weight: 1
+                  paths: [ resources/corpus/pubtabnet/train_thead_corpus.txt ]
+                  weights: [ 1 ]
+                  min_length: 1
+                  max_length: 200
+                  textcase: [ lower, upper, capitalize ]
+              tbody_corpus:
+                length_augmentable_corpus:
+                  weight: 1
+                  paths: [ resources/corpus/mjsynth.txt, resources/corpus/synthtext.txt ]
+                  weights: [ 1, 1 ]
+                  min_length: 1
+                  max_length: 200
+                  textcase: [ lower, upper, capitalize ]
+                  augmentation: 0.1
+                  augmentation_length: [ 1, 25 ]
+                char_augmentable_corpus:
+                  weight: 1
+                  paths: [ ]
+                  weights: [ ]
+                  min_length: 1
+                  max_length: 200
+                  textcase: [ lower, upper, capitalize ]
+                  augmentation: 0.1
+                  augmentation_charset: resources/charset/alphanum_special.txt
+                base_corpus:
+                  weight: 1
+                  paths: [ resources/corpus/pubtabnet/ ]
+                  weights: [ 1 ]
+                  min_length: 1
+                  max_length: 200
+                  textcase: [ lower, upper, capitalize ]
             #                charset: resources/charset/en
             empty_cell:
               prob: 0.1
