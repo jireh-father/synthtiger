@@ -502,7 +502,7 @@ class SynthTable(Component):
             tags.append("</tr>")
             if add_thead and thead_rows == row + 1:
                 tags.append("</thead>")
-            if row == meta['num_rows'] - 1:
+            if row == meta['nums_row'] - 1:
                 tags.append("</tbody>")
         tags.append("</table>")
 
