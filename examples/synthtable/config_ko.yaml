@@ -28,7 +28,7 @@ document:
   content:
     table:
       static:
-        weight: 1
+        weight: 0
         image:
           paths: [ resources/table_image ]
           lower_image_size_ratios: [ 0.9 ]
