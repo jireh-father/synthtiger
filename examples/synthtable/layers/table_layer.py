@@ -97,6 +97,11 @@ class TableLayer(Layer):
         # todo: get div size and apply
         table_width = int(table_element.size['width'] * self.meta['relative_style']['table']['width_scale'])
         table_height = int(table_element.size['height'] * self.meta['relative_style']['table']['height_scale'])
+        ar = table_width / table_height
+        if self.meta['aspect_ratio'][0] > ar:
+            table_width = int(table_height * self.meta['aspect_ratio'][0])
+        if self.meta['aspect_ratio'][1] < ar:
+            table_height = int(table_width / self.meta['aspect_ratio'][1])
 
         # driver.close()
         margin_horizontal, margin_vertical = self._get_margin_vertical_and_horizontal()

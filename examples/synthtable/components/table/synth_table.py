@@ -2,7 +2,7 @@ import os
 import traceback
 import json
 import uuid
-
+import numpy
 from synthtiger.components.component import Component
 from utils.switch import BoolSwitch
 from utils.path_selector import PathSelector
@@ -87,6 +87,10 @@ class SynthTable(Component):
         os.makedirs(tmp_path, exist_ok=True)
 
         self.font = components.BaseFont(**config["style"].get("font", {}))
+        self.span_switch = config_selectors['html']['synth_structure'].get()['span']
+        self.row_span_switch = config_selectors['html']['synth_structure'].get()['span'].get()['row_span']
+        self.col_span_switch = config_selectors['html']['synth_structure'].get()['span'].get()['col_span']
+        self.thead_switch = config_selectors['html']['synth_structure'].get()['thead']
 
     def _sample_global_color_mode(self):
         return self.global_color_mode.select()
@@ -401,7 +405,10 @@ class SynthTable(Component):
         synth_structure = self.config_selectors['html']['synth_structure'].on()
         synth_content = self.config_selectors['html']['synth_content'].on()
         if synth_structure:
-            pass
+            synth_structure_config = self.config_selectors['html']['synth_structure'].get()
+            meta['num_rows'] = synth_structure_config['num_rows'].select()
+            meta['num_cols'] = synth_structure_config['num_cols'].select()
+            meta['span'] = self.span_switch.on()
         else:
             html_path, html_json = self._sample_html_path()
             meta['html_path'] = html_path
@@ -412,7 +419,7 @@ class SynthTable(Component):
             meta['nums_col'] = html_json['nums_col']
             meta['nums_row'] = html_json['nums_row']
         meta['synth_structure'] = synth_structure
-        meta['synth_content'] = synth_content
+        meta['synth_content'] = False if synth_structure else synth_content
 
         # global absolute and css styles
         meta['global_style'] = self.sample_styles(meta)
@@ -427,6 +434,7 @@ class SynthTable(Component):
         meta['relative_style'] = relative_style
 
         meta['tmp_path'] = self.config_selectors['html']['tmp_path'].select()
+        meta['aspect_ratio'] = self.config["style"]["aspect_ratio"]
         return meta
 
     def _sample_html_path(self):
@@ -449,19 +457,65 @@ class SynthTable(Component):
 
             return html_json_path, html_json
 
+    def _synth_structure_and_content(self, meta):
+        if meta['span']:
+            span_table = np.full((meta['num_rows'], meta['num_cols']), False)
+
+        tags = ["<table>"]
+        if self.thead_switch.on():
+            add_thead = True
+            thead_rows = self.thead_switch.get()['rows'].select()
+        for row in range(meta['num_rows']):
+            if add_thead:
+                if row == 0:
+                    tags.append("<tbody>")
+                elif row == add_thead:
+                    tags.append("<tbody>")
+            else:
+                if row == 0:
+                    tags.append("<tbody>")
+            tags.append("<tr>")
+            for col in range(meta['num_cols']):
+                if meta['span']:
+                    if span_table[row][col]:
+                        continue
+                    spans = []
+                    if self.row_span_switch.on():
+                        max_row_span = meta['num_rows'] - row
+                        if max_row_span > 1:
+                            row_span = np.random.randint(2, max_row_span + 1)
+                            spans.append(' rowspan="{}"'.format(row_span))
+                            span_table[row:row + row_span, col] = True
+                    if self.col_span_switch.on():
+                        max_col_span = meta['num_cols'] - col
+                        if max_col_span > 1:
+                            col_span = np.random.randint(2, max_col_span + 1)
+                            spans.append(' colspan="{}"'.format(col_span))
+                            span_table[row, col:col + col_span] = True
+                    span_attr = "".join(spans)
+                    tags.append("<td{}>".format(span_attr))
+                else:
+                    tags.append("<td>")
+                # todo: get content
+                # tags.append(content)
+                tags.append("</td>")
+            tags.append("</tr>")
+            if add_thead and thead_rows == row + 1:
+                tags.append("</thead>")
+            if row == meta['num_rows'] - 1:
+                tags.append("</tbody>")
+        tags.append("</table>")
+
+    def _synth_content(self, meta):
+        pass
+
     def apply(self, layers, meta=None):
         meta = self.sample(meta)
         if meta['synth_structure']:
-            # meta['nums_col'] = html_json['nums_col']
-            # meta['nums_row'] = html_json['nums_row']
-            pass
-        else:
-            html = meta['html']
+            self._synth_structure_and_content(meta)
 
         if meta['synth_content']:
-            pass
-        else:
-            pass
+            self._synth_content(meta)
 
         if meta['background_config'] == 'paper':
             paper = self.paper

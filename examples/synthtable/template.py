@@ -56,11 +56,9 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        폰트구현
-         - 웹에서 지원안되는 폰트들 제외 (어떻게 확인?)
-         - glyphs 뽑아내기 실행
+        synth structure
 
-        생성한 이미지 max_width, aspect_ratio에 따라 이미지 자동 리사이징 혹은 삭제
+        synth contents
 
         meta 넣어서 static 이미지 만들기
         
