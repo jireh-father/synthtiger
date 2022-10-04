@@ -122,7 +122,7 @@ class TableCorpus(Component):
 
             paths = [path]
             if os.path.isdir(path):
-                paths = search_files(path, exts=['json'])
+                paths = search_files(path, exts=['.json'])
 
             for json_path in paths:
                 print(json_path)
