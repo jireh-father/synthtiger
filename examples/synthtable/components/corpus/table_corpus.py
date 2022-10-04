@@ -106,9 +106,7 @@ class TableCorpus(Component):
         self._contents_tbody = []
         self._offsets_tbody = []
         self._counts_tbody = []
-        print(self.paths)
         for path in self.paths:
-            print(path)
             offset_thead = 0
             count_thead = 0
             contents_thead = io.StringIO()
@@ -125,14 +123,13 @@ class TableCorpus(Component):
                 paths = search_files(path, exts=['.json'])
 
             for json_path in paths:
-                print(json_path)
                 data = json.load(open(json_path, encoding="utf-8"))
                 html = data['html'].strip()
                 bs = BeautifulSoup(html, 'html.parser')
                 thead = bs.find("thead")
                 if thead:
                     for td in thead.find_all("td"):
-                        text = td.string.text.strip()
+                        text = td.text.strip()
                         if not self._check_length(text):
                             continue
                         if not self._check_charset(text):
@@ -145,7 +142,7 @@ class TableCorpus(Component):
                     thead.extract()
                 tbody = bs.find("table")
                 for td in tbody.find_all("td"):
-                    text = td.string.text.strip()
+                    text = td.text.strip()
                     if not self._check_length(text):
                         continue
                     if not self._check_charset(text):
@@ -162,9 +159,6 @@ class TableCorpus(Component):
             self._contents_tbody.append(contents_tbody.getvalue())
             self._offsets_tbody.append(np.frombuffer(offsets_tbody.getvalue(), dtype=np.uint32))
             self._counts_tbody.append(count_tbody)
-            print(self._counts_thead)
-            print(self._counts_tbody)
-            sys.exit()
 
             contents_thead.close()
             offsets_thead.close()
