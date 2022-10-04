@@ -406,8 +406,8 @@ class SynthTable(Component):
         synth_content = self.config_selectors['html']['synth_content'].on()
         if synth_structure:
             synth_structure_config = self.config_selectors['html']['synth_structure'].get()
-            meta['num_rows'] = synth_structure_config['num_rows'].select()
-            meta['num_cols'] = synth_structure_config['num_cols'].select()
+            meta['nums_row'] = synth_structure_config['nums_row'].select()
+            meta['nums_col'] = synth_structure_config['nums_col'].select()
             meta['span'] = self.span_switch.on()
         else:
             html_path, html_json = self._sample_html_path()
@@ -459,13 +459,13 @@ class SynthTable(Component):
 
     def _synth_structure_and_content(self, meta):
         if meta['span']:
-            span_table = np.full((meta['num_rows'], meta['num_cols']), False)
+            span_table = np.full((meta['nums_row'], meta['nums_col']), False)
 
         tags = ["<table>"]
         add_thead = self.thead_switch.on()
         if add_thead:
             thead_rows = self.thead_switch.get()['rows'].select()
-        for row in range(meta['num_rows']):
+        for row in range(meta['nums_row']):
             if add_thead:
                 if row == 0:
                     tags.append("<tbody>")
@@ -475,19 +475,19 @@ class SynthTable(Component):
                 if row == 0:
                     tags.append("<tbody>")
             tags.append("<tr>")
-            for col in range(meta['num_cols']):
+            for col in range(meta['nums_col']):
                 if meta['span']:
                     if span_table[row][col]:
                         continue
                     spans = []
                     if self.row_span_switch.on():
-                        max_row_span = meta['num_rows'] - row
+                        max_row_span = meta['nums_row'] - row
                         if max_row_span > 1:
                             row_span = np.random.randint(2, max_row_span + 1)
                             spans.append(' rowspan="{}"'.format(row_span))
                             span_table[row:row + row_span, col] = True
                     if self.col_span_switch.on():
-                        max_col_span = meta['num_cols'] - col
+                        max_col_span = meta['nums_col'] - col
                         if max_col_span > 1:
                             col_span = np.random.randint(2, max_col_span + 1)
                             spans.append(' colspan="{}"'.format(col_span))
