@@ -82,10 +82,10 @@ def main(args):
         else:
             val_thead_text_list.update(thead_text_set)
             val_tbody_text_list.update(tbody_text_set)
-    open(train_thead_corpus_output, "w+", encoding='utf-8').writelines(train_thead_text_list)
-    open(train_tbody_corpus_output, "w+", encoding='utf-8').writelines(train_tbody_text_list)
-    open(val_thead_corpus_output, "w+", encoding='utf-8').writelines(val_thead_text_list)
-    open(val_tbody_corpus_output, "w+", encoding='utf-8').writelines(val_tbody_text_list)
+    open(train_thead_corpus_output, "w+", encoding='utf-8').writelines(list(train_thead_text_list))
+    open(train_tbody_corpus_output, "w+", encoding='utf-8').writelines(list(train_tbody_text_list))
+    open(val_thead_corpus_output, "w+", encoding='utf-8').writelines(list(val_thead_text_list))
+    open(val_tbody_corpus_output, "w+", encoding='utf-8').writelines(list(val_tbody_text_list))
 
     print("done")
 

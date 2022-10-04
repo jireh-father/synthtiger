@@ -66,17 +66,9 @@ document:
           synth_content:
             prob: 0.0
             corpus:
-              table_corpus:
-                weight: 5
-                paths: [ resources/table_html/train ]
-                weights: [ 1 ]
-                min_length: 1
-                max_length: 25
-                textcase: [ lower, upper, capitalize ]
-              #                charset: resources/charset/en
               text_corpus:
                 weight: 0
-                paths: [ resources/table_html/train ]
+                paths: [ resources/corpus/pubtabnet ]
                 weights: [ 1 ]
                 min_length: 1
                 max_length: 25

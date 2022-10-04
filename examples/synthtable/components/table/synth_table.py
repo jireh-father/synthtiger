@@ -96,9 +96,9 @@ class SynthTable(Component):
         table_corpus_config = config["html"]["synth_content"]["corpus"]["table_corpus"]
         self.table_corpus = comps.TableCorpus(
             **{k: table_corpus_config[k] for k in table_corpus_config if k != "weight"})
-        # text_corpus_config = config["html"]["synth_content"]["corpus"]["text_corpus"]
-        # self.text_corpus = components.BaseCorpus(
-        #     **{k: text_corpus_config[k] for k in text_corpus_config if k != "weight"})
+        text_corpus_config = config["html"]["synth_content"]["corpus"]["text_corpus"]
+        self.text_corpus = components.BaseCorpus(
+            **{k: text_corpus_config[k] for k in text_corpus_config if k != "weight"})
         self.empty_cell_switch = config_selectors['html']['synth_content'].get()['empty_cell']
 
     def _sample_global_color_mode(self):
