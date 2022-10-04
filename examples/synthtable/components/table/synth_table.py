@@ -505,6 +505,7 @@ class SynthTable(Component):
             if row == meta['nums_row'] - 1:
                 tags.append("</tbody>")
         tags.append("</table>")
+        meta['html'] = "".join(tags)
 
     def _synth_content(self, meta):
         pass
