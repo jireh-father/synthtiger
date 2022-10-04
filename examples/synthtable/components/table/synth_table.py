@@ -462,8 +462,8 @@ class SynthTable(Component):
             span_table = np.full((meta['num_rows'], meta['num_cols']), False)
 
         tags = ["<table>"]
-        if self.thead_switch.on():
-            add_thead = True
+        add_thead = self.thead_switch.on()
+        if add_thead:
             thead_rows = self.thead_switch.get()['rows'].select()
         for row in range(meta['num_rows']):
             if add_thead:
