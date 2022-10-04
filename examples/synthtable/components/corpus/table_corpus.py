@@ -124,6 +124,7 @@ class TableCorpus(Component):
                 paths = search_files(path, exts=['json'])
 
             for json_path in paths:
+                print(json_path)
                 data = json.load(open(json_path, encoding="utf-8"))
                 html = data['html'].strip()
                 bs = BeautifulSoup(html, 'html.parser')
