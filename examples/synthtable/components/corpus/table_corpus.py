@@ -193,7 +193,8 @@ class TableCorpus(Component):
     def _sample_text(self, thead_or_tbody):
         key = np.random.choice(len(self.paths), p=self._probs)
         if thead_or_tbody == "thead" and self._counts_thead[key] == 0:
-            raise RuntimeError(f"There is no text: {self.paths[key]}")
+            # raise RuntimeError(f"There is no text: {self.paths[key]}")
+            thead_or_tbody = "tbody"
         if thead_or_tbody == "tbody" and self._counts_tbody[key] == 0:
             raise RuntimeError(f"There is no text: {self.paths[key]}")
 

@@ -93,10 +93,10 @@ class SynthTable(Component):
         self.row_span_switch = config_selectors['html']['synth_structure'].get()['span'].get()['row_span']
         self.col_span_switch = config_selectors['html']['synth_structure'].get()['span'].get()['col_span']
         self.thead_switch = config_selectors['html']['synth_structure'].get()['thead']
-        table_corpus_config = config["html"]["synth_structure"]["corpus"]["table_corpus"]
+        table_corpus_config = config["html"]["synth_content"]["corpus"]["table_corpus"]
         self.table_corpus = comps.TableCorpus(
             **{k: table_corpus_config[k] for k in table_corpus_config if k != "weight"})
-        # text_corpus_config = config["html"]["synth_structure"]["corpus"]["text_corpus"]
+        # text_corpus_config = config["html"]["synth_content"]["corpus"]["text_corpus"]
         # self.text_corpus = components.BaseCorpus(
         #     **{k: text_corpus_config[k] for k in text_corpus_config if k != "weight"})
 
