@@ -42,6 +42,7 @@ def convert_ptn_item_to_simple_html(item):
 
     i = 0
     is_thead = True
+    max_text_length = 0
     for tag in tags:
         if tag == "<tbody>":
             is_thead = False
@@ -49,12 +50,14 @@ def convert_ptn_item_to_simple_html(item):
             text = remove_html_tags("".join(item['html']['cells'][i]['tokens'])).strip()
 
             if text:
+                if len(text) > max_text_length:
+                    max_text_length = len(text)
                 if is_thead:
                     thead_text_set.add(text)
                 else:
                     tbody_text_set.add(text)
             i += 1
-    return thead_text_set, tbody_text_set
+    return thead_text_set, tbody_text_set, max_text_length
 
 
 def main(args):
@@ -68,6 +71,7 @@ def main(args):
     train_tbody_text_list = set()
     val_thead_text_list = set()
     val_tbody_text_list = set()
+    max_text_length = 0
     for i, line in enumerate(open(args.label_path, encoding='utf-8')):
         if i % 10 == 0:
             print(i)
@@ -75,7 +79,9 @@ def main(args):
             break
         item = json.loads(line)
 
-        thead_text_set, tbody_text_set = convert_ptn_item_to_simple_html(item)
+        thead_text_set, tbody_text_set, tmp_max_text_length = convert_ptn_item_to_simple_html(item)
+        if max_text_length < tmp_max_text_length:
+            max_text_length = tmp_max_text_length
         if item['split'] == "train":
             train_thead_text_list.update(thead_text_set)
             train_tbody_text_list.update(tbody_text_set)
@@ -90,7 +96,7 @@ def main(args):
         ["\n" + text for i, text in enumerate(val_thead_text_list) if i > 0])
     open(val_tbody_corpus_output, "w+", encoding='utf-8').writelines(
         ["\n" + text for i, text in enumerate(val_tbody_text_list) if i > 0])
-
+    print("max_text_length", max_text_length)
     print("done")
 
 
