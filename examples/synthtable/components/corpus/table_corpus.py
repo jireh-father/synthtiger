@@ -100,6 +100,7 @@ class TableCorpus(Component):
             self._charset = utils.read_charset(self.charset)
 
     def _update_contents(self):
+        print("updating table corpus contents")
         self._contents_thead = []
         self._offsets_thead = []
         self._counts_thead = []
@@ -122,6 +123,8 @@ class TableCorpus(Component):
             if os.path.isdir(path):
                 paths = search_files(path, exts=['.json'])
 
+            thead_text_list = set()
+            tbody_text_list = set()
             for json_path in paths:
                 data = json.load(open(json_path, encoding="utf-8"))
                 html = data['html'].strip()
@@ -130,28 +133,36 @@ class TableCorpus(Component):
                 if thead:
                     for td in thead.find_all("td"):
                         text = td.text.strip()
-                        if not self._check_length(text):
-                            continue
-                        if not self._check_charset(text):
-                            continue
-
-                        contents_thead.write(text)
-                        offset_thead += len(text)
-                        offsets_thead.write(offset_thead.to_bytes(4, sys.byteorder, signed=False))
-                        count_thead += 1
+                        if text:
+                            thead_text_list.add(text)
                     thead.extract()
                 tbody = bs.find("table")
                 for td in tbody.find_all("td"):
                     text = td.text.strip()
-                    if not self._check_length(text):
-                        continue
-                    if not self._check_charset(text):
-                        continue
+                    if text:
+                        tbody_text_list.add(text)
 
-                    contents_tbody.write(text)
-                    offset_tbody += len(text)
-                    offsets_tbody.write(offset_tbody.to_bytes(4, sys.byteorder, signed=False))
-                    count_tbody += 1
+            for text in thead_text_list:
+                if not self._check_length(text):
+                    continue
+                if not self._check_charset(text):
+                    continue
+
+                contents_thead.write(text)
+                offset_thead += len(text)
+                offsets_thead.write(offset_thead.to_bytes(4, sys.byteorder, signed=False))
+                count_thead += 1
+
+            for text in tbody_text_list:
+                if not self._check_length(text):
+                    continue
+                if not self._check_charset(text):
+                    continue
+
+                contents_tbody.write(text)
+                offset_tbody += len(text)
+                offsets_tbody.write(offset_tbody.to_bytes(4, sys.byteorder, signed=False))
+                count_tbody += 1
 
             self._contents_thead.append(contents_thead.getvalue())
             self._offsets_thead.append(np.frombuffer(offsets_thead.getvalue(), dtype=np.uint32))
@@ -164,6 +175,7 @@ class TableCorpus(Component):
             offsets_thead.close()
             contents_tbody.close()
             offsets_tbody.close()
+        print("updated table corpus contents")
 
     def _check_length(self, text):
         if self.min_length is not None and len(text) < self.min_length:
