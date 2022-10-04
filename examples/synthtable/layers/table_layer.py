@@ -94,13 +94,13 @@ class TableLayer(Layer):
         driver.set_window_size(required_width, required_height)
 
         table_element = driver.find_element(By.TAG_NAME, 'table')
-        # todo: get div size and apply
+
         table_width = int(table_element.size['width'] * self.meta['relative_style']['table']['width_scale'])
         table_height = int(table_element.size['height'] * self.meta['relative_style']['table']['height_scale'])
         ar = table_width / table_height
         if self.meta['aspect_ratio'][0] > ar:
             table_width = int(table_height * self.meta['aspect_ratio'][0])
-        if self.meta['aspect_ratio'][1] < ar:
+        elif self.meta['aspect_ratio'][1] < ar:
             table_height = int(table_width / self.meta['aspect_ratio'][1])
 
         # driver.close()
@@ -116,13 +116,11 @@ class TableLayer(Layer):
             base64_image = image_util.image_to_base64(paper_layer.image)
             self.global_style['#table_wrapper']['background-image'] = 'url("data:image/png;base64,{}")'.format(
                 base64_image)
-        # driver = webdriver.Chrome('chromedriver', options=options)
-        # driver.implicitly_wait(0.5)
 
         self._write_html_file(html_path)
 
         driver.get("file:///{}".format(os.path.abspath(html_path)))
-        driver.set_window_size(int(image_width * 1.1), int(image_height * 1.1))
+        driver.set_window_size(int(image_width * 1.2), int(image_height * 1.2))
         div_element = driver.find_element(By.ID, 'table_wrapper')
         div_element.screenshot(image_path)
         driver.close()

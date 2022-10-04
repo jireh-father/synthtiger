@@ -16,6 +16,7 @@ from bs4 import BeautifulSoup
 import re
 from utils import html_util
 from synthtiger import components
+import components as comps
 
 
 def parse_html_style_values_dict(dict_values):
@@ -87,10 +88,17 @@ class SynthTable(Component):
         os.makedirs(tmp_path, exist_ok=True)
 
         self.font = components.BaseFont(**config["style"].get("font", {}))
+
         self.span_switch = config_selectors['html']['synth_structure'].get()['span']
         self.row_span_switch = config_selectors['html']['synth_structure'].get()['span'].get()['row_span']
         self.col_span_switch = config_selectors['html']['synth_structure'].get()['span'].get()['col_span']
         self.thead_switch = config_selectors['html']['synth_structure'].get()['thead']
+        table_corpus_config = config["html"]["synth_structure"]["corpus"]["table_corpus"]
+        self.table_corpus = comps.TableCorpus(
+            **{k: table_corpus_config[k] for k in table_corpus_config if k != "weight"})
+        # text_corpus_config = config["html"]["synth_structure"]["corpus"]["text_corpus"]
+        # self.text_corpus = components.BaseCorpus(
+        #     **{k: text_corpus_config[k] for k in text_corpus_config if k != "weight"})
 
     def _sample_global_color_mode(self):
         return self.global_color_mode.select()
@@ -369,7 +377,8 @@ class SynthTable(Component):
                     meta[css_selector_name + "_color_mode"] = color_mode
                     if color_mode == "dark":
                         global_style[css_selector_name]['color'] = self._sample_light_color()
-                        global_style[css_selector_name]['background-color'] = self._sample_dark_color()
+                        if meta['background_config'] != 'paper':
+                            global_style[css_selector_name]['background-color'] = self._sample_dark_color()
                         border_color = self._sample_light_color()
                         global_style[css_selector_name]['border-color'] = border_color
                         global_style[css_selector_name]['border-top-color'] = border_color
@@ -378,7 +387,8 @@ class SynthTable(Component):
                         global_style[css_selector_name]['border-bottom-color'] = border_color
                     else:
                         global_style[css_selector_name]['color'] = self._sample_dark_color()
-                        global_style[css_selector_name]['background-color'] = self._sample_light_color()
+                        if meta['background_config'] != 'paper':
+                            global_style[css_selector_name]['background-color'] = self._sample_light_color()
                         border_color = self._sample_dark_color()
                         global_style[css_selector_name]['border-color'] = border_color
                         global_style[css_selector_name]['border-top-color'] = border_color
@@ -468,12 +478,14 @@ class SynthTable(Component):
         for row in range(meta['nums_row']):
             if add_thead:
                 if row == 0:
+                    tags.append("<thead>")
+                elif row == thead_rows:
                     tags.append("<tbody>")
-                elif row == add_thead:
-                    tags.append("<tbody>")
+                is_head = row < thead_rows
             else:
                 if row == 0:
                     tags.append("<tbody>")
+                is_head = False
             tags.append("<tr>")
             for col in range(meta['nums_col']):
                 if meta['span']:
@@ -481,7 +493,11 @@ class SynthTable(Component):
                         continue
                     spans = []
                     if self.row_span_switch.on():
-                        max_row_span = meta['nums_row'] - row
+                        if is_head:
+                            max_row_span = thead_rows - row
+                        else:
+                            max_row_span = meta['nums_row'] - row
+
                         if max_row_span > 1:
                             row_span = np.random.randint(2, max_row_span + 1)
                             spans.append(' rowspan="{}"'.format(row_span))
@@ -496,8 +512,7 @@ class SynthTable(Component):
                     tags.append("<td{}>".format(span_attr))
                 else:
                     tags.append("<td>")
-                # todo: get content
-                # tags.append(content)
+                tags.append(self.table_corpus.sample({"thead_or_tbody": "thead" if is_head else "tbody"})["text"])
                 tags.append("</td>")
             tags.append("</tr>")
             if add_thead and thead_rows == row + 1:

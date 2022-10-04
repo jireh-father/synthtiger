@@ -46,7 +46,7 @@ class StaticTable(Component):
         html_path, key, idx = self.html_path_selector.select()
         image_path = self._get_image_path(html_path, key)
         if not image_path:
-            raise Exception("not found image path.")
+            return self.sample(meta)
 
         meta["html_path"] = html_path
         meta["image_path"] = image_path
