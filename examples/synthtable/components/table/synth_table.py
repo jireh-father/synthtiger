@@ -575,7 +575,7 @@ class SynthTable(Component):
             first_td_tag.string = first_text
             second_td_tag.string = second_text
 
-    def _shuffle_cells(self, bs, element, is_thead=False):
+    def _shuffle_cells(self, bs, element, meta, is_thead=False):
         tr_tags = element.find_all("tr")
         tr_td_tags = []
         total_td = 0
@@ -584,7 +584,14 @@ class SynthTable(Component):
             total_td += len(td_tags)
             tr_td_tags.append(td_tags)
         swap_cnt = int(total_td * self.shuffle_cells_portion_selector.select())
-        is_bold = self.thead_bold_switch.on() if is_thead else False
+
+        if is_thead:
+            is_bold = self.thead_bold_switch.on()
+            meta['shuffle_thead_is_bold'] = is_bold
+            meta['shuffle_thead_swap_cnt'] = swap_cnt
+        else:
+            is_bold = False
+            meta['shuffle_swap_cnt'] = swap_cnt
         for i in range(swap_cnt):
             self._swap_cells(bs, tr_td_tags, is_bold)
 
@@ -592,17 +599,18 @@ class SynthTable(Component):
         bs = BeautifulSoup(meta['html'], 'html.parser')
         if meta['shuffle_cells']:
             if meta['mix_thead_tbody']:
-                self._shuffle_cells(bs, bs)
+                self._shuffle_cells(bs, bs, meta)
             else:
                 thead_element = bs.find("thead")
                 if thead_element:
-                    self._shuffle_cells(bs, thead_element, True)
+                    self._shuffle_cells(bs, thead_element, meta, True)
 
                 tbody_element = bs.find("tbody")
                 if tbody_element:
-                    self._shuffle_cells(bs, tbody_element)
+                    self._shuffle_cells(bs, tbody_element, meta)
         else:
             thead_bold = self.thead_bold_switch.on()
+            meta['synth_content_thead_bold'] = thead_bold
             for thead_or_tbody in ["thead", "tbody"]:
                 if not thead_or_tbody:
                     continue
