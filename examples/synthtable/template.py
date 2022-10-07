@@ -56,14 +56,6 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        synth structure
-        
-        >> corpus: table corpus인 경우 일반 corpus처럼 파일 따로 만들어놓기 
-        
-        synth contents
-        
-        
-        
         html 모든 파일 순서대로 사용하도록 변경하기(process 1, html 파일 갯수 만큼 만들도록)
         
         meta 넣어서 static 이미지 만들기
@@ -78,7 +70,6 @@ class SynthTable(templates.Template):
         table_layer.meta['bg_image'] = bg_image_meta
         table_layer.meta['bg_effect'] = bg_effect_meta
 
-        # todo: remove etc tag in td cell(ex: <td><b>contents</b></td>)
         table_html = self._filter_html(table_layer.html)
 
         document_space = np.clip(bg_size - table_layer.size, 0, None)

@@ -56,7 +56,6 @@ class SynthTable(Component):
                                                config_selectors['html']['weights'].values, exts=['.json'])
 
         # styles
-        # todo: select parser or other backgrounds
         for background_config in config_selectors['style']['global']['absolute']['background'].values:
             name = background_config['name']
 
@@ -382,7 +381,6 @@ class SynthTable(Component):
 
             font_size_scale = None
             if use_relative and local_config['relative'][config_key].on():
-                # todo:
                 font_size_scale = local_config['relative'][config_key].get()['font_size'].select()
 
             selectors = local_config['css'][config_key].get()
@@ -627,8 +625,6 @@ class SynthTable(Component):
         else:
             paper = None
 
-        # todo: thead use !important;
         # rendering
         for layer in layers:
-            # todo : remove tag in cell
             layer.render_table(paper=paper, meta=meta)
