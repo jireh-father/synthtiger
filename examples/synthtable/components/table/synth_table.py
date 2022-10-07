@@ -458,6 +458,7 @@ class SynthTable(Component):
             # insert tbody
             html = html_util.insert_tbody_tag(html)
             meta['html'] = html
+            meta['original_html'] = html
             meta['nums_col'] = html_json['nums_col']
             meta['nums_row'] = html_json['nums_row']
         meta['synth_structure'] = synth_structure
