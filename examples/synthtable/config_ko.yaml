@@ -128,7 +128,7 @@ document:
             thead_bold:
               prob: 0.6
             shuffle_cells:
-              prob: 1.0
+              prob: 0.7
               portion: [0.2, 0.8]
           min_row: 2
           max_row: 10
