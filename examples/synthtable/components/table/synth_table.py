@@ -17,6 +17,7 @@ import re
 from utils import html_util
 from synthtiger import components
 import components as comps
+import random
 
 
 def parse_html_style_values_dict(dict_values):
@@ -114,7 +115,11 @@ class SynthTable(Component):
             self.thead_corpus_selector = config_selectors['html']['synth_content'].get()['corpus']['thead']
             self.tbody_corpus_selector = config_selectors['html']['synth_content'].get()['corpus']['tbody']
             self.empty_cell_switch = config_selectors['html']['synth_content'].get()['empty_cell']
+            self.thead_bold_switch = config_selectors['html']['synth_content'].get()['thead_bold']
+            self.synth_cell_switch = config_selectors['html']['synth_content'].get()['synth_cell']
             self.shuffle_cells_switch = config_selectors['html']['synth_content'].get()['shuffle_cells']
+            self.shuffle_cells_portion_selector = \
+            config_selectors['html']['synth_content'].get()['shuffle_cells'].get()["portion"]
             self.mix_thead_tbody_switch = config_selectors['html']['synth_content'].get()['corpus']['mix_thead_tbody']
 
     def _sample_cell_text(self, thead_or_tbody='tbody', mix_thead_tbody=False):
@@ -443,6 +448,9 @@ class SynthTable(Component):
             meta['nums_row'] = synth_structure_config['nums_row'].select()
             meta['nums_col'] = synth_structure_config['nums_col'].select()
             meta['span'] = self.span_switch.on()
+            meta['add_thead'] = self.thead_switch.on()
+            if meta['add_thead']:
+                meta['thead_rows'] = self.thead_switch.get()['rows'].select()
         else:
             html_path, html_json = self._sample_html_path()
             meta['html_path'] = html_path
@@ -499,9 +507,9 @@ class SynthTable(Component):
             span_table = np.full((meta['nums_row'], meta['nums_col']), False)
 
         tags = ["<table>"]
-        add_thead = self.thead_switch.on()
+        add_thead = meta['add_thead']
         if add_thead:
-            thead_rows = self.thead_switch.get()['rows'].select()
+            thead_rows = meta['thead_rows']
         for row in range(meta['nums_row']):
             if add_thead:
                 if row == 0:
@@ -550,8 +558,59 @@ class SynthTable(Component):
         tags.append("</table>")
         meta['html'] = "".join(tags)
 
+    def _swap_cells(self, tr_td_tags, is_thead=False):
+        first_td_tag = random.choice(random.choice(tr_td_tags))
+        second_td_tag = random.choice(random.choice(tr_td_tags))
+        first_text = "".join([str(tag) for tag in first_td_tag.contents])
+        second_text = "".join([str(tag) for tag in second_td_tag.contents])
+        if is_thead and self.thead_bold_switch.on():
+            first_text = "<b>{}</b>".format(first_text)
+            second_text = "<b>{}</b>".format(second_text)
+
+        first_td_tag.string = first_text
+        second_td_tag.string = second_text
+
+    def _shuffle_cells(self, element):
+        tr_tags = element.find_all("tr")
+        tr_td_tags = []
+        total_td = 0
+        for tr_tag in tr_tags:
+            td_tags = tr_tag.find_all("td")
+            total_td += len(td_tags)
+            tr_td_tags.append(total_td)
+        swap_cnt = int(total_td * self.shuffle_cells_portion_selector.select())
+        for i in range(swap_cnt):
+            self._swap_cells(tr_td_tags)
+
     def _synth_content(self, meta):
-        pass
+        bs = BeautifulSoup(meta['html'], 'html.parser')
+        if meta['shuffle_cells']:
+            if meta['mix_thead_tbody']:
+                self._shuffle_cells(bs)
+            else:
+                thead_element = bs.find("thead")
+                if thead_element:
+                    self._shuffle_cells(thead_element)
+
+                tbody_element = bs.find("tbody")
+                if tbody_element:
+                    self._shuffle_cells(tbody_element)
+        else:
+            for thead_or_tbody in ["thead", "tbody"]:
+                if not thead_or_tbody:
+                    continue
+                thead_or_tbody_tag = bs.find(thead_or_tbody)
+                for td in thead_or_tbody_tag.find_all("td"):
+                    if self.synth_cell_switch.on():
+                        if self.empty_cell_switch.on():
+                            td.string = ""
+                        else:
+                            # content = "".join([str(tag) for tag in td.contents])
+                            cell_text = self._sample_cell_text(thead_or_tbody, meta['mix_thead_tbody'])
+                            if thead_or_tbody == "thead" and self.thead_bold_switch.on():
+                                cell_text = "<b>{}</b>".format(cell_text)
+                            td.string = cell_text
+        meta['html'] = str(bs)
 
     def apply(self, layers, meta=None):
         meta = self.sample(meta)
