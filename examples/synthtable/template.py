@@ -56,8 +56,8 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        html 모든 파일 순서대로 사용하도록 변경하기(process 1, html 파일 갯수 만큼 만들도록)
-        
+        change html structure. span
+
         meta 넣어서 static 이미지 만들기
         
         # meta data 보고 버그없는지 디버깅

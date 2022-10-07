@@ -612,7 +612,6 @@ class SynthTable(Component):
                         if self.empty_cell_switch.on():
                             td.string = ""
                         else:
-                            # content = "".join([str(tag) for tag in td.contents])
                             cell_text = self._sample_cell_text(thead_or_tbody, meta['mix_thead_tbody'])
                             if thead_or_tbody == "thead" and thead_bold:
                                 btag = bs.new_tag("b")
