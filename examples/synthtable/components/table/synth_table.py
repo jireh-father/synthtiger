@@ -118,7 +118,7 @@ class SynthTable(Component):
             self.synth_cell_switch = config_selectors['html']['synth_content'].get()['synth_cell']
             self.shuffle_cells_switch = config_selectors['html']['synth_content'].get()['shuffle_cells']
             self.shuffle_cells_portion_selector = \
-            config_selectors['html']['synth_content'].get()['shuffle_cells'].get()["portion"]
+                config_selectors['html']['synth_content'].get()['shuffle_cells'].get()["portion"]
             self.mix_thead_tbody_switch = config_selectors['html']['synth_content'].get()['corpus']['mix_thead_tbody']
 
     def _sample_cell_text(self, thead_or_tbody='tbody', mix_thead_tbody=False):
@@ -557,43 +557,48 @@ class SynthTable(Component):
         tags.append("</table>")
         meta['html'] = "".join(tags)
 
-    def _swap_cells(self, tr_td_tags, is_thead=False):
+    def _swap_cells(self, bs, tr_td_tags, bold=False):
         first_td_tag = random.choice(random.choice(tr_td_tags))
         second_td_tag = random.choice(random.choice(tr_td_tags))
         first_text = "".join([str(tag) for tag in first_td_tag.contents])
         second_text = "".join([str(tag) for tag in second_td_tag.contents])
-        if is_thead and self.thead_bold_switch.on():
-            first_text = "<b>{}</b>".format(first_text)
-            second_text = "<b>{}</b>".format(second_text)
+        if bold:
+            first_btag = bs.new_tag("b")
+            first_btag.string = first_text
+            second_btag = bs.new_tag("b")
+            second_btag.string = second_text
+            first_td_tag.append(first_btag)
+            second_td_tag.append(second_btag)
+        else:
+            first_td_tag.string = first_text
+            second_td_tag.string = second_text
 
-        first_td_tag.string = first_text
-        second_td_tag.string = second_text
-
-    def _shuffle_cells(self, element):
+    def _shuffle_cells(self, bs, element, is_thead=False):
         tr_tags = element.find_all("tr")
         tr_td_tags = []
         total_td = 0
         for tr_tag in tr_tags:
             td_tags = tr_tag.find_all("td")
             total_td += len(td_tags)
-            tr_td_tags.append(total_td)
+            tr_td_tags.append(td_tags)
         swap_cnt = int(total_td * self.shuffle_cells_portion_selector.select())
+        is_bold = self.thead_bold_switch.on() if is_thead else False
         for i in range(swap_cnt):
-            self._swap_cells(tr_td_tags)
+            self._swap_cells(bs, tr_td_tags, is_bold)
 
     def _synth_content(self, meta):
         bs = BeautifulSoup(meta['html'], 'html.parser')
         if meta['shuffle_cells']:
             if meta['mix_thead_tbody']:
-                self._shuffle_cells(bs)
+                self._shuffle_cells(bs, bs)
             else:
                 thead_element = bs.find("thead")
                 if thead_element:
-                    self._shuffle_cells(thead_element)
+                    self._shuffle_cells(bs, thead_element, True)
 
                 tbody_element = bs.find("tbody")
                 if tbody_element:
-                    self._shuffle_cells(tbody_element)
+                    self._shuffle_cells(bs, tbody_element)
         else:
             for thead_or_tbody in ["thead", "tbody"]:
                 if not thead_or_tbody:
