@@ -567,6 +567,8 @@ class SynthTable(Component):
             first_btag.string = first_text
             second_btag = bs.new_tag("b")
             second_btag.string = second_text
+            first_td_tag.clear()
+            second_td_tag.clear()
             first_td_tag.append(first_btag)
             second_td_tag.append(second_btag)
         else:
@@ -600,6 +602,7 @@ class SynthTable(Component):
                 if tbody_element:
                     self._shuffle_cells(bs, tbody_element)
         else:
+            thead_bold = self.thead_bold_switch.on()
             for thead_or_tbody in ["thead", "tbody"]:
                 if not thead_or_tbody:
                     continue
@@ -611,9 +614,13 @@ class SynthTable(Component):
                         else:
                             # content = "".join([str(tag) for tag in td.contents])
                             cell_text = self._sample_cell_text(thead_or_tbody, meta['mix_thead_tbody'])
-                            if thead_or_tbody == "thead" and self.thead_bold_switch.on():
-                                cell_text = "<b>{}</b>".format(cell_text)
-                            td.string = cell_text
+                            if thead_or_tbody == "thead" and thead_bold:
+                                btag = bs.new_tag("b")
+                                btag.string = cell_text
+                                td.clear()
+                                td.append(btag)
+                            else:
+                                td.string = cell_text
         meta['html'] = str(bs)
 
     def apply(self, layers, meta=None):
