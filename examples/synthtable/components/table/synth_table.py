@@ -89,14 +89,40 @@ class SynthTable(Component):
 
         self.font = components.BaseFont(**config["style"].get("font", {}))
 
-        self.span_switch = config_selectors['html']['synth_structure'].get()['span']
-        self.row_span_switch = config_selectors['html']['synth_structure'].get()['span'].get()['row_span']
-        self.col_span_switch = config_selectors['html']['synth_structure'].get()['span'].get()['col_span']
-        self.thead_switch = config_selectors['html']['synth_structure'].get()['thead']
-        text_corpus_config = config["html"]["synth_content"]["corpus"]["text_corpus"]
-        self.text_corpus = components.BaseCorpus(
-            **{k: text_corpus_config[k] for k in text_corpus_config if k != "weight"})
-        self.empty_cell_switch = config_selectors['html']['synth_content'].get()['empty_cell']
+        if config["html"]["synth_structure"]["prob"] > 0 or config["html"]["synth_content"]["prob"] > 0:
+            self.span_switch = config_selectors['html']['synth_structure'].get()['span']
+            self.row_span_switch = config_selectors['html']['synth_structure'].get()['span'].get()['row_span']
+            self.col_span_switch = config_selectors['html']['synth_structure'].get()['span'].get()['col_span']
+            self.thead_switch = config_selectors['html']['synth_structure'].get()['thead']
+
+            corpus_dict = defaultdict(dict)
+            for thead_or_tbody in ["thead", "tbody"]:
+                for corpus_type in config["html"]["synth_content"]["corpus"][thead_or_tbody].keys():
+                    corpus_config = config["html"]["synth_content"]["corpus"][thead_or_tbody][corpus_type]
+                    if corpus_type == "length_augmentable":
+                        corpus = components.LengthAugmentableCorpus(
+                            **{k: corpus_config[k] for k in corpus_config if k != "weight"})
+                    elif corpus_type == "char_augmentable":
+                        corpus = self.thead_char_aug_corpus = components.CharAugmentableCorpus(
+                            **{k: corpus_config[k] for k in corpus_config if k != "weight"})
+                    elif corpus_type == "base":
+                        corpus = components.BaseCorpus(
+                            **{k: corpus_config[k] for k in corpus_config if k != "weight"})
+                    corpus_dict[thead_or_tbody][corpus_type] = corpus
+            self.corpus_dict = corpus_dict
+
+            self.thead_corpus_selector = config_selectors['html']['synth_content'].get()['corpus']['thead']
+            self.tbody_corpus_selector = config_selectors['html']['synth_content'].get()['corpus']['tbody']
+            self.empty_cell_switch = config_selectors['html']['synth_content'].get()['empty_cell']
+            self.shuffle_cells_switch = config_selectors['html']['synth_content'].get()['shuffle_cells']
+            self.mix_thead_tbody_switch = config_selectors['html']['synth_content'].get()['corpus']['mix_thead_tbody']
+
+    def _sample_cell_text(self, thead_or_tbody='tbody', mix_thead_tbody=False):
+        if mix_thead_tbody:
+            thead_or_tbody = ["tbody", "thead"][np.random.randint(0, 2)]
+        corpus_type = self.thead_corpus_selector.select()['name']
+        corpus = self.corpus_dict[thead_or_tbody][corpus_type]
+        return corpus.sample()['text']
 
     def _sample_global_color_mode(self):
         return self.global_color_mode.select()
@@ -428,6 +454,9 @@ class SynthTable(Component):
             meta['nums_row'] = html_json['nums_row']
         meta['synth_structure'] = synth_structure
         meta['synth_content'] = False if synth_structure else synth_content
+        if synth_structure or meta['synth_content']:
+            meta['mix_thead_tbody'] = self.mix_thead_tbody_switch.on()
+            meta['shuffle_cells'] = self.shuffle_cells_switch.on()
 
         # global absolute and css styles
         meta['global_style'] = self.sample_styles(meta)
@@ -511,7 +540,7 @@ class SynthTable(Component):
                 else:
                     tags.append("<td>")
                 if not self.empty_cell_switch.on():
-                    tags.append(self.table_corpus.sample({"thead_or_tbody": "thead" if is_head else "tbody"})["text"])
+                    tags.append(self._sample_cell_text("thead" if is_head else "tbody", meta['mix_thead_tbody']))
                 tags.append("</td>")
             tags.append("</tr>")
             if add_thead and thead_rows == row + 1:
