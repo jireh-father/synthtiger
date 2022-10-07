@@ -557,11 +557,15 @@ class SynthTable(Component):
         tags.append("</table>")
         meta['html'] = "".join(tags)
 
-    def _swap_cells(self, bs, tr_td_tags, bold=False):
+    def _swap_cells(self, bs, tr_td_tags, bold=False, meta={}, idx=0):
         first_td_tag = random.choice(random.choice(tr_td_tags))
         second_td_tag = random.choice(random.choice(tr_td_tags))
         first_text = "".join([str(tag) for tag in first_td_tag.contents])
         second_text = "".join([str(tag) for tag in second_td_tag.contents])
+        meta["swap_cell_{}".format(idx)] = {
+            "first_text": first_text,
+            "second_text": second_text,
+        }
         if bold:
             first_btag = bs.new_tag("b")
             first_btag.string = first_text
@@ -569,11 +573,11 @@ class SynthTable(Component):
             second_btag.string = second_text
             first_td_tag.clear()
             second_td_tag.clear()
-            first_td_tag.append(first_btag)
-            second_td_tag.append(second_btag)
+            first_td_tag.append(second_btag)
+            second_td_tag.append(first_btag)
         else:
-            first_td_tag.string = first_text
-            second_td_tag.string = second_text
+            first_td_tag.string = second_text
+            second_td_tag.string = first_text
 
     def _shuffle_cells(self, bs, element, meta, is_thead=False):
         tr_tags = element.find_all("tr")
@@ -593,7 +597,7 @@ class SynthTable(Component):
             is_bold = False
             meta['shuffle_swap_cnt'] = swap_cnt
         for i in range(swap_cnt):
-            self._swap_cells(bs, tr_td_tags, is_bold)
+            self._swap_cells(bs, tr_td_tags, is_bold, meta, i)
 
     def _synth_content(self, meta):
         bs = BeautifulSoup(meta['html'], 'html.parser')

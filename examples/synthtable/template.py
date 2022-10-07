@@ -58,6 +58,8 @@ class SynthTable(templates.Template):
         '''
         change html structure. span
 
+        content안에 부분 단어나 글자 효과 변경하기(색, 크기, bold, italic등)
+
         meta 넣어서 static 이미지 만들기
         
         # meta data 보고 버그없는지 디버깅
