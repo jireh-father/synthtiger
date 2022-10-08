@@ -524,7 +524,7 @@ class SynthTable(Component):
         structure_config = self.config_selectors['html']['structure'].select()
         synth_structure = structure_config['name'] == 'synth_structure'
         synth_content = self.config_selectors['html']['synth_content'].on()
-        meta['mix_thead_tbody'] = self.mix_thead_tbody_switch.on()
+
 
         if synth_structure:
             synth_structure_config = structure_config['config']
@@ -536,6 +536,7 @@ class SynthTable(Component):
             meta['add_thead'] = synth_structure_config['thead'].on()
             if meta['add_thead']:
                 meta['thead_rows'] = synth_structure_config['thead'].get()['rows'].select()
+            meta['mix_thead_tbody'] = self.mix_thead_tbody_switch.on()
             self._synth_structure_and_content(meta)
         else:
             html_path, html_json = self._sample_html_path()
@@ -552,6 +553,7 @@ class SynthTable(Component):
 
         if meta['synth_content']:
             meta['shuffle_cells'] = self.shuffle_cells_switch.on()
+            meta['mix_thead_tbody'] = self.mix_thead_tbody_switch.on()
             bs = self._synth_content(meta)
             meta['html'] = str(bs)
             meta['html_bs'] = bs
