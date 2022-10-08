@@ -25,7 +25,10 @@ class Polynomial(Component):
             else:
                 return int(length - length * np.random.uniform(self.dest_coord_ratios[0], self.dest_coord_ratios[1]))
         else:
-            return 0
+            if is_start:
+                return length
+            else:
+                return 0
 
     def sample(self, meta=None):
         if meta is None:
