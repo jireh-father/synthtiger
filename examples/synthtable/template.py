@@ -56,9 +56,9 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        구부러지는 효과 넣고, 너무 삐뚫어지는 효과는 빼기
-
         기능별로 debugging
+        
+        효과 과하지 않도로고 설정 파라미터 미세조정
 
         change html structure. span
 
