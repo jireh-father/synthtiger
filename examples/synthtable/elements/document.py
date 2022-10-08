@@ -7,6 +7,7 @@ import numpy as np
 from synthtiger import components
 
 from elements.content import Content
+import components as custom_components
 
 
 class Document:
@@ -21,20 +22,38 @@ class Document:
             [
                 components.Switch(components.ElasticDistortion()),
                 components.Switch(components.AdditiveGaussianNoise()),
-                components.Switch(
-                    components.Selector(
-                        [
-                            components.Perspective(),
-                            components.Perspective(),
-                            components.Perspective(),
-                            components.Perspective(),
-                            components.Perspective(),
-                            components.Perspective(),
-                            components.Perspective(),
-                            components.Perspective(),
-                        ]
-                    )
-                ),
+                components.Selector(
+                    [
+                        components.Selector(
+                            [
+                                components.Perspective(),
+                                components.Perspective(),
+                                components.Perspective(),
+                                components.Perspective(),
+                                components.Perspective(),
+                                components.Perspective(),
+                                components.Perspective(),
+                                components.Perspective(),
+                            ]
+                        ),
+                        custom_components.Arc(),
+                        custom_components.Polynomial()
+                    ]
+                )
+                # components.Switch(
+                #     components.Selector(
+                #         [
+                #             components.Perspective(),
+                #             components.Perspective(),
+                #             components.Perspective(),
+                #             components.Perspective(),
+                #             components.Perspective(),
+                #             components.Perspective(),
+                #             components.Perspective(),
+                #             components.Perspective(),
+                #         ]
+                #     )
+                # ),
             ],
             **config.get("effect", {}),
         )
