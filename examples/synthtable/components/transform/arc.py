@@ -32,9 +32,11 @@ class Arc(Component):
 
         for layer in layers:
             im = Image.from_array(layer.image)
+            filename = str(uuid.uuid4())
+            im.save(filename=filename + "_before.png")
             im.virtual_pixel = 'transparent'
             im.distort('arc', (angle,))
-            im.save(filename=str(uuid.uuid4())+".png")
+            im.save(filename=filename + "_after.png")
             layer.image = np.array(im)
 
         return meta
