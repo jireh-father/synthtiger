@@ -24,7 +24,7 @@ document:
   landscape: 0.5
   short_size: [720, 1024]
   aspect_ratio: [1, 2]
-  margin: [0, 0.2]
+  margin: [0, 0.08]
   content:
     table:
       static:
