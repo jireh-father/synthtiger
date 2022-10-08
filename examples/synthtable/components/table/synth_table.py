@@ -371,6 +371,45 @@ class SynthTable(Component):
                     continue
                 global_style[css_selector][css_key] = value
 
+    def _set_text_style(self, bs, bs_element, text, global_style, meta, text_config, color_mode):
+        local_config = self.config_selectors['style']['local'].get()
+        text_id = str(uuid.uuid4())
+        span_tag = bs.new_tag("span", id="text_{}".format(text_id))
+        span_tag.append(text)
+        bs_element.append(span_tag)
+        selectors = local_config['css']['td'].get()
+        global_style_key = "#text_{}".format(text_id)
+        for css_selector in selectors:
+            if css_selector.startswith("border"):
+                continue
+            css_val = selectors[css_selector]
+            val = css_val.select()
+            if val is None:
+                continue
+            global_style[global_style_key][css_selector] = val
+
+        use_bg = text_config['config']['background_color'].on()
+        # color
+        if color_mode == "dark":
+            global_style[global_style_key]['color'] = self._sample_light_color()
+            if use_bg and meta['background_config'] != 'paper':
+                global_style[global_style_key]['background-color'] = self._sample_dark_color()
+        else:
+            global_style[global_style_key]['color'] = self._sample_dark_color()
+            if use_bg and meta['background_config'] != 'paper':
+                global_style[global_style_key]['background-color'] = self._sample_light_color()
+
+        # font
+        if local_config['absolute']['td']['font'].on():
+            self._sample_font(global_style, meta, global_style_key)
+
+        # font-size
+        if local_config['relative']['td'].on():
+            font_size_scale = local_config['relative']['td'].get()['font_size'].select()
+            font_size = int(
+                round(float(global_style['table']['font-size'].split("px")[0]) * font_size_scale))
+            global_style[global_style_key]['font-size'] = str(font_size) + "px"
+
     def _set_local_text_styles(self, global_style, meta, bs_element, color_mode):
         local_config = self.config_selectors['style']['local'].get()
         text_config = local_config['absolute']['text'].get().select()
@@ -391,54 +430,21 @@ class SynthTable(Component):
             for i, word in enumerate(words):
                 word = ("" if i == 0 else " ") + word
                 if i in change_word_indexes:
-                    word_id = str(uuid.uuid4())
-                    span_tag = bs.new_tag("span", id="word_{}".format(word_id))
-                    span_tag.append(word)
-                    bs_element.append(span_tag)
-                    selectors = local_config['css']['td'].get()
-                    global_style_key = "#word_{}".format(word_id)
-                    for css_selector in selectors:
-                        if css_selector.startswith("border"):
-                            continue
-                        css_val = selectors[css_selector]
-                        val = css_val.select()
-                        if val is None:
-                            continue
-                        global_style[global_style_key][css_selector] = val
-
-                    use_bg = text_config['config']['background_color'].on()
-                    # color
-                    if color_mode == "dark":
-                        global_style[global_style_key]['color'] = self._sample_light_color()
-                        if use_bg and meta['background_config'] != 'paper':
-                            global_style[global_style_key]['background-color'] = self._sample_dark_color()
-                    else:
-                        global_style[global_style_key]['color'] = self._sample_dark_color()
-                        if use_bg and meta['background_config'] != 'paper':
-                            global_style[global_style_key]['background-color'] = self._sample_light_color()
-
-                    # font
-                    if local_config['absolute']['td']['font'].on():
-                        self._sample_font(global_style, meta, global_style_key)
-
-                    # font-size
-                    if local_config['relative']['td'].on():
-                        font_size_scale = local_config['relative']['td'].get()['font_size'].select()
-                        font_size = int(
-                            round(float(global_style['table']['font-size'].split("px")[0]) * font_size_scale))
-                        global_style[global_style_key]['font-size'] = str(font_size) + "px"
+                    self._set_text_style(bs, bs_element, text, global_style, meta, text_config, color_mode)
                 else:
                     bs_element.append(word)
-
         elif word_or_char == "char":
             char_length_ratio = text_config['config']['length'].select()
             char_length = math.ceil(len(text) * char_length_ratio)
             if char_length > len(text):
                 char_length = len(text)
             start_idx = np.random.randint(0, len(text) - char_length + 1)
-            text = text[start_idx:start_idx + char_length]
-
-
+            if start_idx > 0:
+                bs_element.append(text[:start_idx])
+            self._set_text_style(bs, bs_element, text[start_idx:start_idx + char_length], global_style, meta,
+                                 text_config, color_mode)
+            if start_idx + char_length < len(text):
+                bs_element.append(text[start_idx + char_length:])
 
     def _set_local_css_styles(self, global_style, config_key, css_selector_name, meta, bs_element=None):
         local_config = self.config_selectors['style']['local'].get()
