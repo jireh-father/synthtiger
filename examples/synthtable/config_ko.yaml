@@ -54,7 +54,7 @@ document:
             static_html:
               weight: 1
             synth_structure:
-              weight: 1
+              weight: 0
               nums_row: [2, 10]
               nums_col: [2, 10]
               thead:
@@ -70,7 +70,7 @@ document:
 #              weight: 1
 #              portion: [0.1, 0.7]
           synth_content:
-            prob: 1.0
+            prob: 0.0
             corpus:
               mix_thead_tbody:
                 prob: 0.3
