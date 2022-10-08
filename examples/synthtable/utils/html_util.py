@@ -29,8 +29,9 @@ def insert_tbody_tag(html):
     return html
 
 
-def remove_tag_in_table_cell(html):
-    bs = BeautifulSoup(html, 'html.parser')
+def remove_tag_in_table_cell(html, bs=None):
+    if bs is None:
+        bs = BeautifulSoup(html, 'html.parser')
     for td in bs.find_all("td"):
         content = "".join([str(tag) for tag in td.contents])
         td.string = remove_tags(content).strip()

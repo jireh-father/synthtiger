@@ -321,6 +321,15 @@ document:
                 color_mode: [light, dark]
                 font:
                   prob: 0.1
+              text:
+                prob: 0.3
+                word:
+                  weight: 1
+                  words: [1, 3]
+                char:
+                  weight: 1
+                  length: [1, 10]
+                  count: [1, 2]
             relative:
               tr:
                 prob: 0.1

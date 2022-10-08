@@ -372,10 +372,76 @@ class SynthTable(Component):
                     continue
                 global_style[css_selector][css_key] = value
 
-    def _set_local_css_styles(self, global_style, config_key, css_selector_name, meta):
+    def _set_local_text_styles(self, global_style, meta, bs_element, color_mode):
+        local_config = self.config_selectors['style']['local'].get()
+        text_config = local_config['absolute']['text'].get().select()
+        word_or_char = text_config['name']
+        bs = meta['html_bs']
+        text = remove_tags("".join([str(tag) for tag in bs_element.contents])).strip()
+        bs_element.clear()
+
+        if color_mode is None:
+            color_mode = local_config['absolute']['td']['color_mode'].select()
+        if word_or_char == 'word':
+            words = text.split(" ")
+            change_word_cnt = text_config['words'].select()
+            if change_word_cnt > len(words):
+                change_word_cnt = len(words)
+            change_word_indexes = random.sample(list(range(len(words))), change_word_cnt)
+            for i, word in enumerate(words):
+                word = ("" if i == 0 else " ") + word
+                if i in change_word_indexes:
+                    word_id = str(uuid.uuid4())
+                    span_tag = bs.new_tag("span", id="word_{}".format(word_id))
+                    span_tag.append(word)
+
+                    selectors = local_config['css']['td'].get()
+                    global_style_key = "#{}".format(word_id)
+                    for css_selector in selectors:
+                        if css_selector.startswith("border"):
+                            continue
+                        css_val = selectors[css_selector]
+                        val = css_val.select()
+                        if val is None:
+                            continue
+                        global_style[global_style_key][css_selector] = val
+
+                    # color
+                    if color_mode == "dark":
+                        global_style[global_style_key]['color'] = self._sample_light_color()
+                        if meta['background_config'] != 'paper':
+                            global_style[global_style_key]['background-color'] = self._sample_dark_color()
+                    else:
+                        global_style[global_style_key]['color'] = self._sample_dark_color()
+                        if meta['background_config'] != 'paper':
+                            global_style[global_style_key]['background-color'] = self._sample_light_color()
+
+                    # font
+                    if local_config['absolute']['td']['font'].on():
+                        font_face = self._sample_font()
+                        global_style['@font-face'].append(font_face)
+                        global_style[global_style_key]['font-family'] = font_face['font-family']
+                        meta[global_style_key + "_font"] = font_face['src']
+
+                    # font-size
+                    if local_config['relative']['td'].on():
+                        font_size_scale = local_config['relative']['td'].get()['font_size'].select()
+                        font_size = int(
+                            round(float(global_style['table']['font-size'].split("px")[0]) * font_size_scale))
+                        global_style[global_style_key]['font-size'] = str(font_size) + "px"
+                else:
+                    bs_element.append(word)
+
+        elif word_or_char == "char":
+
+            pass
+
+    def _set_local_css_styles(self, global_style, config_key, css_selector_name, meta, bs_element=None):
         local_config = self.config_selectors['style']['local'].get()
         use_absolute = config_key in local_config['absolute']
         use_relative = config_key in local_config['relative']
+
+        color_mode = None
         if local_config['css'][config_key].on():
             if use_absolute:
                 color_mode = local_config['absolute'][config_key]['color_mode'].select()
@@ -425,6 +491,9 @@ class SynthTable(Component):
                         global_style[css_selector_name]['border-right-color'] = border_color
                         global_style[css_selector_name]['border-bottom-color'] = border_color
 
+        if config_key == "td" and local_config['absolute']['text'].on():
+            self._set_local_text_styles(global_style, meta, bs_element, color_mode)
+
     def sample_local_styles(self, global_style, meta):
         if not self.config_selectors['style']['local'].on():
             return
@@ -432,17 +501,23 @@ class SynthTable(Component):
         self._set_local_css_styles(global_style, 'thead', 'thead', meta)
         self._set_local_css_styles(global_style, 'tbody', 'tbody', meta)
 
-        for row_idx in range(1, meta['nums_row'] + 1):
-            self._set_local_css_styles(global_style, 'tr', "tr:nth-child({})".format(row_idx), meta)
-            for col_idx in range(1, meta['nums_col'] + 1):
+        if 'html_bs' not in meta:
+            meta['html_bs'] = BeautifulSoup(meta['html'], 'html.parser')
+        for row_idx, tr_tag in enumerate(meta['html_bs'].find_all("tr")):
+            # for row_idx in range(1, meta['nums_row'] + 1):
+            self._set_local_css_styles(global_style, 'tr', "tr:nth-child({})".format(row_idx + 1), meta, tr_tag)
+            for col_idx, td_tag in enumerate(tr_tag.find_all("td")):
+                # for col_idx in range(1, meta['nums_col'] + 1):
                 self._set_local_css_styles(global_style, 'td',
-                                           "tr:nth-child({}) td:nth-child({})".format(row_idx, col_idx), meta)
+                                           "tr:nth-child({}) td:nth-child({})".format(row_idx + 1, col_idx + 1), meta,
+                                           td_tag)
 
     def sample(self, meta=None):
         if meta is None:
             meta = {}
         synth_structure = self.config_selectors['html']['synth_structure'].on()
         synth_content = self.config_selectors['html']['synth_content'].on()
+        meta['mix_thead_tbody'] = self.mix_thead_tbody_switch.on()
         if synth_structure:
             synth_structure_config = self.config_selectors['html']['synth_structure'].get()
             meta['nums_row'] = synth_structure_config['nums_row'].select()
@@ -451,6 +526,7 @@ class SynthTable(Component):
             meta['add_thead'] = self.thead_switch.on()
             if meta['add_thead']:
                 meta['thead_rows'] = self.thead_switch.get()['rows'].select()
+            self._synth_structure_and_content(meta)
         else:
             html_path, html_json = self._sample_html_path()
             meta['html_path'] = html_path
@@ -463,12 +539,18 @@ class SynthTable(Component):
             meta['nums_row'] = html_json['nums_row']
         meta['synth_structure'] = synth_structure
         meta['synth_content'] = False if synth_structure else synth_content
-        if synth_structure or meta['synth_content']:
-            meta['mix_thead_tbody'] = self.mix_thead_tbody_switch.on()
+
+        if meta['synth_content']:
             meta['shuffle_cells'] = self.shuffle_cells_switch.on()
+            bs = self._synth_content(meta)
+            meta['html'] = str(bs)
+            meta['html_bs'] = bs
 
         # global absolute and css styles
         meta['global_style'] = self.sample_styles(meta)
+
+        if 'html_bs' in meta:
+            meta['html'] = str(meta['html_bs'])
 
         # global relative styles
         relative_style = defaultdict(dict)
@@ -637,15 +719,10 @@ class SynthTable(Component):
                                 td.append(btag)
                             else:
                                 td.string = cell_text
-        meta['html'] = str(bs)
+        return bs
 
     def apply(self, layers, meta=None):
         meta = self.sample(meta)
-        if meta['synth_structure']:
-            self._synth_structure_and_content(meta)
-
-        if meta['synth_content']:
-            self._synth_content(meta)
 
         if meta['background_config'] == 'paper':
             paper = self.paper

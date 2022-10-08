@@ -41,9 +41,9 @@ class SynthTable(templates.Template):
             **config.get("effect", {}),
         )
 
-    def _filter_html(self, html):
+    def _filter_html(self, html, bs=None):
         if self.html_output["remove_tag_in_content"]:
-            html = html_util.remove_tag_in_table_cell(html)
+            html = html_util.remove_tag_in_table_cell(html, bs)
 
         if self.html_output["remove_thead_tbody"]:
             html = html_util.remove_thead_tbody_tag(html)
@@ -74,7 +74,8 @@ class SynthTable(templates.Template):
         table_layer.meta['bg_image'] = bg_image_meta
         table_layer.meta['bg_effect'] = bg_effect_meta
 
-        table_html = self._filter_html(table_layer.html)
+        table_html = self._filter_html(table_layer.html,
+                                       table_layer.meta['html_bs'] if 'html_bs' in table_layer.meta else None)
 
         document_space = np.clip(bg_size - table_layer.size, 0, None)
         table_layer.left = np.random.randint(document_space[0] + 1)
@@ -89,6 +90,10 @@ class SynthTable(templates.Template):
         image = layer.output(bbox=[0, 0, *bg_size])
         quality = np.random.randint(self.quality[0], self.quality[1] + 1)
         table_layer.meta['quality'] = quality
+
+        if 'html_bs' in table_layer.meta:
+            del table_layer.meta['html_bs']
+
         data = {
             "image": image,
             "label": table_html,
