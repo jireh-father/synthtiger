@@ -113,6 +113,8 @@ class TableLayer(Layer):
         self.global_style['table']['width'] = str(table_width) + "px"
         self.global_style['table']['height'] = str(table_height) + "px"
 
+        self.meta['css'] = self._convert_global_style_to_css()
+
         if paper is not None:
             paper_layer = paper.generate((image_width, image_height))
             base64_image = image_util.image_to_base64(paper_layer.image)
@@ -129,7 +131,12 @@ class TableLayer(Layer):
 
     def effect(self, meta):
         selectors = parse_config(meta["effect_config"])
-        effect_config = selectors.select()
+        if not selectors["distort"].on():
+            meta["distort"] = False
+            return
+        meta["distort"] = True
+
+        effect_config = selectors["distort"].get().select()
         meta['table_effect'] = effect_config['name']
         if effect_config['name'] == "arc":
             arc = components.Arc(meta["effect_config"]["arc"]["angles"])
