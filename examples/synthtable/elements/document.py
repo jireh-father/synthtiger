@@ -21,20 +21,20 @@ class Document:
             [
                 components.Switch(components.ElasticDistortion()),
                 components.Switch(components.AdditiveGaussianNoise()),
-                # components.Switch(
-                #     components.Selector(
-                #         [
-                #             components.Perspective(),
-                #             components.Perspective(),
-                #             components.Perspective(),
-                #             components.Perspective(),
-                #             components.Perspective(),
-                #             components.Perspective(),
-                #             components.Perspective(),
-                #             components.Perspective(),
-                #         ]
-                #     )
-                # ),
+                components.Switch(
+                    components.Selector(
+                        [
+                            components.Perspective(),
+                            components.Perspective(),
+                            components.Perspective(),
+                            components.Perspective(),
+                            components.Perspective(),
+                            components.Perspective(),
+                            components.Perspective(),
+                            components.Perspective(),
+                        ]
+                    )
+                ),
             ],
             **config.get("effect", {}),
         )
