@@ -92,12 +92,12 @@ class SynthTable(Component):
         self.font = components.BaseFont(**config["style"].get("font", {}))
 
         if config["html"]["structure"]["synth_structure"]["weight"] > 0 or config["html"]["synth_content"]["prob"] > 0:
-            self.span_switch = config_selectors['html']["structure"]['synth_structure'].get()['span']
-            self.row_span_switch = config_selectors['html']["structure"]['synth_structure'].get()['span'].get()[
+            self.span_switch = config_selectors['html']["structure"].values['synth_structure']['span']
+            self.row_span_switch = config_selectors['html']["structure"].values['synth_structure']['span'].get()[
                 'row_span']
-            self.col_span_switch = config_selectors['html']["structure"]['synth_structure'].get()['span'].get()[
+            self.col_span_switch = config_selectors['html']["structure"].values['synth_structure']['span'].get()[
                 'col_span']
-            self.thead_switch = config_selectors['html']["structure"]['synth_structure'].get()['thead']
+            self.thead_switch = config_selectors['html']["structure"].values['synth_structure']['thead']
 
             corpus_dict = defaultdict(dict)
             for thead_or_tbody in ["thead", "tbody"]:
@@ -531,8 +531,9 @@ class SynthTable(Component):
         synth_structure = structure_config['name'] == 'synth_structure'
         synth_content = self.config_selectors['html']['synth_content'].on()
         meta['mix_thead_tbody'] = self.mix_thead_tbody_switch.on()
+
         if synth_structure:
-            synth_structure_config = self.config_selectors['html']['synth_structure'].get()
+            synth_structure_config = structure_config['config']
             meta['nums_row'] = synth_structure_config['nums_row'].select()
             meta['nums_col'] = synth_structure_config['nums_col'].select()
             meta['span'] = self.span_switch.on()
