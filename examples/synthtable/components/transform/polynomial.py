@@ -30,6 +30,13 @@ class Polynomial(Component):
     def sample(self, meta=None):
         if meta is None:
             meta = {}
+
+        return meta
+
+    def _sample(self, meta=None):
+
+        if meta is None:
+            meta = {}
         width = meta['width']
         height = meta['height']
 
@@ -55,7 +62,7 @@ class Polynomial(Component):
             im = Image.from_array(layer.image)
             meta['width'] = im.width
             meta['height'] = im.height
-            meta = self.sample(meta)
+            meta = self._sample(meta)
             polynomial_args = meta["polynomial_args"]
             im.virtual_pixel = 'transparent'
             im.distort('polynomial', polynomial_args)
