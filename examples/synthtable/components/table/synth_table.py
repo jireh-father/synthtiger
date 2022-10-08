@@ -1,5 +1,6 @@
 import os
 import traceback
+import math
 import json
 import uuid
 import numpy
@@ -18,6 +19,7 @@ from utils import html_util
 from synthtiger import components
 import components as comps
 import random
+from utils.html_util import remove_tags
 
 
 def parse_html_style_values_dict(dict_values):
@@ -557,11 +559,11 @@ class SynthTable(Component):
         tags.append("</table>")
         meta['html'] = "".join(tags)
 
-    def _swap_cells(self, bs, tr_td_tags, bold=False, meta={}, idx=0):
-        first_td_tag = random.choice(random.choice(tr_td_tags))
-        second_td_tag = random.choice(random.choice(tr_td_tags))
+    def _swap_cells(self, bs, first_td_tag, second_td_tag, bold=False, meta={}, idx=None):
         first_text = "".join([str(tag) for tag in first_td_tag.contents])
         second_text = "".join([str(tag) for tag in second_td_tag.contents])
+        first_text = remove_tags(first_text).strip()
+        second_text = remove_tags(second_text).strip()
         meta["swap_cell_{}".format(idx)] = {
             "first_text": first_text,
             "second_text": second_text,
@@ -580,14 +582,16 @@ class SynthTable(Component):
             second_td_tag.string = first_text
 
     def _shuffle_cells(self, bs, element, meta, is_thead=False):
-        tr_tags = element.find_all("tr")
-        tr_td_tags = []
-        total_td = 0
-        for tr_tag in tr_tags:
-            td_tags = tr_tag.find_all("td")
-            total_td += len(td_tags)
-            tr_td_tags.append(td_tags)
-        swap_cnt = int(total_td * self.shuffle_cells_portion_selector.select())
+        td_tags = element.find_all("td")
+        swap_cnt = math.ceil(len(td_tags) * self.shuffle_cells_portion_selector.select())
+        if swap_cnt % 2 != 0:
+            swap_cnt += 1
+        if len(td_tags) < swap_cnt:
+            swap_cnt -= 2
+        if swap_cnt < 1:
+            return
+
+        shuffle_td_tags = random.sample(td_tags, swap_cnt)
 
         if is_thead:
             is_bold = self.thead_bold_switch.on()
@@ -596,8 +600,9 @@ class SynthTable(Component):
         else:
             is_bold = False
             meta['shuffle_swap_cnt'] = swap_cnt
-        for i in range(swap_cnt):
-            self._swap_cells(bs, tr_td_tags, is_bold, meta, i)
+        for i in range(0, len(shuffle_td_tags), 2):
+            self._swap_cells(bs, shuffle_td_tags[i], shuffle_td_tags[i + 1], is_bold, meta,
+                             ("thead" if is_thead else "") + str(i))
 
     def _synth_content(self, meta):
         bs = BeautifulSoup(meta['html'], 'html.parser')

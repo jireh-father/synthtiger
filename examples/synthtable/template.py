@@ -56,6 +56,8 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
+        shuffle cells에서 <b> 태그 문자로 들어가는거 디버깅
+        
         change html structure. span
 
         content안에 부분 단어나 글자 효과 변경하기(색, 크기, bold, italic등)
