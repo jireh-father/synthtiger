@@ -56,11 +56,9 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        shuffle cells에서 <b> 태그 문자로 들어가는거 디버깅
-        
         change html structure. span
 
-        content안에 부분 단어나 글자 효과 변경하기(색, 크기, bold, italic등)
+        구부러지는 효과 넣고, 너무 삐뚫어지는 효과는 빼기
 
         meta 넣어서 static 이미지 만들기
         

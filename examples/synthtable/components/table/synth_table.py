@@ -91,11 +91,13 @@ class SynthTable(Component):
 
         self.font = components.BaseFont(**config["style"].get("font", {}))
 
-        if config["html"]["synth_structure"]["prob"] > 0 or config["html"]["synth_content"]["prob"] > 0:
-            self.span_switch = config_selectors['html']['synth_structure'].get()['span']
-            self.row_span_switch = config_selectors['html']['synth_structure'].get()['span'].get()['row_span']
-            self.col_span_switch = config_selectors['html']['synth_structure'].get()['span'].get()['col_span']
-            self.thead_switch = config_selectors['html']['synth_structure'].get()['thead']
+        if config["html"]["structure"]["synth_structure"]["weight"] > 0 or config["html"]["synth_content"]["prob"] > 0:
+            self.span_switch = config_selectors['html']["structure"]['synth_structure'].get()['span']
+            self.row_span_switch = config_selectors['html']["structure"]['synth_structure'].get()['span'].get()[
+                'row_span']
+            self.col_span_switch = config_selectors['html']["structure"]['synth_structure'].get()['span'].get()[
+                'col_span']
+            self.thead_switch = config_selectors['html']["structure"]['synth_structure'].get()['thead']
 
             corpus_dict = defaultdict(dict)
             for thead_or_tbody in ["thead", "tbody"]:
@@ -428,11 +430,14 @@ class SynthTable(Component):
                 change_word_cnt = len(words)
             change_word_indexes = random.sample(list(range(len(words))), change_word_cnt)
             for i, word in enumerate(words):
-                word = ("" if i == 0 else " ") + word
+                if i > 0:
+                    bs_element.append(" ")
                 if i in change_word_indexes:
-                    self._set_text_style(bs, bs_element, text, global_style, meta, text_config, color_mode)
+                    self._set_text_style(bs, bs_element, word, global_style, meta, text_config, color_mode)
                 else:
                     bs_element.append(word)
+                if i < len(words):
+                    bs_element.append(" ")
         elif word_or_char == "char":
             char_length_ratio = text_config['config']['length'].select()
             char_length = math.ceil(len(text) * char_length_ratio)
@@ -522,7 +527,8 @@ class SynthTable(Component):
     def sample(self, meta=None):
         if meta is None:
             meta = {}
-        synth_structure = self.config_selectors['html']['synth_structure'].on()
+        structure_config = self.config_selectors['html']['structure'].select()
+        synth_structure = structure_config['name'] == 'synth_structure'
         synth_content = self.config_selectors['html']['synth_content'].on()
         meta['mix_thead_tbody'] = self.mix_thead_tbody_switch.on()
         if synth_structure:
@@ -544,7 +550,7 @@ class SynthTable(Component):
             meta['original_html'] = html
             meta['nums_col'] = html_json['nums_col']
             meta['nums_row'] = html_json['nums_row']
-        meta['synth_structure'] = synth_structure
+        meta['structure_type'] = structure_config['name']
         meta['synth_content'] = False if synth_structure else synth_content
 
         if meta['synth_content']:
