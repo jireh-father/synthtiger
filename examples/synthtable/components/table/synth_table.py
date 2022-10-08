@@ -265,10 +265,7 @@ class SynthTable(Component):
         global_style['thead tr']['font-size'] = str(head_font_size) + "px"
 
         if self.config_selectors['style']['global']['absolute']['thead']['font'].on():
-            font_face = self._sample_font()
-            global_style['@font-face'].append(font_face)
-            global_style['thead tr']['font-family'] = font_face['font-family']
-            meta['thead_font'] = font_face['src']
+            self._sample_font(global_style, meta, 'thead tr')
 
     def _sample_table_outline(self, global_style, meta):
         if meta['background_config'] != 'paper':
@@ -322,14 +319,19 @@ class SynthTable(Component):
         meta['table_border_width'] = border_width
         meta['thead_border_type'] = thead_border_type
 
-    def _sample_font(self):
+    def _sample_font(self, global_style, meta, selector):
         font_path = os.path.abspath(self.font.sample()["path"])
         font_family = str(uuid.uuid4())
-        return {
+        font_face = {
             'font-family': font_family,
             'src': 'url("{}") format("truetype")'.format(font_path),
             'font-weight': 'normal'
         }
+        if '@font-face' not in global_style:
+            global_style['@font-face'] = []
+        global_style['@font-face'].append(font_face)
+        global_style[selector]['font-family'] = font_face['font-family']
+        meta['{}_font'.format(selector)] = font_face['src']
 
     def sample_styles(self, meta):
         # static style
@@ -341,10 +343,7 @@ class SynthTable(Component):
         meta['color_mode'] = self._sample_global_color_mode()
 
         # font
-        font_face = self._sample_font()
-        global_style['@font-face'] = [font_face]
-        global_style['table']['font-family'] = font_face['font-family']
-        meta['table_font'] = font_face['src']
+        self._sample_font(global_style, meta, 'table')
 
         # css
         css_selectors = self.config_selectors['style']['global']['css']
@@ -384,7 +383,7 @@ class SynthTable(Component):
             color_mode = local_config['absolute']['td']['color_mode'].select()
         if word_or_char == 'word':
             words = text.split(" ")
-            change_word_cnt = text_config['words'].select()
+            change_word_cnt = text_config['config']['words'].select()
             if change_word_cnt > len(words):
                 change_word_cnt = len(words)
             change_word_indexes = random.sample(list(range(len(words))), change_word_cnt)
@@ -394,9 +393,9 @@ class SynthTable(Component):
                     word_id = str(uuid.uuid4())
                     span_tag = bs.new_tag("span", id="word_{}".format(word_id))
                     span_tag.append(word)
-
+                    bs_element.append(span_tag)
                     selectors = local_config['css']['td'].get()
-                    global_style_key = "#{}".format(word_id)
+                    global_style_key = "#word_{}".format(word_id)
                     for css_selector in selectors:
                         if css_selector.startswith("border"):
                             continue
@@ -418,10 +417,7 @@ class SynthTable(Component):
 
                     # font
                     if local_config['absolute']['td']['font'].on():
-                        font_face = self._sample_font()
-                        global_style['@font-face'].append(font_face)
-                        global_style[global_style_key]['font-family'] = font_face['font-family']
-                        meta[global_style_key + "_font"] = font_face['src']
+                        self._sample_font(global_style, meta, global_style_key)
 
                     # font-size
                     if local_config['relative']['td'].on():
@@ -433,7 +429,10 @@ class SynthTable(Component):
                     bs_element.append(word)
 
         elif word_or_char == "char":
+            change_cnt = text_config['config']['count'].select()
 
+            char_length = text_config['config']['length'].select()
+            text
             pass
 
     def _set_local_css_styles(self, global_style, config_key, css_selector_name, meta, bs_element=None):
@@ -465,10 +464,7 @@ class SynthTable(Component):
                     meta[css_selector_name + "_font_size"] = font_size
                 if use_absolute:
                     if use_font:
-                        font_face = self._sample_font()
-                        global_style['@font-face'].append(font_face)
-                        global_style[css_selector_name]['font-family'] = font_face['font-family']
-                        meta[css_selector_name + "_font"] = font_face['src']
+                        self._sample_font(global_style, meta, css_selector_name)
                     meta[css_selector_name + "_color_mode"] = color_mode
                     if color_mode == "dark":
                         global_style[css_selector_name]['color'] = self._sample_light_color()
