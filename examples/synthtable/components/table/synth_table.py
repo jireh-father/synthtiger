@@ -92,13 +92,7 @@ class SynthTable(Component):
         self.font = components.BaseFont(**config["style"].get("font", {}))
 
         if config["html"]["structure"]["synth_structure"]["weight"] > 0 or config["html"]["synth_content"]["prob"] > 0:
-            self.span_switch = config_selectors['html']["structure"].values['synth_structure']['span']
-            self.row_span_switch = config_selectors['html']["structure"].values['synth_structure']['span'].get()[
-                'row_span']
-            self.col_span_switch = config_selectors['html']["structure"].values['synth_structure']['span'].get()[
-                'col_span']
-            self.thead_switch = config_selectors['html']["structure"].values['synth_structure']['thead']
-
+            self.synth_structure_config = None
             corpus_dict = defaultdict(dict)
             for thead_or_tbody in ["thead", "tbody"]:
                 for corpus_type in config["html"]["synth_content"]["corpus"][thead_or_tbody].keys():
@@ -534,12 +528,14 @@ class SynthTable(Component):
 
         if synth_structure:
             synth_structure_config = structure_config['config']
+            self.synth_structure_config = synth_structure_config
             meta['nums_row'] = synth_structure_config['nums_row'].select()
             meta['nums_col'] = synth_structure_config['nums_col'].select()
-            meta['span'] = self.span_switch.on()
-            meta['add_thead'] = self.thead_switch.on()
+
+            meta['span'] = synth_structure_config['span'].on()
+            meta['add_thead'] = synth_structure_config['thead'].on()
             if meta['add_thead']:
-                meta['thead_rows'] = self.thead_switch.get()['rows'].select()
+                meta['thead_rows'] = synth_structure_config['thead'].get()['rows'].select()
             self._synth_structure_and_content(meta)
         else:
             html_path, html_json = self._sample_html_path()
@@ -624,7 +620,7 @@ class SynthTable(Component):
                     if span_table[row][col]:
                         continue
                     spans = []
-                    if self.row_span_switch.on():
+                    if self.synth_structure_config['span'].get()['row_span'].on():
                         if is_head:
                             max_row_span = thead_rows - row
                         else:
@@ -634,7 +630,7 @@ class SynthTable(Component):
                             row_span = np.random.randint(2, max_row_span + 1)
                             spans.append(' rowspan="{}"'.format(row_span))
                             span_table[row:row + row_span, col] = True
-                    if self.col_span_switch.on():
+                    if self.synth_structure_config['span'].get()['col_span'].on():
                         max_col_span = meta['nums_col'] - col
                         if max_col_span > 1:
                             col_span = np.random.randint(2, max_col_span + 1)
