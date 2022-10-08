@@ -9,10 +9,13 @@ import numpy as np
 from synthtiger.components.component import Component
 from wand.image import Image
 import uuid
+
+
 class Arc(Component):
-    def __init__(self, angles=None):
+    def __init__(self, angles=None, reverse_prob=0.5):
         super().__init__()
         self.angles = angles
+        self.reverse_prob = reverse_prob
 
     def sample(self, meta=None):
         if meta is None:
@@ -21,7 +24,8 @@ class Arc(Component):
         angle = meta.get("angle", np.random.randint(self.angles[0], self.angles[1] + 1))
 
         meta = {
-            "angle": angle
+            "angle": angle,
+            "reverse": np.random.rand() < self.reverse_prob
         }
 
         return meta
@@ -44,12 +48,14 @@ class Arc(Component):
     def apply_image(self, image):
         meta = self.sample(None)
         angle = meta["angle"]
+        reverse = meta["reverse"]
 
         im = Image.from_array(image)
-        filename = str(uuid.uuid4())
-        im.save(filename=filename + "_before.png")
         im.virtual_pixel = 'transparent'
+        if reverse:
+            im.rotate(180)
         im.distort('arc', (angle,))
-        im.save(filename=filename + "_after.png")
+        if reverse:
+            im.rotate(180)
 
         return np.array(im)

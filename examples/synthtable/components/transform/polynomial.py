@@ -71,10 +71,11 @@ class Polynomial(Component):
         return meta
 
     def apply_image(self, image):
+        meta = {}
         im = Image.from_array(image)
         meta['width'] = im.width
         meta['height'] = im.height
-        meta = self._sample()
+        meta = self._sample(meta)
         polynomial_args = meta["polynomial_args"]
         im.virtual_pixel = 'transparent'
         print(polynomial_args)
