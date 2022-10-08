@@ -49,7 +49,8 @@ class Polynomial(Component):
         return meta
 
     def apply(self, layers, meta=None):
-
+        if meta is None:
+            meta = {}
         for layer in layers:
             im = Image.from_array(layer.image)
             meta['width'] = im.width
