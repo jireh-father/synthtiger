@@ -56,8 +56,7 @@ class Polynomial(Component):
         return meta
 
     def apply(self, layers, meta=None):
-        if meta is None:
-            meta = {}
+
         for layer in layers:
             im = Image.from_array(layer.image)
             meta['width'] = im.width
@@ -72,13 +71,10 @@ class Polynomial(Component):
         return meta
 
     def apply_image(self, image):
-        meta = self.sample(None)
-        angle = meta["angle"]
-
         im = Image.from_array(image)
         meta['width'] = im.width
         meta['height'] = im.height
-        meta = self._sample(meta)
+        meta = self._sample()
         polynomial_args = meta["polynomial_args"]
         im.virtual_pixel = 'transparent'
         print(polynomial_args)
