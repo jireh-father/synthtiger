@@ -8,7 +8,7 @@ import numpy as np
 
 from synthtiger.components.component import Component
 from wand.image import Image
-
+import uuid
 class Arc(Component):
     def __init__(self, angles=None):
         super().__init__()
@@ -34,6 +34,7 @@ class Arc(Component):
             im = Image.from_array(layer.image)
             im.virtual_pixel = 'transparent'
             im.distort('arc', (angle,))
+            im.save(filename=str(uuid.uuid4())+".png")
             layer.image = np.array(im)
 
         return meta
