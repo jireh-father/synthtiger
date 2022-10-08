@@ -7,6 +7,8 @@ import sys
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 from utils import image_util
+from utils.selector import parse_config
+import components
 
 
 class TableLayer(Layer):
@@ -125,6 +127,18 @@ class TableLayer(Layer):
         div_element.screenshot(image_path)
         driver.close()
 
+    def effect(self, meta):
+        selectors = parse_config(meta["effect_config"])
+        effect_config = selectors.select()
+        meta['table_effect'] = effect_config['name']
+        if effect_config['name'] == "arc":
+            arc = components.Arc(meta["effect_config"]["arc"]["angles"])
+            arc.apply([self])
+        elif effect_config['name'] == "polynomial":
+            polynomial = components.Polynomial(meta["effect_config"]["polynomial"]["dest_coord_ratios"],
+                                               meta["effect_config"]["polynomial"]["move_prob"])
+            polynomial.apply([self])
+
     def render_table(self, image=None, paper=None, meta=None):
         self.meta = meta
         self.html = meta['html']
@@ -149,6 +163,8 @@ class TableLayer(Layer):
             os.unlink(html_path)
 
         super().__init__(image)
+
+        self.effect(meta)
 
         height, width = self.image.shape[:2]
         self.table_size = (width, height)

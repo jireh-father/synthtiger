@@ -742,6 +742,7 @@ class SynthTable(Component):
         else:
             paper = None
 
-        # rendering
+        meta["effect_config"] = self.config["effect"]
         for layer in layers:
+            # rendering
             layer.render_table(paper=paper, meta=meta)

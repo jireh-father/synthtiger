@@ -29,6 +29,7 @@ class StaticTable(Component):
         self.has_span = self.config_selectors['html']['has_span']
         self.has_col_span = self.config_selectors['html']['has_col_span']
         self.has_row_span = self.config_selectors['html']['has_row_span']
+        self.config = config
 
     def _get_image_path(self, html_path, key):
         html_file_name = os.path.splitext(os.path.basename(html_path))[0]
@@ -105,5 +106,6 @@ class StaticTable(Component):
         if image.mode != "RGB":
             image = image.convert("RGB")
         image, target_size = image_util.resize_keeping_aspect_ratio(image, target_size, Image.ANTIALIAS)
+        meta["effect_config"] = self.config["effect"]
         for layer in layers:
             layer.render_table(image=image, meta=meta)
