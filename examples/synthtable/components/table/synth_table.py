@@ -383,7 +383,8 @@ class SynthTable(Component):
             color_mode = local_config['absolute']['td']['color_mode'].select()
         if word_or_char == 'word':
             words = text.split(" ")
-            change_word_cnt = text_config['config']['words'].select()
+            change_word_ratio = text_config['config']['words'].select()
+            change_word_cnt = math.ceil(len(words) * change_word_ratio)
             if change_word_cnt > len(words):
                 change_word_cnt = len(words)
             change_word_indexes = random.sample(list(range(len(words))), change_word_cnt)
@@ -405,14 +406,15 @@ class SynthTable(Component):
                             continue
                         global_style[global_style_key][css_selector] = val
 
+                    use_bg = text_config['config']['background_color'].on()
                     # color
                     if color_mode == "dark":
                         global_style[global_style_key]['color'] = self._sample_light_color()
-                        if meta['background_config'] != 'paper':
+                        if use_bg and meta['background_config'] != 'paper':
                             global_style[global_style_key]['background-color'] = self._sample_dark_color()
                     else:
                         global_style[global_style_key]['color'] = self._sample_dark_color()
-                        if meta['background_config'] != 'paper':
+                        if use_bg and meta['background_config'] != 'paper':
                             global_style[global_style_key]['background-color'] = self._sample_light_color()
 
                     # font
@@ -429,11 +431,14 @@ class SynthTable(Component):
                     bs_element.append(word)
 
         elif word_or_char == "char":
-            change_cnt = text_config['config']['count'].select()
+            char_length_ratio = text_config['config']['length'].select()
+            char_length = math.ceil(len(text) * char_length_ratio)
+            if char_length > len(text):
+                char_length = len(text)
+            start_idx = np.random.randint(0, len(text) - char_length + 1)
+            text = text[start_idx:start_idx + char_length]
 
-            char_length = text_config['config']['length'].select()
-            text
-            pass
+
 
     def _set_local_css_styles(self, global_style, config_key, css_selector_name, meta, bs_element=None):
         local_config = self.config_selectors['style']['local'].get()
