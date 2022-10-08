@@ -40,3 +40,16 @@ class Arc(Component):
             layer.image = np.array(im)
 
         return meta
+
+    def apply_image(self, image):
+        meta = self.sample(None)
+        angle = meta["angle"]
+
+        im = Image.from_array(image)
+        filename = str(uuid.uuid4())
+        im.save(filename=filename + "_before.png")
+        im.virtual_pixel = 'transparent'
+        im.distort('arc', (angle,))
+        im.save(filename=filename + "_after.png")
+
+        return np.array(im)

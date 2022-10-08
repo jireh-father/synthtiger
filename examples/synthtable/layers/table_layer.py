@@ -3,6 +3,7 @@ from synthtiger.layers.layer import Layer
 from PIL import Image
 import uuid
 import os
+import numpy as np
 import sys
 from selenium.webdriver.common.by import By
 from selenium import webdriver
@@ -129,22 +130,26 @@ class TableLayer(Layer):
         div_element.screenshot(image_path)
         driver.close()
 
-    def effect(self, meta):
-        selectors = parse_config(meta["effect_config"])
+    def effect(self, image):
+        selectors = parse_config(self.meta["effect_config"])
         if not selectors["distort"].on():
-            meta["distort"] = False
-            return
-        meta["distort"] = True
+            self.meta["distort"] = False
+            return image
+
+        image = np.array(image)
+
+        self.meta["distort"] = True
 
         effect_config = selectors["distort"].get().select()
-        meta['table_effect'] = effect_config['name']
+        self.meta['table_effect'] = effect_config['name']
         if effect_config['name'] == "arc":
-            arc = components.Arc(meta["effect_config"]["distort"]["arc"]["angles"])
-            arc.apply([self])
+            arc = components.Arc(self.meta["effect_config"]["distort"]["arc"]["angles"])
+            image = arc.apply_image(image)
         elif effect_config['name'] == "polynomial":
-            polynomial = components.Polynomial(meta["effect_config"]["distort"]["polynomial"]["dest_coord_ratios"],
-                                               meta["effect_config"]["distort"]["polynomial"]["move_prob"])
-            polynomial.apply([self])
+            polynomial = components.Polynomial(self.meta["effect_config"]["distort"]["polynomial"]["dest_coord_ratios"],
+                                               self.meta["effect_config"]["distort"]["polynomial"]["move_prob"])
+            image = polynomial.apply_image(image)
+        return image
 
     def render_table(self, image=None, paper=None, meta=None):
         self.meta = meta
@@ -169,9 +174,9 @@ class TableLayer(Layer):
             os.unlink(image_path)
             os.unlink(html_path)
 
-        super().__init__(image)
+        image = self.effect(image)
 
-        self.effect(meta)
+        super().__init__(image)
 
         height, width = self.image.shape[:2]
         self.table_size = (width, height)

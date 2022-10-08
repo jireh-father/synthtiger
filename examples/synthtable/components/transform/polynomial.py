@@ -70,3 +70,17 @@ class Polynomial(Component):
             layer.image = np.array(im)
 
         return meta
+
+    def apply_image(self, image):
+        meta = self.sample(None)
+        angle = meta["angle"]
+
+        im = Image.from_array(image)
+        meta['width'] = im.width
+        meta['height'] = im.height
+        meta = self._sample(meta)
+        polynomial_args = meta["polynomial_args"]
+        im.virtual_pixel = 'transparent'
+        print(polynomial_args)
+        im.distort('polynomial', polynomial_args)
+        return np.array(im)
