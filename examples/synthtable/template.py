@@ -56,9 +56,11 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        change html structure. span
-
         구부러지는 효과 넣고, 너무 삐뚫어지는 효과는 빼기
+
+        기능별로 debugging
+
+        change html structure. span
 
         meta 넣어서 static 이미지 만들기
         
