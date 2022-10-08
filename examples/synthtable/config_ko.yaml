@@ -65,7 +65,7 @@ document:
                 prob: 0.5
             polynomial:
               weight: 1
-              dest_coord_ratios: [ 0.05, 0.2 ]
+              dest_coord_ratios: [ 0.05, 0.1 ]
               move_prob: 0.5
         html:
           paths: [ resources/table_html/train ]
