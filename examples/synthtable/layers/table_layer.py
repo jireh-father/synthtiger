@@ -139,11 +139,11 @@ class TableLayer(Layer):
         effect_config = selectors["distort"].get().select()
         meta['table_effect'] = effect_config['name']
         if effect_config['name'] == "arc":
-            arc = components.Arc(meta["effect_config"]["arc"]["angles"])
+            arc = components.Arc(meta["effect_config"]["distort"]["arc"]["angles"])
             arc.apply([self])
         elif effect_config['name'] == "polynomial":
-            polynomial = components.Polynomial(meta["effect_config"]["polynomial"]["dest_coord_ratios"],
-                                               meta["effect_config"]["polynomial"]["move_prob"])
+            polynomial = components.Polynomial(meta["effect_config"]["distort"]["polynomial"]["dest_coord_ratios"],
+                                               meta["effect_config"]["distort"]["polynomial"]["move_prob"])
             polynomial.apply([self])
 
     def render_table(self, image=None, paper=None, meta=None):
