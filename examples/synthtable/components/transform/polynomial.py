@@ -65,6 +65,7 @@ class Polynomial(Component):
             meta = self._sample(meta)
             polynomial_args = meta["polynomial_args"]
             im.virtual_pixel = 'transparent'
+            print(polynomial_args)
             im.distort('polynomial', polynomial_args)
             layer.image = np.array(im)
 
