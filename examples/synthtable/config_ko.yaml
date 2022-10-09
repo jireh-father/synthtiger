@@ -81,8 +81,8 @@ document:
               dest_coord_ratios: [ 0.02, 0.055 ]
               move_prob: 0.5
           rotate:
-            prob: 0.5
-            angle: [1, 10]
+            prob: 0.0
+            angle: [1, 5]
             ccw:
               prob: 0.5
         html:
