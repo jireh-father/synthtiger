@@ -1,6 +1,7 @@
 import traceback
 from synthtiger.layers.layer import Layer
 from PIL import Image
+from wand.image import Image as WandImage
 import uuid
 import os
 import numpy as np
@@ -144,27 +145,36 @@ class TableLayer(Layer):
 
     def effect(self, image):
         selectors = parse_config(self.meta["effect_config"])
-        if not selectors["distort"].on():
-            self.meta["distort"] = False
+        self.meta["distort"] = selectors["distort"].on()
+        self.meta["rotate"] = selectors["rotate"].on()
+        if not self.meta["distort"] and not self.meta["rotate"]:
             return image
-
         image = np.array(image)
+        if self.meta["distort"]:
+            effect_config = selectors["distort"].get().select()
+            self.meta['table_effect'] = effect_config['name']
+            if effect_config['name'] == "arc":
+                arc = components.Arc(self.meta["effect_config"]["distort"]["arc"]["angles"],
+                                     self.meta["effect_config"]["distort"]["arc"]["reverse"]["prob"])
+                min_aspect_ratio = self.meta["effect_config"]["distort"]["arc"]["min_aspect_ratio"]
+                height, width = image.shape[:2]
+                if min_aspect_ratio <= width / height:
+                    image = arc.apply_image(image)
+            elif effect_config['name'] == "polynomial":
+                polynomial = components.Polynomial(
+                    self.meta["effect_config"]["distort"]["polynomial"]["dest_coord_ratios"],
+                    self.meta["effect_config"]["distort"]["polynomial"]["move_prob"])
+                image = polynomial.apply_image(image)
+        if self.meta["rotate"]:
+            rotate_config = selectors["rotate"].get()
+            angle = rotate_config['angle'].select()
+            ccw = rotate_config['ccw'].on()
+            if not ccw:
+                angle = -angle
 
-        self.meta["distort"] = True
-
-        effect_config = selectors["distort"].get().select()
-        self.meta['table_effect'] = effect_config['name']
-        if effect_config['name'] == "arc":
-            arc = components.Arc(self.meta["effect_config"]["distort"]["arc"]["angles"],
-                                 self.meta["effect_config"]["distort"]["arc"]["reverse"]["prob"])
-            min_aspect_ratio = self.meta["effect_config"]["distort"]["arc"]["min_aspect_ratio"]
-            height, width = image.shape[:2]
-            if min_aspect_ratio <= width / height:
-                image = arc.apply_image(image)
-        elif effect_config['name'] == "polynomial":
-            polynomial = components.Polynomial(self.meta["effect_config"]["distort"]["polynomial"]["dest_coord_ratios"],
-                                               self.meta["effect_config"]["distort"]["polynomial"]["move_prob"])
-            image = polynomial.apply_image(image)
+            image = WandImage.from_array(image)
+            image.rotate(angle)
+            np.array(image)
         return image
 
     def render_table(self, image=None, paper=None, meta=None):

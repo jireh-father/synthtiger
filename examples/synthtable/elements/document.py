@@ -34,9 +34,6 @@ class Document:
                             components.Perspective(),
                         ]
                     )
-                ),
-                components.Switch(
-                    components.Rotate(),
                 )
             ],
             **config.get("effect", {}),

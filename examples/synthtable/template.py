@@ -56,6 +56,10 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
+        rotate 기능추가
+
+        밑에 부분 짤리는거 확인
+
         기능별로 debugging
         
         효과 과하지 않도로고 설정 파라미터 미세조정

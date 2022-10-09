@@ -30,7 +30,7 @@ document:
   landscape: 0.5
   short_size: [720, 1024]
   aspect_ratio: [1, 2]
-  margin: [0, 0.08]
+  margin: [0, 0.13]
   content:
     table:
       static:
@@ -80,6 +80,11 @@ document:
               weight: 1
               dest_coord_ratios: [ 0.02, 0.055 ]
               move_prob: 0.5
+          rotate:
+            prob: 0.5
+            angle: [1, 10]
+            ccw:
+              prob: 0.5
         html:
           paths: [ resources/table_html/train ]
           weights: [1]
@@ -550,11 +555,6 @@ document:
 #            - percents: [[1, 1], [1, 1], [1, 1], [0.97, 1]]
             - percents: [[1, 1], [1, 1], [1, 1], [0.97, 1]]
             - percents: [[1, 1], [1, 1], [1, 1], [1, 1]]
-      - prob: 0.5
-        args:
-          # rotate
-          angle: [ 0, 3 ]
-          ccw: 0.5
 
 effect:
   args:
