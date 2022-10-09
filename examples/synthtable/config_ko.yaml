@@ -562,10 +562,9 @@ effect:
     - prob: 0.7
       args:
 #        intensity: [0, 160]
-        intensity: [0, 100]
+        intensity: [0, 120]
         amount: [0, 1]
-#        smoothing: [0.5, 1]
-        smoothing: [0.7, 1]
+        smoothing: [0.5, 1]
 #        bidirectional: 0
         bidirectional: 0.5
     # contrast
