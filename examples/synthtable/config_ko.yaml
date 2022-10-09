@@ -355,6 +355,7 @@ document:
                   prob: 0.1
                 text_vertical:
                   prob: 0.1
+                  max_text_length: 7
               text:
                 prob: 0.5
                 word:

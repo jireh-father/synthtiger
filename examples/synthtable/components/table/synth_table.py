@@ -457,7 +457,11 @@ class SynthTable(Component):
                 use_font = local_config['absolute'][config_key]['font'].on()
                 if config_key == "td":
                     use_text_vertical = local_config['absolute'][config_key]['text_vertical'].on()
-
+                    if use_text_vertical:
+                        max_text_length = local_config['absolute'][config_key]['text_vertical'].get()[
+                            "max_text_length"].select()
+                        if len(bs_element.text) > max_text_length:
+                            use_text_vertical = False
             font_size_scale = None
             if use_relative and local_config['relative'][config_key].on():
                 font_size_scale = local_config['relative'][config_key].get()['font_size'].select()
