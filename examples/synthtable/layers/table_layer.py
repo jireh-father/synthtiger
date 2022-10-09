@@ -112,7 +112,7 @@ class TableLayer(Layer):
             table_width = int(table_height * self.meta['aspect_ratio'][0])
         elif self.meta['aspect_ratio'][1] < ar:
             table_height = int(table_width / self.meta['aspect_ratio'][1])
-
+        print(table_element.size)
         # driver.close()
         self.global_style['table']['width'] = str(table_width) + "px"
         self.global_style['table']['height'] = str(table_height) + "px"
@@ -139,7 +139,8 @@ class TableLayer(Layer):
         self._write_html_file(html_path)
 
         driver.get("file:///{}".format(os.path.abspath(html_path)))
-        driver.set_window_size(int(image_width * 1.5), int(image_height * 1.5))
+        driver.set_window_size(window_width, window_height)
+        # driver.set_window_size(int(image_width * 1.5), int(image_height * 1.5))
         div_element = driver.find_element(By.ID, 'table_wrapper')
         div_element.screenshot(image_path)
         driver.close()
