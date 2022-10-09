@@ -56,8 +56,6 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        background 이미지를  color 로도 넣기
-        
         세로로 글씨 쓰는 기능 추가
         
         html 파일 읽어올때 지원하는 charset 추가

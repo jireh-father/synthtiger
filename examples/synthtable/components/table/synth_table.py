@@ -455,6 +455,7 @@ class SynthTable(Component):
             if use_absolute:
                 color_mode = local_config['absolute'][config_key]['color_mode'].select()
                 use_font = local_config['absolute'][config_key]['font'].on()
+                use_text_vertical = local_config['absolute'][config_key]['text_vertical'].on()
 
             font_size_scale = None
             if use_relative and local_config['relative'][config_key].on():
@@ -475,6 +476,9 @@ class SynthTable(Component):
                 if use_absolute:
                     if use_font:
                         self._sample_font(global_style, meta, css_selector_name)
+                    if use_text_vertical:
+                        global_style[css_selector_name]['text-orientation'] = 'upright'
+                        global_style[css_selector_name]['writing-mode'] = 'vertical-rl'
                     meta[css_selector_name + "_color_mode"] = color_mode
                     if color_mode == "dark":
                         global_style[css_selector_name]['color'] = self._sample_light_color()
@@ -524,7 +528,6 @@ class SynthTable(Component):
         structure_config = self.config_selectors['html']['structure'].select()
         synth_structure = structure_config['name'] == 'synth_structure'
         synth_content = self.config_selectors['html']['synth_content'].on()
-
 
         if synth_structure:
             synth_structure_config = structure_config['config']

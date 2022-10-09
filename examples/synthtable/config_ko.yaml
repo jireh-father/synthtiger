@@ -353,6 +353,8 @@ document:
                 color_mode: [light, dark]
                 font:
                   prob: 0.1
+                text_vertical:
+                  prob: 0.1
               text:
                 prob: 0.5
                 word:
