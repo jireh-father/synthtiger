@@ -56,8 +56,6 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        세로로 글씨 쓰는 기능 추가
-        
         html 파일 읽어올때 지원하는 charset 추가
         
         이미지 세로로 너무 긴경우 arc 효과 없애기

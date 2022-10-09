@@ -462,6 +462,11 @@ class SynthTable(Component):
                             "max_text_length"].select()
                         if len(bs_element.text) > max_text_length:
                             use_text_vertical = False
+                    if use_text_vertical:
+                        ignore_number = local_config['absolute'][config_key]['text_vertical'].get()[
+                            "ignore_number"].select()
+                        if ignore_number and any(c.isdigit() for c in bs_element.text):
+                            use_text_vertical = False
             font_size_scale = None
             if use_relative and local_config['relative'][config_key].on():
                 font_size_scale = local_config['relative'][config_key].get()['font_size'].select()

@@ -55,6 +55,7 @@ document:
           arc:
             weight: 1
             angles: [ 3, 30 ]
+            min_aspect_ratio: 0.82
           polynomial:
             weight: 1
             dest_coord_ratios: [ 0.05, 0.2 ]
@@ -356,6 +357,7 @@ document:
                 text_vertical:
                   prob: 0.1
                   max_text_length: 7
+                  ignore_number: true
               text:
                 prob: 0.5
                 word:
