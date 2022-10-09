@@ -32,10 +32,6 @@ class Document:
                             components.Perspective(),
                             components.Perspective(),
                             components.Perspective(),
-                            components.Trapezoidate(),
-                            components.Trapezoidate(),
-                            components.Skew(),
-                            components.Skew(),
                         ]
                     )
                 ),
