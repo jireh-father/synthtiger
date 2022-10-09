@@ -53,14 +53,17 @@ document:
           has_row_span:
             prob: 0.5
         effect:
-          arc:
-            weight: 1
-            angles: [ 3, 30 ]
-            min_aspect_ratio: 0.82
-          polynomial:
-            weight: 1
-            dest_coord_ratios: [ 0.05, 0.2 ]
-            move_prob: 0.5
+          distort:
+            prob: 0.5
+            arc:
+              weight: 1
+              angles: [ 3, 11 ]
+              reverse:
+                prob: 0.5
+            polynomial:
+              weight: 1
+              dest_coord_ratios: [ 0.05, 0.08 ]
+              move_prob: 0.5
       synth:
         weight: 1
         effect:
