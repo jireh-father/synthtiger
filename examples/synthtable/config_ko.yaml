@@ -552,7 +552,7 @@ document:
             - percents: [[1, 1], [1, 1], [1, 1], [1, 1]]
       - prob: 0.5
         args:
-          weights: []
+          weights: [1,1,1,1,2]
           args:
             # trapezoidate x
             - weights: [ 1, 0, 1, 0 ]
