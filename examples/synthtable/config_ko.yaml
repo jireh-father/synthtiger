@@ -553,7 +553,7 @@ document:
       - prob: 0.5
         args:
           # rotate
-          angle: [ 0, 10 ]
+          angle: [ 0, 3 ]
           ccw: 0.5
 
 effect:
