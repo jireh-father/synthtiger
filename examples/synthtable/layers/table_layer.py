@@ -103,16 +103,18 @@ class TableLayer(Layer):
         table_element = driver.find_element(By.TAG_NAME, 'table')
         table_width = table_element.size['width']
         table_height = table_element.size['height']
-        print(table_width, table_height)
+        print("star", table_width, table_height)
         if not self.meta['table_full_size']:
             table_width = int(table_element.size['width'] * self.meta['relative_style']['table']['width_scale'])
             table_height = int(table_element.size['height'] * self.meta['relative_style']['table']['height_scale'])
+        print("full", table_width, table_height)
         ar = table_width / table_height
         if self.meta['aspect_ratio'][0] > ar:
             table_width = int(table_height * self.meta['aspect_ratio'][0])
+            print("> ar", table_width, table_height)
         elif self.meta['aspect_ratio'][1] < ar:
             table_height = int(table_width / self.meta['aspect_ratio'][1])
-        print(table_width, table_height)
+        print("laset", table_width, table_height)
         # driver.close()
         self.global_style['table']['width'] = str(table_width) + "px"
         self.global_style['table']['height'] = str(table_height) + "px"
