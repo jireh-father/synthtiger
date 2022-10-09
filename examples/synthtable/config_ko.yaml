@@ -533,7 +533,7 @@ document:
       # perspective
       - prob: 0.5
         args:
-          weights: [750, 50, 50, 25, 25, 25, 25, 50]
+          weights: [750, 50, 50, 25, 25, 25, 25, 50, 500, 500, 500, 500]
           args:
 #            - percents: [[0.97, 1], [0.97, 1], [0.97, 1], [0.97, 1]]
             - percents: [[0.97, 1], [0.97, 1], [0.97, 1], [0.97, 1]]
@@ -550,10 +550,6 @@ document:
 #            - percents: [[1, 1], [1, 1], [1, 1], [0.97, 1]]
             - percents: [[1, 1], [1, 1], [1, 1], [0.97, 1]]
             - percents: [[1, 1], [1, 1], [1, 1], [1, 1]]
-      - prob: 0.5
-        args:
-          weights: [1,1,1,1,2]
-          args:
             # trapezoidate x
             - weights: [ 1, 0, 1, 0 ]
               percent: [ 0.5, 1 ]
@@ -570,9 +566,11 @@ document:
             - weights: [ 0, 1 ]
               angle: [ 0, 30 ]
               ccw: 0.5
-            # rotate
-            - angle: [ 0, 5 ]
-              ccw: 0.5
+      - prob: 0.5
+        args:
+          # rotate
+          angle: [ 0, 5 ]
+          ccw: 0.5
 
 effect:
   args:

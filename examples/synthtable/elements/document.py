@@ -32,20 +32,15 @@ class Document:
                             components.Perspective(),
                             components.Perspective(),
                             components.Perspective(),
-
+                            components.Trapezoidate(),
+                            components.Trapezoidate(),
+                            components.Skew(),
+                            components.Skew(),
                         ]
                     )
                 ),
                 components.Switch(
-                    components.Selector(
-                        [
-                            components.Trapezoidate(),
-                            components.Trapezoidate(),
-                            components.Skew(),
-                            components.Skew(),
-                            components.Rotate(),
-                        ]
-                    )
+                    components.Rotate(),
                 )
             ],
             **config.get("effect", {}),
