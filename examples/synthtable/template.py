@@ -56,11 +56,11 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        아이콘이나 이미지 넣기<i> 태그
-        
         기능별로 debugging
         
         효과 과하지 않도로고 설정 파라미터 미세조정
+
+        아이콘이나 이미지 넣기<i> 태그
 
         change html structure. span
 

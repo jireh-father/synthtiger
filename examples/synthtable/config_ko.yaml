@@ -559,12 +559,15 @@ effect:
         rgb: [[0, 255], [0, 255], [0, 255]]
         alpha: [0, 0.2]
     # shadow
-    - prob: 1
+    - prob: 0.7
       args:
-        intensity: [0, 160]
+#        intensity: [0, 160]
+        intensity: [0, 100]
         amount: [0, 1]
-        smoothing: [0.5, 1]
-        bidirectional: 0
+#        smoothing: [0.5, 1]
+        smoothing: [0.7, 1]
+#        bidirectional: 0
+        bidirectional: 0.5
     # contrast
     - prob: 1
       args:
