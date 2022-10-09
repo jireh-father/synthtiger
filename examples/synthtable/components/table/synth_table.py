@@ -477,7 +477,7 @@ class SynthTable(Component):
                 if use_absolute:
                     if use_font:
                         self._sample_font(global_style, meta, css_selector_name)
-                    if use_text_vertical:
+                    if config_key == "td" and use_text_vertical:
                         global_style[css_selector_name]['text-orientation'] = 'upright'
                         global_style[css_selector_name]['writing-mode'] = 'vertical-rl'
                     meta[css_selector_name + "_color_mode"] = color_mode
