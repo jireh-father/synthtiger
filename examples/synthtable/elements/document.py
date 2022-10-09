@@ -46,7 +46,7 @@ class Document:
         long_size = int(short_size * aspect_ratio)
         size = (long_size, short_size) if landscape else (short_size, long_size)
 
-        table_layer = self.content.generate(size, int(self.short_size[1] * self.aspect_ratio[1]))
+        table_layer = self.content.generate(size)#, int(self.short_size[1] * self.aspect_ratio[1]))
 
         fullscreen = np.random.rand() < self.fullscreen
         if fullscreen:

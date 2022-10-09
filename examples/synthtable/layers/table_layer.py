@@ -90,11 +90,21 @@ class TableLayer(Layer):
         driver = webdriver.Chrome('chromedriver', options=options)
         driver.implicitly_wait(0.5)
 
+        if self.meta['table_full_size']:
+            window_width = 5000
+            window_height = 5000
+        else:
+            window_width = self.meta['size'][0]
+            window_height = self.meta['size'][1]
+            self.global_style['table']['width'] = str(window_width) + "px"
+            self.global_style['table']['height'] = str(window_height) + "px"
+
         self._write_html_file(html_path)
         driver.get("file:///{}".format(os.path.abspath(html_path)))
-        required_width = driver.execute_script('return document.body.parentNode.scrollWidth')
-        required_height = driver.execute_script('return document.body.parentNode.scrollHeight')
-        driver.set_window_size(required_width, required_height)
+
+        # required_width = driver.execute_script('return document.body.parentNode.scrollWidth')
+        # required_height = driver.execute_script('return document.body.parentNode.scrollHeight')
+        driver.set_window_size(window_width, window_height)
 
         table_element = driver.find_element(By.TAG_NAME, 'table')
 

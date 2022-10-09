@@ -21,7 +21,7 @@ class Table():
             else:
                 self.synth = comps.SynthTable(selector_dict['config'], config["synth"])
 
-    def generate(self, size, max_size):
+    def generate(self, size):#, max_size):
         table_layer = TableLayer(size)
 
         table_config = self.table_selector.select()
@@ -30,10 +30,10 @@ class Table():
             if table_type == "static":
                 self.static.apply([table_layer], {'size': size})
             elif table_type == "synth":
-                self.synth.apply([table_layer])
+                self.synth.apply([table_layer], {'size': size})
             table_layer.meta['table_type'] = table_type
         except:
             traceback.print_exc()
-            return self.generate(size, max_size)
+            return self.generate(size)#, max_size)
 
         return table_layer
