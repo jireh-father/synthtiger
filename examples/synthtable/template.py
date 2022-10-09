@@ -56,10 +56,6 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        html 파일 읽어올때 지원하는 charset 추가
-        
-        이미지 세로로 너무 긴경우 arc 효과 없애기
-        
         아이콘이나 이미지 넣기<i> 태그
         
         기능별로 debugging

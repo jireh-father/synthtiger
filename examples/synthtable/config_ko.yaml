@@ -41,6 +41,7 @@ document:
         html:
           paths: [ resources/table_html/train ]
           weights: [ 1 ]
+#          charset:
           min_row: 2
           max_row: 10
           min_col: 2
@@ -77,6 +78,7 @@ document:
         html:
           paths: [ resources/table_html/train ]
           weights: [1]
+#          charset:
           structure:
             static_html:
               weight: 1

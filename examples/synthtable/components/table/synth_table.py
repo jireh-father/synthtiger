@@ -20,6 +20,8 @@ from synthtiger import components
 import components as comps
 import random
 from utils.html_util import remove_tags
+from utils.charset import Charset
+from html import unescape
 
 
 def parse_html_style_values_dict(dict_values):
@@ -39,6 +41,14 @@ def parse_html_style_values(values):
         return Selector(values)
 
 
+def convert_bs_to_html_string(bs):
+    if "<" in bs.text or ">" in bs.text:
+        html = str(bs)
+        return unescape(html)
+    else:
+        return str(bs)
+
+
 def parse_html_style(config):
     selectors = {}
     for k in config:
@@ -56,6 +66,10 @@ class SynthTable(Component):
         self.config_selectors = config_selectors
         self.html_path_selector = PathSelector(config_selectors['html']['paths'].values,
                                                config_selectors['html']['weights'].values, exts=['.json'])
+
+        self.html_charset = None
+        if 'charset' in config_selectors['html']:
+            self.html_charset = Charset(config_selectors['html']['charset'])
 
         # styles
         for background_config in config_selectors['style']['global']['absolute']['background'].values:
@@ -532,6 +546,8 @@ class SynthTable(Component):
                                            "tr:nth-child({}) td:nth-child({})".format(row_idx + 1, col_idx + 1), meta,
                                            td_tag)
 
+        meta['html'] = convert_bs_to_html_string(meta['html_bs'])
+
     def sample(self, meta=None):
         if meta is None:
             meta = {}
@@ -552,7 +568,7 @@ class SynthTable(Component):
             meta['mix_thead_tbody'] = self.mix_thead_tbody_switch.on()
             self._synth_structure_and_content(meta)
         else:
-            html_path, html_json = self._sample_html_path()
+            html_path, html_json = self._sample_html_path(meta)
             meta['html_path'] = html_path
             html = html_json['html'].strip()
             # insert tbody
@@ -567,15 +583,13 @@ class SynthTable(Component):
         if meta['synth_content']:
             meta['shuffle_cells'] = self.shuffle_cells_switch.on()
             meta['mix_thead_tbody'] = self.mix_thead_tbody_switch.on()
-            bs = self._synth_content(meta)
-            meta['html'] = str(bs)
-            meta['html_bs'] = bs
+            self._synth_content(meta)
 
         # global absolute and css styles
         meta['global_style'] = self.sample_styles(meta)
 
-        if 'html_bs' in meta:
-            meta['html'] = str(meta['html_bs'])
+        # if 'html_bs' in meta:
+        #     meta['html'] = str(meta['html_bs'])
 
         # global relative styles
         relative_style = defaultdict(dict)
@@ -590,10 +604,16 @@ class SynthTable(Component):
         meta['aspect_ratio'] = self.config["style"]["aspect_ratio"]
         return meta
 
-    def _sample_html_path(self):
+    def _sample_html_path(self, meta):
         while True:
             html_json_path, _, _ = self.html_path_selector.select()
+
             html_json = json.load(open(html_json_path), encoding='utf-8')
+            if self.html_charset:
+                bs = BeautifulSoup(html_json['html'], 'html.parser')
+                meta['html_bs'] = bs
+                if not self.html_charset.check_charset(bs.text):
+                    continue
             if self.min_cols > html_json['nums_col'] or self.max_cols < html_json['nums_col']:
                 continue
             if self.min_rows > html_json['nums_row'] or self.max_rows < html_json['nums_row']:
@@ -712,7 +732,9 @@ class SynthTable(Component):
                              ("thead" if is_thead else "") + str(i))
 
     def _synth_content(self, meta):
-        bs = BeautifulSoup(meta['html'], 'html.parser')
+        if 'html_bs' not in meta:
+            bs = BeautifulSoup(meta['html'], 'html.parser')
+            meta['html_bs'] = bs
         if meta['shuffle_cells']:
             if meta['mix_thead_tbody']:
                 self._shuffle_cells(bs, bs, meta)
@@ -744,7 +766,7 @@ class SynthTable(Component):
                                 td.append(btag)
                             else:
                                 td.string = cell_text
-        return bs
+        meta['html'] = convert_bs_to_html_string(bs)
 
     def apply(self, layers, meta=None):
         meta = self.sample(meta)
