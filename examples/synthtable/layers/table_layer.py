@@ -110,10 +110,9 @@ class TableLayer(Layer):
         print("full", table_width, table_height)
         ar = table_width / table_height
         if self.meta['aspect_ratio'][0] > ar:
-            table_width = int(table_height * self.meta['aspect_ratio'][0])
-            print("> ar", table_width, table_height)
+            table_height = int(table_width / self.meta['aspect_ratio'][0])
         elif self.meta['aspect_ratio'][1] < ar:
-            table_height = int(table_width / self.meta['aspect_ratio'][1])
+            table_width = int(table_height * self.meta['aspect_ratio'][1])
         print("laset", table_width, table_height)
         # driver.close()
         self.global_style['table']['width'] = str(table_width) + "px"

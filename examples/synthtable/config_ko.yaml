@@ -287,8 +287,8 @@ document:
                   prob: 0.5
             relative:
               table:
-                width_scale: [ 0.55, 1.1 ]
-                height_scale: [ 0.55, 1.1 ]
+                width_scale: [ 0.7, 1.2 ]
+                height_scale: [ 0.7, 1.2 ]
               thead:
                 font_size: [1.0, 2.0]
             css:
