@@ -32,9 +32,21 @@ class Document:
                             components.Perspective(),
                             components.Perspective(),
                             components.Perspective(),
+
                         ]
                     )
                 ),
+                components.Switch(
+                    components.Selector(
+                        [
+                            components.Trapezoidate(),
+                            components.Trapezoidate(),
+                            components.Skew(),
+                            components.Skew(),
+                            components.Rotate(),
+                        ]
+                    )
+                )
             ],
             **config.get("effect", {}),
         )
