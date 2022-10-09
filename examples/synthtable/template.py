@@ -58,6 +58,14 @@ class SynthTable(templates.Template):
         '''
         background 이미지를  color 로도 넣기
         
+        세로로 글씨 쓰는 기능 추가
+        
+        html 파일 읽어올때 지원하는 charset 추가
+        
+        이미지 세로로 너무 긴경우 arc 효과 없애기
+        
+        아이콘이나 이미지 넣기<i> 태그
+        
         기능별로 debugging
         
         효과 과하지 않도로고 설정 파라미터 미세조정

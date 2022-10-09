@@ -8,10 +8,16 @@ html_output:
   remove_tag_in_content: true
 
 background:
+  weights:
+    image: 1
+    color: 1
   image:
     paths: [resources/background]
     weights: [1]
-
+  color:
+    rgb: [[ 0, 255 ],[ 0, 255 ],[ 0, 255 ]]
+    alpha: [ 1, 1 ]
+    grayscale: 0
   effect:
     args:
       # gaussian blur
