@@ -103,6 +103,7 @@ class TableLayer(Layer):
         table_element = driver.find_element(By.TAG_NAME, 'table')
         table_width = table_element.size['width']
         table_height = table_element.size['height']
+        print(table_element.size)
         if not self.meta['table_full_size']:
             table_width = int(table_element.size['width'] * self.meta['relative_style']['table']['width_scale'])
             table_height = int(table_element.size['height'] * self.meta['relative_style']['table']['height_scale'])
@@ -198,7 +199,7 @@ class TableLayer(Layer):
 
             self.meta['css'] = self._convert_global_style_to_css()
             image = Image.open(image_path)
-            # os.unlink(image_path)
+            os.unlink(image_path)
             os.unlink(html_path)
 
         image = self.effect(image)
