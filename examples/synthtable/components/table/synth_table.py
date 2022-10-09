@@ -455,7 +455,8 @@ class SynthTable(Component):
             if use_absolute:
                 color_mode = local_config['absolute'][config_key]['color_mode'].select()
                 use_font = local_config['absolute'][config_key]['font'].on()
-                use_text_vertical = local_config['absolute'][config_key]['text_vertical'].on()
+                if config_key == "td":
+                    use_text_vertical = local_config['absolute'][config_key]['text_vertical'].on()
 
             font_size_scale = None
             if use_relative and local_config['relative'][config_key].on():
