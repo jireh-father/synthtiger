@@ -603,7 +603,6 @@ class SynthTable(Component):
         meta['tmp_path'] = self.config_selectors['html']['tmp_path'].select()
         meta['aspect_ratio'] = self.config["style"]["aspect_ratio"]
 
-        meta['table_full_size'] = self.config_selectors['style']['global']['absolute']['table']['full_size'].on()
         return meta
 
     def _sample_html_path(self, meta):

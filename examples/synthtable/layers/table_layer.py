@@ -90,20 +90,13 @@ class TableLayer(Layer):
         driver = webdriver.Chrome('chromedriver', options=options)
         driver.implicitly_wait(0.5)
 
-        if self.meta['table_full_size']:
-            window_width = 5000
-            window_height = 5000
-        else:
-            window_width = self.meta['size'][0]
-            window_height = self.meta['size'][1]
-            self.global_style['table']['width'] = str(window_width) + "px"
-            self.global_style['table']['height'] = str(window_height) + "px"
-
         self._write_html_file(html_path)
         driver.get("file:///{}".format(os.path.abspath(html_path)))
 
         # required_width = driver.execute_script('return document.body.parentNode.scrollWidth')
         # required_height = driver.execute_script('return document.body.parentNode.scrollHeight')
+        window_width = 5000
+        window_height = 5000
         driver.set_window_size(window_width, window_height)
 
         table_element = driver.find_element(By.TAG_NAME, 'table')
@@ -117,14 +110,22 @@ class TableLayer(Layer):
             table_height = int(table_width / self.meta['aspect_ratio'][1])
 
         # driver.close()
+        self.global_style['table']['width'] = str(table_width) + "px"
+        self.global_style['table']['height'] = str(table_height) + "px"
+
+        self._write_html_file(html_path)
+        driver.get("file:///{}".format(os.path.abspath(html_path)))
+        driver.set_window_size(window_width, window_height)
+        table_element = driver.find_element(By.TAG_NAME, 'table')
+        table_width = table_element.size['width']
+        table_height = table_element.size['height']
+
         margin_horizontal, margin_vertical = self._get_margin_vertical_and_horizontal()
         image_width = table_width + margin_horizontal  # meta['margin_width']
         image_height = table_height + margin_vertical  # meta['margin_height']
 
         self.global_style['table']['width'] = str(table_width) + "px"
         self.global_style['table']['height'] = str(table_height) + "px"
-
-        self.meta['css'] = self._convert_global_style_to_css()
 
         if paper is not None:
             paper_layer = paper.generate((image_width, image_height))
@@ -184,6 +185,7 @@ class TableLayer(Layer):
                     os.unlink(html_path)
                 raise e
 
+            self.meta['css'] = self._convert_global_style_to_css()
             image = Image.open(image_path)
             os.unlink(image_path)
             os.unlink(html_path)

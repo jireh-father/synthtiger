@@ -30,7 +30,7 @@ class Table():
             if table_type == "static":
                 self.static.apply([table_layer], {'size': size})
             elif table_type == "synth":
-                self.synth.apply([table_layer], {'size': size})
+                self.synth.apply([table_layer])
             table_layer.meta['table_type'] = table_type
         except:
             traceback.print_exc()
