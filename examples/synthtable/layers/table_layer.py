@@ -100,9 +100,11 @@ class TableLayer(Layer):
         driver.set_window_size(window_width, window_height)
 
         table_element = driver.find_element(By.TAG_NAME, 'table')
-
-        table_width = int(table_element.size['width'] * self.meta['relative_style']['table']['width_scale'])
-        table_height = int(table_element.size['height'] * self.meta['relative_style']['table']['height_scale'])
+        table_width = table_element.size['width']
+        table_height = table_element.size['height']
+        if not self.meta['table_full_size']:
+            table_width = int(table_element.size['width'] * self.meta['relative_style']['table']['width_scale'])
+            table_height = int(table_element.size['height'] * self.meta['relative_style']['table']['height_scale'])
         ar = table_width / table_height
         if self.meta['aspect_ratio'][0] > ar:
             table_width = int(table_height * self.meta['aspect_ratio'][0])
@@ -112,13 +114,11 @@ class TableLayer(Layer):
         # driver.close()
         self.global_style['table']['width'] = str(table_width) + "px"
         self.global_style['table']['height'] = str(table_height) + "px"
-
-        self._write_html_file(html_path)
-        driver.get("file:///{}".format(os.path.abspath(html_path)))
-        driver.set_window_size(window_width, window_height)
-        table_element = driver.find_element(By.TAG_NAME, 'table')
-        table_width = table_element.size['width']
-        table_height = table_element.size['height']
+        #
+        # self._write_html_file(html_path)
+        # driver.get("file:///{}".format(os.path.abspath(html_path)))
+        # driver.set_window_size(window_width, window_height)
+        # table_element = driver.find_element(By.TAG_NAME, 'table')
 
         margin_horizontal, margin_vertical = self._get_margin_vertical_and_horizontal()
         image_width = table_width + margin_horizontal  # meta['margin_width']
@@ -132,11 +132,12 @@ class TableLayer(Layer):
             base64_image = image_util.image_to_base64(paper_layer.image)
             self.global_style['#table_wrapper']['background-image'] = 'url("data:image/png;base64,{}")'.format(
                 base64_image)
+            self.global_style['#table_wrapper']['background-size'] = "100% 100%"
 
         self._write_html_file(html_path)
 
         driver.get("file:///{}".format(os.path.abspath(html_path)))
-        driver.set_window_size(int(image_width * 1.2), int(image_height * 1.2))
+        driver.set_window_size(int(image_width * 1.5), int(image_height * 1.5))
         div_element = driver.find_element(By.ID, 'table_wrapper')
         div_element.screenshot(image_path)
         driver.close()

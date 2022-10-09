@@ -603,6 +603,7 @@ class SynthTable(Component):
         meta['tmp_path'] = self.config_selectors['html']['tmp_path'].select()
         meta['aspect_ratio'] = self.config["style"]["aspect_ratio"]
 
+        meta['table_full_size'] = self.config_selectors['style']['global']['absolute']['table']['full_size'].on()
         return meta
 
     def _sample_html_path(self, meta):
@@ -777,6 +778,7 @@ class SynthTable(Component):
             meta['global_style']["table"]["color"] = self._sample_dark_color()
         else:
             paper = None
+
 
         meta["effect_config"] = self.config['effect']
         for layer in layers:
