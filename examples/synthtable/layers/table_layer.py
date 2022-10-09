@@ -198,7 +198,7 @@ class TableLayer(Layer):
 
             self.meta['css'] = self._convert_global_style_to_css()
             image = Image.open(image_path)
-            os.unlink(image_path)
+            # os.unlink(image_path)
             os.unlink(html_path)
 
         image = self.effect(image)
