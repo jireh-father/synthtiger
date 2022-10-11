@@ -4,17 +4,14 @@ Copyright (c) 2022-present NAVER Corp.
 MIT License
 """
 import json
+import synthtiger
 import os
-import re
-import uuid
 from typing import Any, List
 
 import numpy as np
 from elements import Background, Document
 from PIL import Image
 from synthtiger import components, layers, templates
-import argparse
-import re
 from utils import html_util
 
 
@@ -56,14 +53,20 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        rotate 기능추가
-
-        밑에 부분 짤리는거 확인
-
-        기능별로 debugging
+        기능 test
         
         효과 과하지 않도로고 설정 파라미터 미세조정
 
+        애매한 컬러 빼고 추가하기
+
+        pubtabnet 데이터셋용 컨피그 추가
+        
+        resources 준비
+        
+        pubtabnet 변형 데이터 생성
+        
+        static html 불러올때 col, row, span 별로 인덱싱해놓기
+        
         아이콘이나 이미지 넣기<i> 태그
 
         change html structure. span
@@ -156,7 +159,7 @@ class SynthTable(templates.Template):
         os.makedirs(os.path.dirname(metadata_filepath), exist_ok=True)
 
         metadata = self.format_metadata(image_filename=image_filename, keys=["text_sequence"], values=[label])
-        with open(metadata_filepath, "a") as fp:
+        with open(metadata_filepath, "a", encoding='utf-8') as fp:
             json.dump(metadata, fp, ensure_ascii=False)
             fp.write("\n")
 
@@ -183,14 +186,21 @@ class SynthTable(templates.Template):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
+    # parser = argparse.ArgumentParser()
+    #
+    # parser.add_argument('--model_path', type=str, default=None)
+    # parser.add_argument('--csv_file', type=str, default=None)
+    # parser.add_argument('--model_name', type=str, default='efficientnet-b2')
+    # parser.add_argument('--input_size', type=int, default=260)
+    # parser.add_argument('--line_width', type=int, default=1)
+    # parser.add_argument('--use_cuda', action='store_true', default=False)
 
-    parser.add_argument('--model_path', type=str, default=None)
-    parser.add_argument('--csv_file', type=str, default=None)
-    parser.add_argument('--model_name', type=str, default='efficientnet-b2')
-    parser.add_argument('--input_size', type=int, default=260)
-    parser.add_argument('--line_width', type=int, default=1)
-    parser.add_argument('--use_cuda', action='store_true', default=False)
-
-    synth_table = SynthTable()
-    synth_table.generate_static(config)
+    synth_table = SynthTable(synthtiger.read_config("config_pc_test.yaml"))
+    data = synth_table.generate()
+    synth_table.save("./output", data, 1)
+    data = synth_table.generate()
+    synth_table.save("./output", data, 2)
+    data = synth_table.generate()
+    synth_table.save("./output", data, 3)
+    data = synth_table.generate()
+    synth_table.save("./output", data, 4)

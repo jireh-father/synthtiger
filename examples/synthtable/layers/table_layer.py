@@ -55,7 +55,7 @@ class TableLayer(Layer):
         </body>
         </html>
         """
-        with open(html_path, "w+") as html_file:
+        with open(html_path, "w+", encoding='utf-8') as html_file:
             html = html_template.format(self._convert_global_style_to_css(), self.html)
             html_file.write(html)
 
@@ -96,8 +96,8 @@ class TableLayer(Layer):
 
         # required_width = driver.execute_script('return document.body.parentNode.scrollWidth')
         # required_height = driver.execute_script('return document.body.parentNode.scrollHeight')
-        window_width = 10000
-        window_height = 10000
+        window_width = 6000
+        window_height = 6000
         driver.set_window_size(window_width, window_height)
 
         table_element = driver.find_element(By.TAG_NAME, 'table')
@@ -171,7 +171,6 @@ class TableLayer(Layer):
             ccw = rotate_config['ccw'].on()
             if not ccw:
                 angle = -angle
-
             image = WandImage.from_array(image)
             image.rotate(angle)
             np.array(image)
@@ -181,6 +180,7 @@ class TableLayer(Layer):
         self.meta = meta
         self.html = meta['html']
 
+        image_path = None
         if not image:
             tmp_path = meta['tmp_path']
             image_path = os.path.join(tmp_path, str(uuid.uuid4()) + ".png")
@@ -198,12 +198,16 @@ class TableLayer(Layer):
 
             self.meta['css'] = self._convert_global_style_to_css()
             image = Image.open(image_path)
-            os.unlink(image_path)
             os.unlink(html_path)
 
         image = self.effect(image)
-
         super().__init__(image)
 
         height, width = self.image.shape[:2]
         self.table_size = (width, height)
+
+        if image_path:
+            if hasattr(image, "close"):
+                image.close()
+            image = None
+            os.unlink(image_path)

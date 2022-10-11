@@ -30,7 +30,7 @@ document:
   landscape: 0.5
   short_size: [720, 1024]
   aspect_ratio: [1, 2]
-  margin: [0, 0.13]
+  margin: [0, 0.17]
   content:
     table:
       static:
@@ -39,7 +39,7 @@ document:
           paths: [ resources/table_image ]
           lower_image_size_ratios: [ 0.9 ]
         html:
-          paths: [ resources/table_html/train ]
+          paths: [ resources/table_html/ ]
           weights: [ 1 ]
 #          charset:
           min_row: 2
@@ -63,8 +63,13 @@ document:
               min_aspect_ratio: 0.82
             polynomial:
               weight: 1
-              dest_coord_ratios: [ 0.05, 0.08 ]
+              dest_coord_ratios: [ 0.01, 0.04 ]
               move_prob: 0.5
+          rotate:
+            prob: 0.5
+            angle: [ 1, 3 ]
+            ccw:
+              prob: 0.5
       synth:
         weight: 1
         effect:
@@ -78,15 +83,15 @@ document:
               min_aspect_ratio: 0.82
             polynomial:
               weight: 1
-              dest_coord_ratios: [ 0.02, 0.055 ]
+              dest_coord_ratios: [ 0.01, 0.04 ]
               move_prob: 0.5
           rotate:
             prob: 0.5
-            angle: [1, 5]
+            angle: [1, 3]
             ccw:
               prob: 0.5
         html:
-          paths: [ resources/table_html/train ]
+          paths: [ resources/table_html ]
           weights: [1]
 #          charset:
           structure:
@@ -112,7 +117,7 @@ document:
             prob: 0.0
             corpus:
               mix_thead_tbody:
-                prob: 0.3
+                prob: 0.2
               thead:
                 length_augmentable:
                   weight: 1
@@ -123,18 +128,18 @@ document:
                   textcase: [ lower, upper, capitalize ]
                   augmentation: 0.1
                   augmentation_length: [ 1, 25 ]
-                char_augmentable:
-                  weight: 1
-                  paths: [ resources/corpus/pubtabnet/train_thead_corpus.txt ]
-                  weights: [ 1 ]
-                  min_length: 1
-                  max_length: 5211
-                  textcase: [ lower, upper, capitalize ]
-                  augmentation: 0.1
-                  augmentation_charset: resources/charset/alphanum_special.txt
+#                char_augmentable:
+#                  weight: 1
+#                  paths: [ resources/corpus/val_thead_corpus.txt ]
+#                  weights: [ 1 ]
+#                  min_length: 1
+#                  max_length: 5211
+#                  textcase: [ lower, upper, capitalize ]
+#                  augmentation: 0.1
+#                  augmentation_charset: resources/charset/alphanum_special.txt
                 base:
                   weight: 1
-                  paths: [ resources/corpus/pubtabnet/train_thead_corpus.txt ]
+                  paths: [ resources/corpus/test_ko.txt ]
                   weights: [ 1 ]
                   min_length: 1
                   max_length: 5211
@@ -142,36 +147,36 @@ document:
               tbody:
                 length_augmentable:
                   weight: 1
-                  paths: [ resources/corpus/mjsynth.txt, resources/corpus/synthtext.txt ]
-                  weights: [ 1, 1 ]
+                  paths: [ resources/corpus/test_ko.txt ]
+                  weights: [ 1 ]
                   min_length: 1
                   max_length: 5211
                   textcase: [ lower, upper, capitalize ]
                   augmentation: 0.1
                   augmentation_length: [ 1, 25 ]
-                char_augmentable:
-                  weight: 1
-                  paths: [ resources/corpus/pubtabnet/train_tbody_corpus.txt ]
-                  weights: [ 1 ]
-                  min_length: 1
-                  max_length: 5211
-                  textcase: [ lower, upper, capitalize ]
-                  augmentation: 0.1
-                  augmentation_charset: resources/charset/alphanum_special.txt
+#                char_augmentable:
+#                  weight: 1
+#                  paths: [ resources/corpus/mjsynth.txt ]
+#                  weights: [ 1 ]
+#                  min_length: 1
+#                  max_length: 5211
+#                  textcase: [ lower, upper, capitalize ]
+#                  augmentation: 0.1
+#                  augmentation_charset: resources/charset/text_ko.txt
                 base:
                   weight: 1
-                  paths: [ resources/corpus/pubtabnet/train_tbody_corpus.txt ]
+                  paths: [ resources/corpus/test_ko.txt ]
                   weights: [ 1 ]
                   min_length: 1
                   max_length: 5211
                   textcase: [ lower, upper, capitalize ]
-            #                charset: resources/charset/en
+#                  charset: resources/charset/alphanum.txt
             empty_cell:
               prob: 0.1
             synth_cell:
-              prob: 0.8
+              prob: 0.5
             thead_bold:
-              prob: 0.6
+              prob: 0.7
             shuffle_cells:
               prob: 0.7
               portion: [0.2, 0.8]
@@ -194,12 +199,13 @@ document:
           color_set:
             dark: [black, red, blue, green, orange, purple, navy, gray, BlueViolet, Brown, CadetBlue, Chocolate, CornflowerBlue, Crimson, DarkBlue, DarkCyan, DarkGoldenRod, DarkGreen, darkmagenta, darkolivegreen, darkorchid, darkred, darkslateblue, darkslategray, darkturquoise, darkviolet, deeppink, deepskyblue, dimgray, dodgerblue, firebrick, forestgreen, fuchsia, indianred, indigo, lightseagreen, lightslategray, limegreen, magenta, maroon, mediumblue, mediumorchid, tomato, violet]
             light: [white, AliceBlue, AntiqueWhite, Aqua, Aquamarine, Azure, Beige, Bisque, BlancedAlmond, BurlyWood, Chartreuse, Coral, Cornsilk, Cyan, DarkGray, DarkGrey, darkkhaki, darkorange,darksalmon, darkseagreen, floralwhite, gainsboro, ghostwhite, gold, goldenrod, greenyellow, honeydew, hotpink, ivory, khaki,lavender, lavenderblush, lawngreen, lemonchiffon, lightblue, lightcoral, lightcyan, lightgoldenrodyellow, lightgray, lightgreen, lightpink, lightsalmon, lightskyblue, lightsteelblue, lightyellow, lime, linen, mediumaquamarine]
+          # todo: 기능 테스트 여기서부터 재시작
           global:
             absolute:
               thead:
-                color_mode: [dark, light]
+                color_mode: [dark]
                 font:
-                  prob: 0.2
+                  prob: 1.0
               table_outline:
                 border_type: [ empty, all, top_bottom, left_right]
                 empty_thead_border_type: [empty, all, top_bottom, bottom]
@@ -213,14 +219,14 @@ document:
                     postfix: "px"
               background:
                 paper:
-                  weight: 1
+                  weight: 0
                   paths: [ resources/paper ]
                   weights: [ 1 ]
                   alpha: [ 0, 0.2 ]
                   grayscale: 0.5
                   crop: 1
                 gradient:
-                  weight: 1
+                  weight: 0
                   type: [linear, radial, conic, repeating-linear]
                   angle: [0, 359] # angle은 linear와,repeating만
                   num_colors: [2, 5]
@@ -229,21 +235,21 @@ document:
                 empty:
                   weight: 1
                 solid:
-                  weight: 1
+                  weight: 0
                 striped:
-                  weight: 1
+                  weight: 0
                   dark_line: [odd, even]
                 striped_all_colors:
-                  weight: 1
+                  weight: 0
                 multi_color:
-                  weight: 1
+                  weight: 0
               border:
                 empty:
-                  weight: 1
+                  weight: 0
                   td:
                     border: 0px
                 inside:
-                  weight: 1
+                  weight: 0
                   table:
                     border-style: hidden
                   td:
@@ -259,14 +265,14 @@ document:
                       postfix: "px"
                     border-style: solid
                 row:
-                  weight: 1
+                  weight: 0
                   tr:
                     border-bottom-width:
                       values: [1, 3]
                       postfix: "px"
                     border-bottom-style: solid
                 col:
-                  weight: 1
+                  weight: 0
                   td:
                     border-right-width:
                       values: [ 1, 3 ]
@@ -275,7 +281,7 @@ document:
                   table:
                     border-style: hidden
                 outline:
-                  weight: 1
+                  weight: 0
                   table:
                     border-width:
                       values: [1, 3]
@@ -358,7 +364,7 @@ document:
             # 라인 템플릿
             # bg & fg 컬러 템플릿
           local:
-            prob: 0.5
+            prob: 0
             absolute:
               tr:
                 color_mode: [light, dark]

@@ -136,7 +136,10 @@ class SynthTable(Component):
     def _sample_cell_text(self, thead_or_tbody='tbody', mix_thead_tbody=False):
         if mix_thead_tbody:
             thead_or_tbody = ["tbody", "thead"][np.random.randint(0, 2)]
-        corpus_type = self.thead_corpus_selector.select()['name']
+        if thead_or_tbody == "tbody":
+            corpus_type = self.tbody_corpus_selector.select()['name']
+        else:
+            corpus_type = self.thead_corpus_selector.select()['name']
         corpus = self.corpus_dict[thead_or_tbody][corpus_type]
         return corpus.sample()['text']
 
@@ -173,8 +176,14 @@ class SynthTable(Component):
                     gd_color = self._sample_light_color()
                 gd_colors.append(gd_color)
 
-            global_style["#table_wrapper"]["background"] = "{}-gradient({}deg, {})".format(gradient_type, angle,
-                                                                                           ", ".join(gd_colors))
+            if gradient_type == "conic":
+                bg_gradient = "{}-gradient(from {}deg, {})".format(gradient_type, angle, ", ".join(gd_colors))
+            elif gradient_type == "radial":
+                bg_gradient = "{}-gradient({})".format(gradient_type, ", ".join(gd_colors))
+            else:
+                bg_gradient = "{}-gradient({}deg, {})".format(gradient_type, angle, ", ".join(gd_colors))
+            global_style["#table_wrapper"]["background"] = bg_gradient
+
             if color_mode == "dark":
                 global_style["table"]["color"] = self._sample_light_color()
             else:
@@ -640,6 +649,8 @@ class SynthTable(Component):
         add_thead = meta['add_thead']
         if add_thead:
             thead_rows = meta['thead_rows']
+            if thead_rows > meta['nums_row'] - 1:
+                thead_rows = meta['nums_row'] - 1
         for row in range(meta['nums_row']):
             if add_thead:
                 if row == 0:
@@ -663,16 +674,28 @@ class SynthTable(Component):
                         else:
                             max_row_span = meta['nums_row'] - row
 
+                        for row_span_idx in range(1, max_row_span):
+                            if span_table[row + row_span_idx][col]:
+                                max_row_span = row_span_idx - 1
+                                break
+
                         if max_row_span > 1:
                             row_span = np.random.randint(2, max_row_span + 1)
                             spans.append(' rowspan="{}"'.format(row_span))
                             span_table[row:row + row_span, col] = True
                     if self.synth_structure_config['span'].get()['col_span'].on():
                         max_col_span = meta['nums_col'] - col
+                        for col_span_idx in range(1, max_col_span):
+                            if span_table[row][col + col_span_idx]:
+                                max_col_span = col_span_idx - 1
+                                break
+
                         if max_col_span > 1:
                             col_span = np.random.randint(2, max_col_span + 1)
                             spans.append(' colspan="{}"'.format(col_span))
                             span_table[row, col:col + col_span] = True
+                    if len(spans) == 2:
+                        span_table[row:row + row_span, col:col + col_span] = True
                     span_attr = "".join(spans)
                     tags.append("<td{}>".format(span_attr))
                 else:
@@ -778,7 +801,6 @@ class SynthTable(Component):
             meta['global_style']["table"]["color"] = self._sample_dark_color()
         else:
             paper = None
-
 
         meta["effect_config"] = self.config['effect']
         for layer in layers:
