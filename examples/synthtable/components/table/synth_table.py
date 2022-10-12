@@ -159,23 +159,48 @@ class SynthTable(Component):
         background_config = self.config_selectors['style']['global']['absolute']['table']['background'].select()
         self.meta['table_background_config'] = background_config['name']
         self.global_style["table"]["color"] = self._sample_fg_color(color_mode)
+        thead = False
+        if self.meta['table_background_config'] != 'empty':
+            thead = background_config['config']['thead'].on() and self.meta['has_thead']
+
         if self.meta['table_background_config'] == 'striped':
             dark_line = background_config['config']['dark_line'].select()
             light_line = "even" if dark_line == "odd" else "odd"
             dark_color = self._sample_dark_color()
             light_color = self._sample_light_color()
-            self.global_style["tr:nth-child({})".format(dark_line)]["background-color"] = dark_color
-            self.global_style["tr:nth-child({})".format(dark_line)]["color"] = light_color
-            self.global_style["tr:nth-child({})".format(light_line)]["background-color"] = light_color
-            self.global_style["tr:nth-child({})".format(light_line)]["color"] = dark_color
+            self.global_style["tbody tr:nth-child({})".format(dark_line)]["background-color"] = dark_color
+            self.global_style["tbody tr:nth-child({})".format(dark_line)]["color"] = light_color
+            self.global_style["tbody tr:nth-child({})".format(light_line)]["background-color"] = light_color
+            self.global_style["tbody tr:nth-child({})".format(light_line)]["color"] = dark_color
+            if thead:
+                if self.meta['nums_head_row'] % 2 == 0:
+                    self.global_style["thead tr:nth-child({})".format(dark_line)]["background-color"] = dark_color
+                    self.global_style["thead tr:nth-child({})".format(dark_line)]["color"] = light_color
+                    self.global_style["thead tr:nth-child({})".format(light_line)]["background-color"] = light_color
+                    self.global_style["thead tr:nth-child({})".format(light_line)]["color"] = dark_color
+                else:
+                    self.global_style["thead tr:nth-child({})".format(dark_line)]["background-color"] = light_color
+                    self.global_style["thead tr:nth-child({})".format(dark_line)]["color"] = dark_color
+                    self.global_style["thead tr:nth-child({})".format(light_line)]["background-color"] = dark_color
+                    self.global_style["thead tr:nth-child({})".format(light_line)]["color"] = light_color
         elif self.meta['table_background_config'] == 'striped_same_color_mode':
             bg_color_odd = self._sample_bg_color(color_mode)
             bg_color_even = self._sample_bg_color(color_mode)
-            self.global_style["tr:nth-child(odd)"]["background-color"] = bg_color_odd
-            self.global_style["tr:nth-child(even)"]["background-color"] = bg_color_even
+            self.global_style["tbody tr:nth-child(odd)"]["background-color"] = bg_color_odd
+            self.global_style["tbody tr:nth-child(even)"]["background-color"] = bg_color_even
+            if thead:
+                if self.meta['nums_head_row'] % 2 == 0:
+                    self.global_style["thead tr:nth-child(odd)"]["background-color"] = bg_color_odd
+                    self.global_style["thead tr:nth-child(even)"]["background-color"] = bg_color_even
+                else:
+                    self.global_style["thead tr:nth-child(odd)"]["background-color"] = bg_color_even
+                    self.global_style["thead tr:nth-child(even)"]["background-color"] = bg_color_odd
         elif self.meta['table_background_config'] == 'multi_color':
-            for i in range(self.meta['nums_row'] - 1):
-                self.global_style["tr:nth-child({})".format(i + 1)]["background-color"] = self._sample_bg_color(
+            for i in range(1, self.meta['nums_row'] - self.meta['nums_head_row'] + 1):
+                self.global_style["tbody tr:nth-child({})".format(i)]["background-color"] = self._sample_bg_color(
+                    color_mode)
+            for i in range(1, self.meta['nums_head_row'] + 1):
+                self.global_style["thead tr:nth-child({})".format(i)]["background-color"] = self._sample_bg_color(
                     color_mode)
 
     def _sample_global_thead_outline(self):

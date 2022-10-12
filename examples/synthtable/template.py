@@ -53,8 +53,6 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        기능 test
-        
         효과 과하지 않도로고 설정 파라미터 미세조정
 
         애매한 컬러 빼고 추가하기
