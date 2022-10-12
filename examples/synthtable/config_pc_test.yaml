@@ -14,6 +14,9 @@ background:
   image:
     paths: [resources/background]
     weights: [1]
+    alpha: [ 0.8, 1.0 ]
+    grayscale: 0.5
+    crop: 0.5
   color:
     rgb: [[ 0, 255 ],[ 0, 255 ],[ 0, 255 ]]
     alpha: [ 1, 1 ]
@@ -59,7 +62,7 @@ document:
               weight: 1
               angles: [ 3, 11 ]
               reverse:
-                prob: 0.5
+                prob: 1.0
               min_aspect_ratio: 0.82
             polynomial:
               weight: 1
@@ -79,7 +82,7 @@ document:
               weight: 1
               angles: [ 3, 11 ]
               reverse:
-                prob: 0.5
+                prob: 1.0
               min_aspect_ratio: 0.82
             polynomial:
               weight: 1
@@ -192,111 +195,72 @@ document:
             prob: 0.5
           tmp_path: tmp
         style:
-          aspect_ratio: [0.285, 3.5]
           font:
             paths: [ resources/fonts ]
             weights: [ 1 ]
           color_set:
             dark: [black, red, blue, green, orange, purple, navy, gray, BlueViolet, Brown, CadetBlue, Chocolate, CornflowerBlue, Crimson, DarkBlue, DarkCyan, DarkGoldenRod, DarkGreen, darkmagenta, darkolivegreen, darkorchid, darkred, darkslateblue, darkslategray, darkturquoise, darkviolet, deeppink, deepskyblue, dimgray, dodgerblue, firebrick, forestgreen, fuchsia, indianred, indigo, lightseagreen, lightslategray, limegreen, magenta, maroon, mediumblue, mediumorchid, tomato, violet]
-            light: [white, AliceBlue, AntiqueWhite, Aqua, Aquamarine, Azure, Beige, Bisque, BlancedAlmond, BurlyWood, Chartreuse, Coral, Cornsilk, Cyan, DarkGray, DarkGrey, darkkhaki, darkorange,darksalmon, darkseagreen, floralwhite, gainsboro, ghostwhite, gold, goldenrod, greenyellow, honeydew, hotpink, ivory, khaki,lavender, lavenderblush, lawngreen, lemonchiffon, lightblue, lightcoral, lightcyan, lightgoldenrodyellow, lightgray, lightgreen, lightpink, lightsalmon, lightskyblue, lightsteelblue, lightyellow, lime, linen, mediumaquamarine]
-          # todo: 기능 테스트 여기서부터 재시작
+            light: [white, AliceBlue, AntiqueWhite, Aqua, Aquamarine, Azure, Beige, Bisque, blanchedalmond, BurlyWood, Chartreuse, Coral, Cornsilk, Cyan, DarkGray, DarkGrey, darkkhaki, darkorange,darksalmon, darkseagreen, floralwhite, gainsboro, ghostwhite, gold, goldenrod, greenyellow, honeydew, hotpink, ivory, khaki,lavender, lavenderblush, lawngreen, lemonchiffon, lightblue, lightcoral, lightcyan, lightgoldenrodyellow, lightgray, lightgreen, lightpink, lightsalmon, lightskyblue, lightsteelblue, lightyellow, lime, linen, mediumaquamarine]
           global:
             absolute:
-              thead:
-                color_mode: [dark]
-                font:
-                  prob: 1.0
-              table_outline:
-                border_type: [ empty, all, top_bottom, left_right]
-                empty_thead_border_type: [empty, all, top_bottom, bottom]
-                etc_thead_border_type: [empty, bottom]
-                border_width: [ 1, 5 ]
-                round:
-                  prob: 0.5
-                  border-collapse: separate
-                  border-radius:
-                    values: [ 3, 10 ]
-                    postfix: "px"
-              background:
-                paper:
-                  weight: 0
-                  paths: [ resources/paper ]
-                  weights: [ 1 ]
-                  alpha: [ 0, 0.2 ]
-                  grayscale: 0.5
-                  crop: 1
-                gradient:
-                  weight: 0
-                  type: [linear, radial, conic, repeating-linear]
-                  angle: [0, 359] # angle은 linear와,repeating만
-                  num_colors: [2, 5]
-                  use_random_stop_position:
-                    prob: 0.3
-                empty:
-                  weight: 1
-                solid:
-                  weight: 0
-                striped:
-                  weight: 0
-                  dark_line: [odd, even]
-                striped_all_colors:
-                  weight: 0
-                multi_color:
-                  weight: 0
-              border:
-                empty:
-                  weight: 0
-                  td:
-                    border: 0px
-                inside:
-                  weight: 0
-                  table:
-                    border-style: hidden
-                  td:
-                    border-width:
-                      values: [1, 3]
-                      postfix: "px"
-                    border-style: solid
-                all:
-                  weight: 1
-                  td:
-                    border-width:
-                      values: [ 1, 3 ]
-                      postfix: "px"
-                    border-style: solid
-                row:
-                  weight: 0
-                  tr:
-                    border-bottom-width:
-                      values: [1, 3]
-                      postfix: "px"
-                    border-bottom-style: solid
-                col:
-                  weight: 0
-                  td:
-                    border-right-width:
-                      values: [ 1, 3 ]
-                      postfix: "px"
-                    border-right-style: solid
-                  table:
-                    border-style: hidden
-                outline:
-                  weight: 0
-                  table:
-                    border-width:
-                      values: [1, 3]
-                      postfix: "px"
-                    border-style: solid
+              table_wrapper:
+                background:
+                  paper:
+                    weight: 1
+                    paths: [ resources/paper ]
+                    weights: [ 1 ]
+                    alpha: [ 0.1, 0.3 ]
+                    grayscale: 0.5
+                    crop: 0.5
+                  gradient:
+                    weight: 1
+                    type: [ linear, radial, conic, repeating-linear ]
+                    angle: [ 0, 359 ]
+                    num_colors: [ 2, 5 ]
+                    use_random_stop_position:
+                      prob: 0.3
+                  empty:
+                    weight: 1
+                  solid:
+                    weight: 1
               table:
-                color_mode: [ dark, light ]
+                background:
+                  empty:
+                    weight: 1
+                  striped:
+                    weight: 1
+                    dark_line: [ odd, even ]
+                  striped_same_color_mode:
+                    weight: 1
+                  multi_color:
+                    weight: 1
+                color_mode:
+                  weights: [5,5]
+                  values: [ dark, light ]
+                paper_color_mode:
+                  weights: [ 5 ]
+                  values: [ light ]
                 full_size:
                   prob: 0.5
+                border_width:
+                  values: [ 1,4 ]
+                  postfix: px
+                border_style:
+                  weights: [10,1,1]
+                  values: [solid, dotted, dashed]
+                aspect_ratio: [0.285, 3.5]
+                font:
+                  prob: 0.6
+                outline: [ empty, all, top_bottom ]
+              thead:
+                outline: [empty, all, top_bottom, bottom]
+                inner_border: [ empty, all, col ]
+              tbody:
+                inner_border: [ empty, all, row, col ]
             relative:
               table:
                 width_scale: [ 0.7, 1.2 ]
                 height_scale: [ 0.7, 1.2 ]
-              thead:
-                font_size: [1.0, 2.0]
             css:
               table:
   #              color: [] # font color
@@ -346,14 +310,10 @@ document:
                 word-spacing:
                   values: [ 0, 5 ]
                   postfix: "px"
+                border-collapse: [collapse, separate]
                 #text-shadow
                 #text-shadow: 4px 4px 5px red;
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
-              thead:
-                font-weight:
-                  values: [ bold, normal ]
-                  weights: [ 5, 1 ]
-                text-align: [ left, center ]
               td:
                 padding: [2, 20]
 
@@ -364,53 +324,147 @@ document:
             # 라인 템플릿
             # bg & fg 컬러 템플릿
           local:
-            prob: 0
+            prob: 0.5
             absolute:
+              thead:
+                prob: 0.5
+                color_mode:
+                  prob: 0.5
+                  values: [ dark, light ]
+                font:
+                  prob: 0.3
+                border_width:
+                  values: [ 1, 4 ]
+                  postfix: "px"
+                  prob: 0.5
+                border_style:
+                  weights: [ 10, 1,1 ]
+                  values: [ solid, dotted, dashed ]
+                  prob: 0.5
+              tbody:
+                prob: 0.3
+                color_mode:
+                  prob: 0.5
+                  values: [ dark, light ]
+                font:
+                  prob: 0.3
+                border_width:
+                  values: [ 1,3 ]
+                  postfix: "px"
+                  prob: 0.3
+                border_style:
+                  weights: [ 1, 1,10 ]
+                  values: [ solid, dotted, dashed ]
+                  prob: 0.3
               tr:
-                color_mode: [light, dark]
+                prob: 0.2
+                color_mode:
+                  prob: 1.0
+                  values: [ dark, light ]
+                same_color:
+                  prob: 0.5
                 font:
                   prob: 0.1
               td:
-                color_mode: [light, dark]
+                prob: 0.3
+                color_mode:
+                  prob: 1.0
+                  values: [ dark, light ]
+                same_color:
+                  prob: 0.5
                 font:
                   prob: 0.1
                 text_vertical:
                   prob: 0.1
                   max_text_length: 7
                   ignore_number: true
-              text:
-                prob: 0.5
-                word:
-                  weight: 1
-                  words: [0.2, 0.8]
-                  background_color:
-                    prob: 0.5
-                char:
-                  weight: 1
-                  length: [0.1, 0.9]
-                  background_color:
-                    prob: 0.5
+                text:
+                  prob: 0.2
+                  word:
+                    weight: 1
+                    words: [0.2, 0.8]
+                    fg_color_change:
+                      prob: 0.3
+                    bg_color_change:
+                      prob: 0.3
+                    font:
+                      prob: 0.1
+                  char:
+                    weight: 1
+                    length: [0.1, 0.9]
+                    fg_color_change:
+                      prob: 0.3
+                    bg_color_change:
+                      prob: 0.3
+                    font:
+                      prob: 0.1
             relative:
+              thead:
+                font_size:
+                  values: [1.0, 2.0]
+                  prob: 0.4
+              tbody:
+                font_size:
+                  values: [ 0.8, 1.2 ]
+                  prob: 0.4
               tr:
-                prob: 0.1
-                font_size: [0.8, 1.2]
+                font_size:
+                  values: [ 0.8, 1.2 ]
+                  prob: 0.4
               td:
-                prob: 0.1
-                font_size: [0.8, 1.2]
+                font_size:
+                  values: [ 0.8, 1.2 ]
+                  prob: 0.4
+                text:
+                  font_size:
+                    values: [ 0.8, 1.2 ]
+                    prob: 0.4
             css:
               thead:
-                prob: 0.2
-                font-weight: [ bold, normal ]
+                font-weight:
+                  values: [ bold, normal ]
+                  prob: 0.5
                 text-align:
                   values: [ left, center ]
+                  prob: 0.5
+                font-style:
+                  values: [ normal, italic ]
+                  prob: 0.5
+                text-decoration:
+                  values: [ none, underline ]
+                  weights: [ 10, 5 ]
+                  prob: 0.5
+                letter-spacing:
+                  values: [ 0, 5 ]
+                  postfix: "px"
+                  prob: 0.5
+                word-spacing:
+                  values: [ 0, 5 ]
+                  postfix: "px"
                   prob: 0.5
               tbody:
-                prob: 0.2
+                font-weight:
+                  values: [ bold, normal ]
+                  prob: 0.1
                 text-align:
                   values: [ left, center ]
-                  prob: 0.5
+                  prob: 0.1
+                font-style:
+                  values: [ normal, italic ]
+                  prob: 0.1
+                text-decoration:
+                  values: [ none, underline ]
+                  weights: [ 10, 5 ]
+                  prob: 0.1
+                letter-spacing:
+                  values: [ 0, 5 ]
+                  postfix: "px"
+                  prob: 0.1
+                word-spacing:
+                  values: [ 0, 5 ]
+                  postfix: "px"
+                  prob: 0.1
               tr:
-                prob: 0.1
                 #              color: [] # font color
                 #              font: []
 #                text-align:
@@ -418,49 +472,71 @@ document:
 #                  prob: 0.1
 #                vertical-align: [top, middle, bottom]
                 #              font-weight: [lighter, bold, normal]
-                font-weight: [ lighter, normal ]
-                font-style: [ normal, italic ]
+                font-weight:
+                  values: [ lighter, normal ]
+                font-style:
+                  values: [ normal, italic ]
                 text-decoration:
                   #                values: [ none, underline, line-through ]
                   values: [ none, underline ]
                   weights: [ 10, 5 ]
                 letter-spacing:
-                  values: [ 0, 5 ]
+                  values: [ 1, 5 ]
                   postfix: "px"
+                  prob: 0.3
                 word-spacing:
-                  values: [ 0, 5 ]
+                  values: [ 1, 5 ]
                   postfix: "px"
+                  prob: 0.3
                 border-width:
-                  values: [ 0, 4 ]
+                  values: [ 1, 4 ]
                   postfix: "px"
-                border-style: [none, solid]
+                  prob: 0.1
+                border-style:
+                  values: [none, solid, dotted, dashed]
+                  prob: 0.1
                 border-top-width:
-                  values: [ 0, 4 ]
+                  values: [ 1, 4 ]
                   postfix: "px"
-                border-top-style: [none, solid]
+                  prob: 0.1
+                border-top-style:
+                  values: [ none, solid, dotted, dashed ]
+                  prob: 0.1
                 border-left-width:
-                  values: [ 0, 4 ]
+                  values: [ 1, 4 ]
                   postfix: "px"
-                border-left-style: [none, solid]
+                  prob: 0.1
+                border-left-style:
+                  values: [ none, solid, dotted, dashed ]
+                  prob: 0.1
                 border-right-width:
-                  values: [ 0, 4 ]
+                  values: [ 1, 4 ]
                   postfix: "px"
-                border-right-style: [none, solid]
+                  prob: 0.1
+                border-right-style:
+                  values: [ none, solid, dotted, dashed ]
+                  prob: 0.1
                 border-bottom-width:
-                  values: [ 0, 4 ]
+                  values: [ 1, 4 ]
                   postfix: "px"
-                border-bottom-style: [none, solid]
+                  prob: 0.1
+                border-bottom-style:
+                  values: [ none, solid, dotted, dashed ]
+                  prob: 0.1
                 #text-shadow
                 #text-shadow: 4px 4px 5px red;
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
               td:
-                prob: 0.1
                 #              color: [] # font color
                 #              font: []
 #                text-align: [ left, center ]
 #                vertical-align: [top, middle, bottom]
-                font-weight: [lighter, bold, normal]
-                font-style: [ normal, italic ]
+                font-weight:
+                  values: [lighter, bold, normal]
+                  prob: 0.4
+                font-style:
+                  values: [ normal, italic ]
+                  prob: 0.4
                 text-decoration:
                   values: [ none, underline, line-through ]
                   weights: [ 10, 1, 1 ]
@@ -471,30 +547,40 @@ document:
                   values: [ 0, 5 ]
                   postfix: "px"
                 border-width:
-                  prob: 0.2
-                  values: [ 0, 4 ]
+                  values: [ 1, 4 ]
                   postfix: "px"
-                border-style: [solid]
+                  prob: 0.1
+                border-style:
+                  values: [ none, solid, dotted, dashed ]
+                  prob: 0.1
                 border-top-width:
-                  prob: 0.2
-                  values: [ 0, 4 ]
+                  values: [ 1, 4 ]
                   postfix: "px"
-                border-top-style: [ solid ]
+                  prob: 0.1
+                border-top-style:
+                  values: [ none, solid, dotted, dashed ]
+                  prob: 0.1
                 border-left-width:
-                  prob: 0.2
-                  values: [ 0, 4 ]
+                  values: [ 1, 4 ]
                   postfix: "px"
-                border-left-style: [ solid ]
+                  prob: 0.1
+                border-left-style:
+                  values: [ none, solid, dotted, dashed ]
+                  prob: 0.1
                 border-right-width:
-                  prob: 0.2
-                  values: [ 0, 4 ]
+                  values: [ 1, 4 ]
                   postfix: "px"
-                border-right-style: [ solid ]
+                  prob: 0.1
+                border-right-style:
+                  values: [ none, solid, dotted, dashed ]
+                  prob: 0.1
                 border-bottom-width:
-                  prob: 0.2
-                  values: [ 0, 4 ]
+                  values: [ 1, 4 ]
                   postfix: "px"
-                border-bottom-style: [ solid ]
+                  prob: 0.1
+                border-bottom-style:
+                  values: [ none, solid, dotted, dashed ]
+                  prob: 0.1
                 #text-shadow
                 #text-shadow: 4px 4px 5px red;
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;

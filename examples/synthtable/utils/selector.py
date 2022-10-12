@@ -44,6 +44,12 @@ class Selector:
                 return str(self.values[idx]) + self.postfix
             return self.values[idx]
 
+    def on(self):
+        if self.bool_switch:
+            return self.bool_switch.on()
+        return None
+
+
 
 def parse_config(config):
     config_selector = {}

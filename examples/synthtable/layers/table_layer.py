@@ -37,7 +37,7 @@ class TableLayer(Layer):
 
                 css_list.append(selector + " { " + "".join(styles) + " }")
 
-        return "\n".join(css_list)
+        return " ".join(css_list)
 
     def _write_html_file(self, html_path):
         html_template = """
@@ -107,10 +107,10 @@ class TableLayer(Layer):
             table_width = int(table_element.size['width'] * self.meta['relative_style']['table']['width_scale'])
             table_height = int(table_element.size['height'] * self.meta['relative_style']['table']['height_scale'])
         ar = table_width / table_height
-        if self.meta['aspect_ratio'][0] > ar:
-            table_height = int(table_width / self.meta['aspect_ratio'][0])
-        elif self.meta['aspect_ratio'][1] < ar:
-            table_width = int(table_height * self.meta['aspect_ratio'][1])
+        if self.meta['table_aspect_ratio'][0] > ar:
+            table_height = int(table_width / self.meta['table_aspect_ratio'][0])
+        elif self.meta['table_aspect_ratio'][1] < ar:
+            table_width = int(table_height * self.meta['table_aspect_ratio'][1])
         # driver.close()
         self.global_style['table']['width'] = str(table_width) + "px"
         self.global_style['table']['height'] = str(table_height) + "px"
