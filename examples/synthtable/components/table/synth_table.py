@@ -836,7 +836,7 @@ class SynthTable(Component):
 
         if self.meta['background_config'] == 'paper':
             paper = self.paper
-            self.meta['self.global_style']["table"]["color"] = self._sample_dark_color()
+            self.meta['global_style']["table"]["color"] = self._sample_dark_color()
         else:
             paper = None
 
