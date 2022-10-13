@@ -400,9 +400,11 @@ class SynthTable(Component):
 
         # color
         use_fg = text_config['config']['fg_color_change'].on()
-        if self.meta['table_background_config'] != 'striped' and use_fg:
+        use_bg = text_config['config']['bg_color_change'].on()
+        if (self.meta['table_background_config'] == 'striped' and use_fg and use_bg and self.meta[
+            'background_config'] != 'paper') or (self.meta['table_background_config'] != 'striped' and use_fg):
             self.global_style[global_style_key]['color'] = self._sample_fg_color(color_mode)
-            use_bg = text_config['config']['bg_color_change'].on()
+
             if use_bg and self.meta['background_config'] != 'paper':
                 self.global_style[global_style_key]['background-color'] = self._sample_bg_color(color_mode)
 
