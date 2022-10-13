@@ -158,7 +158,8 @@ class SynthTable(Component):
 
         background_config = self.config_selectors['style']['global']['absolute']['table']['background'].select()
         self.meta['table_background_config'] = background_config['name']
-        self.global_style["table"]["color"] = self._sample_fg_color(color_mode)
+        # self.global_style["table"]["color"] = self._sample_fg_color(color_mode)
+
         thead = False
         if self.meta['table_background_config'] != 'empty':
             thead = background_config['config']['thead'].on() and self.meta['has_thead']
