@@ -211,9 +211,9 @@ class SynthTable(Component):
                 self.global_style["thead tr:nth-child({})".format(i)]["background-color"] = self._sample_bg_color(
                     color_mode)
                 self.global_style["thead tr:nth-child({})".format(i)]["color"] = font_color
-        # elif self.meta['table_background_config'] == 'solid':
-        #     self.global_style["table"]["background-color"] = self._sample_bg_color(color_mode)
-        #     self.global_style["table"]["color"] = self._sample_fg_color(color_mode)
+        elif self.meta['table_background_config'] == 'solid':
+            self.global_style["table"]["background-color"] = self._sample_bg_color(color_mode)
+            self.global_style["table"]["color"] = self._sample_fg_color(color_mode)
 
     def _sample_global_thead_outline(self):
         thead_outline_type = self.config_selectors['style']['global']['absolute']['thead']['outline'].select()
