@@ -227,8 +227,6 @@ document:
                 background:
                   empty:
                     weight: 1
-                  solid:
-                    weight: 1
                   striped:
                     weight: 1
                     dark_line: [ odd, even ]
@@ -277,22 +275,22 @@ document:
                   prob: 0.5
                   values: [ 1, 50 ]
                   postfix: "px"
-#                margin-left:
-#                  prob: 0.5
-#                  values: [ 1, 50 ]
-#                  postfix: "px"
-#                margin-right:
-#                  prob: 0.5
-#                  values: [ 1, 50 ]
-#                  postfix: "px"
-#                margin-top:
-#                  prob: 0.5
-#                  values: [ 1, 50 ]
-#                  postfix: "px"
-#                margin-bottom:
-#                  prob: 0.5
-#                  values: [ 1, 50 ]
-#                  postfix: "px"
+                margin-left:
+                  prob: 0.5
+                  values: [ 1, 50 ]
+                  postfix: "px"
+                margin-right:
+                  prob: 0.5
+                  values: [ 1, 50 ]
+                  postfix: "px"
+                margin-top:
+                  prob: 0.5
+                  values: [ 1, 50 ]
+                  postfix: "px"
+                margin-bottom:
+                  prob: 0.5
+                  values: [ 1, 50 ]
+                  postfix: "px"
                 font-size:
                   values: [12, 30]
                   postfix: "px"
@@ -318,7 +316,7 @@ document:
                 word-spacing:
                   values: [ 0, 5 ]
                   postfix: "px"
-                border-collapse: [collapse]#, separate]
+                border-collapse: [collapse, separate]
                 #text-shadow
                 #text-shadow: 4px 4px 5px red;
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
@@ -385,8 +383,7 @@ document:
                 text_vertical:
                   prob: 0.1
                   max_text_length: 7
-                  ignore_number:
-                    prob: 1.0
+                  ignore_number: true
                 text:
                   prob: 0.2
                   word:
@@ -629,10 +626,8 @@ document:
       # elastic distortion
       - prob: 1
         args:
-#          alpha: [ 0, 1 ]
-#            sigma: [ 0, 0.5 ]
-          alpha: [0, 0.58]
-          sigma: [0, 0.3]
+          alpha: [0, 1]
+          sigma: [0, 0.5]
       # gaussian noise
       - prob: 1
         args:
@@ -670,7 +665,7 @@ effect:
     - prob: 0.7
       args:
 #        intensity: [0, 160]
-        intensity: [0, 105]
+        intensity: [0, 125]
         amount: [0, 1]
         smoothing: [0.5, 1]
 #        bidirectional: 0

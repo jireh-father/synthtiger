@@ -161,7 +161,7 @@ class SynthTable(Component):
         # self.global_style["table"]["color"] = self._sample_fg_color(color_mode)
 
         thead = False
-        if self.meta['table_background_config'] not in ['empty', 'solid']:
+        if self.meta['table_background_config'] != 'empty':
             thead = background_config['config']['thead'].on() and self.meta['has_thead']
 
         if self.meta['table_background_config'] == 'striped':
@@ -211,9 +211,6 @@ class SynthTable(Component):
                 self.global_style["thead tr:nth-child({})".format(i)]["background-color"] = self._sample_bg_color(
                     color_mode)
                 self.global_style["thead tr:nth-child({})".format(i)]["color"] = font_color
-        elif self.meta['table_background_config'] == 'solid':
-            self.global_style["table"]["background-color"] = self._sample_bg_color(color_mode)
-            self.global_style["table"]["color"] = self._sample_fg_color(color_mode)
 
     def _sample_global_thead_outline(self):
         thead_outline_type = self.config_selectors['style']['global']['absolute']['thead']['outline'].select()
@@ -227,38 +224,44 @@ class SynthTable(Component):
             self._set_global_border('thead', 'bottom')
 
     def _sample_global_inner_border(self, css_selector):
-        inner_border_type = self.config_selectors['style']['global']['absolute'][css_selector][
+        thead_inner_border_type = self.config_selectors['style']['global']['absolute'][css_selector][
             'inner_border'].select()
-        self.meta[css_selector + '_inner_border_type'] = inner_border_type
-        if inner_border_type == "all":
-            self._set_inner_border_row(css_selector)
-            self._set_inner_border_col(css_selector)
-        elif inner_border_type == "row":
-            self._set_inner_border_row(css_selector)
-        elif inner_border_type == "col":
-            self._set_inner_border_col(css_selector)
-        if self.meta['has_thead'] and css_selector == "tbody" and inner_border_type != "empty":
-            if self.meta['thead_outline_type'] == "empty":
-                self._set_global_border('thead', 'bottom')
-            if self.meta['nums_head_row'] > 1 and self.meta['thead_inner_border_type'] in ["col", "empty"]:
-                self._set_inner_border_row("thead")
+        if thead_inner_border_type == "all":
+            # tr_elements = self.meta['html_bs'].find(css_selector).find_all("tr")
+            # for ridx in range(1, len(tr_elements)):
+            #     self._set_global_border('{} tr:nth-child({}) td'.format(css_selector, ridx), 'bottom')
 
-    def _set_inner_border_row(self, css_selector):
-        tr_elements = self.meta['html_bs'].find(css_selector).find_all("tr")
-        for ridx in range(1, len(tr_elements)):
-            for cidx, td_element in enumerate(tr_elements[ridx - 1].find_all("td")):
-                cidx += 1
-                if td_element.has_attr('rowspan') and int(td_element['rowspan']) == self.meta['nums_head_row'] - (
-                        ridx - 1):
-                    continue
-                self._set_global_border('{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx, cidx),
-                                        'bottom')
+            tr_elements = self.meta['html_bs'].find(css_selector).find_all("tr")
+            for ridx in range(1, len(tr_elements)):
+                for cidx, td_element in enumerate(tr_elements.find_all("td")):
+                    cidx += 1
+                    if td_element.has_attr('rowspan') and int(td_element['rowspan']) == self.meta['nums_head_row'] - (
+                            ridx - 1):
+                        continue
+                    self._set_global_border('{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx, cidx),
+                                            'bottom')
 
-    def _set_inner_border_col(self, css_selector):
-        for ridx, tr_element in enumerate(self.meta['html_bs'].find(css_selector).find_all("tr")):
-            for cidx in range(1, len(tr_element.find_all("td"))):
-                self._set_global_border('{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx + 1, cidx),
-                                        'right')
+            for ridx, tr_element in enumerate(tr_elements):
+                for cidx in range(1, len(tr_element.find_all("td"))):
+                    self._set_global_border('{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx + 1, cidx),
+                                            'right')
+        elif thead_inner_border_type == "row":
+            # for ridx in range(1, len(self.meta['html_bs'].find(css_selector).find_all("tr"))):
+            #     self._set_global_border('{} tr:nth-child({}) td'.format(css_selector, ridx), 'bottom')
+            tr_elements = self.meta['html_bs'].find(css_selector).find_all("tr")
+            for ridx in range(1, len(tr_elements)):
+                for cidx, td_element in enumerate(tr_elements.find_all("td")):
+                    cidx += 1
+                    if td_element.has_attr('rowspan') and int(td_element['rowspan']) == self.meta['nums_head_row'] - (
+                            ridx - 1):
+                        continue
+                    self._set_global_border('{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx, cidx),
+                                            'bottom')
+        elif thead_inner_border_type == "col":
+            for ridx, tr_element in enumerate(self.meta['html_bs'].find(css_selector).find_all("tr")):
+                for cidx in range(1, len(tr_element.find_all("td"))):
+                    self._set_global_border('{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx + 1, cidx),
+                                            'right')
 
     def _sample_global_thead(self):
         self._sample_global_thead_outline()
@@ -575,14 +578,19 @@ class SynthTable(Component):
                     self._sample_font(css_selector_name)
 
             # td: text vertical
-            if config_key == "td" and absolute_config['text_vertical'].on():
-                max_text_length = absolute_config['text_vertical'].get()[
-                    "max_text_length"].select()
-                ignore_number = absolute_config['text_vertical'].get()[
-                    "ignore_number"].on()
-
-                if 1 < len(bs_element.text) <= max_text_length and (
-                        not ignore_number or (ignore_number and any(not c.isdigit() for c in bs_element.text))):
+            if config_key == "td":
+                use_text_vertical = absolute_config['text_vertical'].on()
+                if use_text_vertical:
+                    max_text_length = absolute_config['text_vertical'].get()[
+                        "max_text_length"].select()
+                    if len(bs_element.text) > max_text_length:
+                        use_text_vertical = False
+                if use_text_vertical:
+                    ignore_number = absolute_config['text_vertical'].get()[
+                        "ignore_number"].select()
+                    if ignore_number and any(c.isdigit() for c in bs_element.text):
+                        use_text_vertical = False
+                if use_text_vertical:
                     self.global_style[css_selector_name]['text-orientation'] = 'upright'
                     self.global_style[css_selector_name]['writing-mode'] = 'vertical-rl'
 
