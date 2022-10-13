@@ -89,7 +89,7 @@ class TableLayer(Layer):
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
         driver = webdriver.Chrome('chromedriver', options=options)
-        driver.implicitly_wait(1)
+        driver.implicitly_wait(2)
 
         self._write_html_file(html_path)
         driver.get("file:///{}".format(os.path.abspath(html_path)))
