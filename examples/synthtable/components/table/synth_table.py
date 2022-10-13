@@ -161,7 +161,7 @@ class SynthTable(Component):
         # self.global_style["table"]["color"] = self._sample_fg_color(color_mode)
 
         thead = False
-        if self.meta['table_background_config'] != 'empty':
+        if self.meta['table_background_config'] not in ['empty', 'solid']:
             thead = background_config['config']['thead'].on() and self.meta['has_thead']
 
         if self.meta['table_background_config'] == 'striped':
