@@ -196,8 +196,8 @@ class TableLayer(Layer):
             except Exception as e:
                 if os.path.isfile(image_path):
                     os.unlink(image_path)
-                if os.path.isfile(html_path):
-                    os.unlink(html_path)
+                # if os.path.isfile(html_path):
+                #     os.unlink(html_path)
                 raise e
 
             self.meta['css'] = self._convert_global_style_to_css()
