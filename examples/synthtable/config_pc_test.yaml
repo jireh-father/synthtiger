@@ -316,7 +316,7 @@ document:
                 word-spacing:
                   values: [ 0, 5 ]
                   postfix: "px"
-                border-collapse: [collapse, separate]
+                border-collapse: [collapse]#, separate]
                 #text-shadow
                 #text-shadow: 4px 4px 5px red;
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
