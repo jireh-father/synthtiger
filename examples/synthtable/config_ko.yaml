@@ -504,34 +504,34 @@ document:
                 border-style:
                   values: [none, solid, dotted, dashed]
                   prob: 0.1
-                border-top-width:
-                  values: [ 1, 4 ]
-                  postfix: "px"
-                  prob: 0.1
-                border-top-style:
-                  values: [ none, solid, dotted, dashed ]
-                  prob: 0.1
-                border-left-width:
-                  values: [ 1, 4 ]
-                  postfix: "px"
-                  prob: 0.1
-                border-left-style:
-                  values: [ none, solid, dotted, dashed ]
-                  prob: 0.1
-                border-right-width:
-                  values: [ 1, 4 ]
-                  postfix: "px"
-                  prob: 0.1
-                border-right-style:
-                  values: [ none, solid, dotted, dashed ]
-                  prob: 0.1
-                border-bottom-width:
-                  values: [ 1, 4 ]
-                  postfix: "px"
-                  prob: 0.1
-                border-bottom-style:
-                  values: [ none, solid, dotted, dashed ]
-                  prob: 0.1
+#                border-top-width:
+#                  values: [ 1, 4 ]
+#                  postfix: "px"
+#                  prob: 0.1
+#                border-top-style:
+#                  values: [ none, solid, dotted, dashed ]
+#                  prob: 0.1
+#                border-left-width:
+#                  values: [ 1, 4 ]
+#                  postfix: "px"
+#                  prob: 0.1
+#                border-left-style:
+#                  values: [ none, solid, dotted, dashed ]
+#                  prob: 0.1
+#                border-right-width:
+#                  values: [ 1, 4 ]
+#                  postfix: "px"
+#                  prob: 0.1
+#                border-right-style:
+#                  values: [ none, solid, dotted, dashed ]
+#                  prob: 0.1
+#                border-bottom-width:
+#                  values: [ 1, 4 ]
+#                  postfix: "px"
+#                  prob: 0.1
+#                border-bottom-style:
+#                  values: [ none, solid, dotted, dashed ]
+#                  prob: 0.1
                 #text-shadow
                 #text-shadow: 4px 4px 5px red;
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
@@ -562,34 +562,34 @@ document:
                 border-style:
                   values: [ none, solid, dotted, dashed ]
                   prob: 0.1
-                border-top-width:
-                  values: [ 1, 4 ]
-                  postfix: "px"
-                  prob: 0.1
-                border-top-style:
-                  values: [ none, solid, dotted, dashed ]
-                  prob: 0.1
-                border-left-width:
-                  values: [ 1, 4 ]
-                  postfix: "px"
-                  prob: 0.1
-                border-left-style:
-                  values: [ none, solid, dotted, dashed ]
-                  prob: 0.1
-                border-right-width:
-                  values: [ 1, 4 ]
-                  postfix: "px"
-                  prob: 0.1
-                border-right-style:
-                  values: [ none, solid, dotted, dashed ]
-                  prob: 0.1
-                border-bottom-width:
-                  values: [ 1, 4 ]
-                  postfix: "px"
-                  prob: 0.1
-                border-bottom-style:
-                  values: [ none, solid, dotted, dashed ]
-                  prob: 0.1
+#                border-top-width:
+#                  values: [ 1, 4 ]
+#                  postfix: "px"
+#                  prob: 0.1
+#                border-top-style:
+#                  values: [ none, solid, dotted, dashed ]
+#                  prob: 0.1
+#                border-left-width:
+#                  values: [ 1, 4 ]
+#                  postfix: "px"
+#                  prob: 0.1
+#                border-left-style:
+#                  values: [ none, solid, dotted, dashed ]
+#                  prob: 0.1
+#                border-right-width:
+#                  values: [ 1, 4 ]
+#                  postfix: "px"
+#                  prob: 0.1
+#                border-right-style:
+#                  values: [ none, solid, dotted, dashed ]
+#                  prob: 0.1
+#                border-bottom-width:
+#                  values: [ 1, 4 ]
+#                  postfix: "px"
+#                  prob: 0.1
+#                border-bottom-style:
+#                  values: [ none, solid, dotted, dashed ]
+#                  prob: 0.1
                 #text-shadow
                 #text-shadow: 4px 4px 5px red;
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
