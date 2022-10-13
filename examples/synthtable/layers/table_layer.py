@@ -189,12 +189,12 @@ class TableLayer(Layer):
                 driver = webdriver.Chrome('chromedriver', options=options)
                 self._render_table_selenium(driver, html_path, image_path, paper)
             except Exception as e:
-                raise e
-            finally:
                 if os.path.isfile(image_path):
                     os.unlink(image_path)
                 if os.path.isfile(html_path):
                     os.unlink(html_path)
+                raise e
+            finally:
                 if driver and hasattr(driver, "quit"):
                     driver.quit()
 
