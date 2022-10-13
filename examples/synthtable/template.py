@@ -53,9 +53,9 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        효과 과하지 않도로고 설정 파라미터 미세조정
-
         애매한 컬러 빼고 추가하기
+
+        효과 과하지 않도로고 설정 파라미터 미세조정
 
         pubtabnet 데이터셋용 컨피그 추가
         

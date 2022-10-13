@@ -199,8 +199,8 @@ document:
             paths: [ resources/fonts ]
             weights: [ 1 ]
           color_set:
-            dark: [black, red, blue, green, orange, purple, navy, gray, BlueViolet, Brown, CadetBlue, Chocolate, CornflowerBlue, Crimson, DarkBlue, DarkCyan, DarkGoldenRod, DarkGreen, darkmagenta, darkolivegreen, darkorchid, darkred, darkslateblue, darkslategray, darkturquoise, darkviolet, deeppink, deepskyblue, dimgray, dodgerblue, firebrick, forestgreen, fuchsia, indianred, indigo, lightseagreen, lightslategray, limegreen, magenta, maroon, mediumblue, mediumorchid, tomato, violet]
-            light: [white, AliceBlue, AntiqueWhite, Aqua, Aquamarine, Azure, Beige, Bisque, blanchedalmond, BurlyWood, Chartreuse, Coral, Cornsilk, Cyan, DarkGray, DarkGrey, darkkhaki, darkorange,darksalmon, darkseagreen, floralwhite, gainsboro, ghostwhite, gold, goldenrod, greenyellow, honeydew, hotpink, ivory, khaki,lavender, lavenderblush, lawngreen, lemonchiffon, lightblue, lightcoral, lightcyan, lightgoldenrodyellow, lightgray, lightgreen, lightpink, lightsalmon, lightskyblue, lightsteelblue, lightyellow, lime, linen, mediumaquamarine]
+            dark: [ MediumVioletRed, blue, darkmagenta, darkblue, forestgreen, blueviolet, mediumblue, darkslateblue, darkred, darkviolet, purple, dimgray, firebrick, fuchsia, maroon, gray, darkorchid, brown, navy, magenta, crimson, deeppink, indigo, darkcyan, red, green, black, chocolate, darkgreen, darkslategray, MidnightBlue,Navy,OrangeRed,Purple,RebeccaPurple,RoyalBlue,SaddleBrown ]
+              light: [ Linen, bisque, beige, antiquewhite, chartreuse, greenyellow, lemonchiffon, honeydew, gold, floralwhite, aliceblue, linen, lavender, cornsilk, azure, lightyellow, white, gainsboro, lightgoldenrodyellow, cyan, lavenderblush, ivory, lightcyan, aquamarine, aqua, ghostwhite, blanchedalmond, SeaShell,MintCream,MistyRose,Moccasin,OldLace,PaleGoldenRod,PapayaWhip,Snow,SpringGreen ]
           global:
             absolute:
               table_wrapper:
@@ -292,7 +292,7 @@ document:
                   values: [ 1, 50 ]
                   postfix: "px"
                 font-size:
-                  values: [8, 30]
+                  values: [12, 30]
                   postfix: "px"
   #              text-align: [left, right, center]
                 text-align: [left, center]

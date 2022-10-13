@@ -186,8 +186,11 @@ class SynthTable(Component):
         elif self.meta['table_background_config'] == 'striped_same_color_mode':
             bg_color_odd = self._sample_bg_color(color_mode)
             bg_color_even = self._sample_bg_color(color_mode)
+            font_color = self._sample_fg_color(color_mode)
             self.global_style["tbody tr:nth-child(odd)"]["background-color"] = bg_color_odd
             self.global_style["tbody tr:nth-child(even)"]["background-color"] = bg_color_even
+            self.global_style["tbody tr:nth-child(odd)"]["color"] = font_color
+            self.global_style["tbody tr:nth-child(even)"]["color"] = font_color
             if thead:
                 if self.meta['nums_head_row'] % 2 == 0:
                     self.global_style["thead tr:nth-child(odd)"]["background-color"] = bg_color_odd
@@ -195,13 +198,18 @@ class SynthTable(Component):
                 else:
                     self.global_style["thead tr:nth-child(odd)"]["background-color"] = bg_color_even
                     self.global_style["thead tr:nth-child(even)"]["background-color"] = bg_color_odd
+                self.global_style["thead tr:nth-child(odd)"]["color"] = font_color
+                self.global_style["thead tr:nth-child(even)"]["color"] = font_color
         elif self.meta['table_background_config'] == 'multi_color':
+            font_color = self._sample_fg_color(color_mode)
             for i in range(1, self.meta['nums_row'] - self.meta['nums_head_row'] + 1):
                 self.global_style["tbody tr:nth-child({})".format(i)]["background-color"] = self._sample_bg_color(
                     color_mode)
+                self.global_style["tbody tr:nth-child({})".format(i)]["color"] = font_color
             for i in range(1, self.meta['nums_head_row'] + 1):
                 self.global_style["thead tr:nth-child({})".format(i)]["background-color"] = self._sample_bg_color(
                     color_mode)
+                self.global_style["thead tr:nth-child({})".format(i)]["color"] = font_color
 
     def _sample_global_thead_outline(self):
         thead_outline_type = self.config_selectors['style']['global']['absolute']['thead']['outline'].select()
