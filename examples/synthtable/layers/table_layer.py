@@ -197,7 +197,6 @@ class TableLayer(Layer):
             finally:
                 driver.close()
                 driver.quit()
-                driver.dispose()
 
             self.meta['css'] = self._convert_global_style_to_css()
             image = Image.open(image_path)
