@@ -195,8 +195,8 @@ class TableLayer(Layer):
                     os.unlink(html_path)
                 raise e
             finally:
-                if driver and hasattr(driver, "quit"):
-                    driver.quit()
+                driver.close()
+                driver.quit()
 
             self.meta['css'] = self._convert_global_style_to_css()
             image = Image.open(image_path)
