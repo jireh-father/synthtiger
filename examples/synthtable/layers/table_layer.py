@@ -99,7 +99,7 @@ class TableLayer(Layer):
         window_width = 6000
         window_height = 6000
         driver.set_window_size(window_width, window_height)
-
+        print(html_path)
         table_element = driver.find_element(By.TAG_NAME, 'table')
         table_width = table_element.size['width']
         table_height = table_element.size['height']
