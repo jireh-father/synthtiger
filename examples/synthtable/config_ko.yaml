@@ -631,12 +631,12 @@ document:
         args:
 #          alpha: [ 0, 1 ]
 #            sigma: [ 0, 0.5 ]
-          alpha: [0, 0.58]
-          sigma: [0, 0.3]
+          alpha: [0, 0.4]
+          sigma: [0, 0.25]
       # gaussian noise
       - prob: 1
         args:
-          scale: [0, 8]
+          scale: [0, 6]
           per_channel: 0
       # perspective
       - prob: 0.5
