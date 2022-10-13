@@ -233,7 +233,7 @@ class SynthTable(Component):
 
             tr_elements = self.meta['html_bs'].find(css_selector).find_all("tr")
             for ridx in range(1, len(tr_elements)):
-                for cidx, td_element in enumerate(tr_elements.find_all("td")):
+                for cidx, td_element in enumerate(tr_elements[ridx-1].find_all("td")):
                     cidx += 1
                     if td_element.has_attr('rowspan') and int(td_element['rowspan']) == self.meta['nums_head_row'] - (
                             ridx - 1):
@@ -250,7 +250,7 @@ class SynthTable(Component):
             #     self._set_global_border('{} tr:nth-child({}) td'.format(css_selector, ridx), 'bottom')
             tr_elements = self.meta['html_bs'].find(css_selector).find_all("tr")
             for ridx in range(1, len(tr_elements)):
-                for cidx, td_element in enumerate(tr_elements.find_all("td")):
+                for cidx, td_element in enumerate(tr_elements[ridx-1].find_all("td")):
                     cidx += 1
                     if td_element.has_attr('rowspan') and int(td_element['rowspan']) == self.meta['nums_head_row'] - (
                             ridx - 1):
