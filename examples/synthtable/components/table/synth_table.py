@@ -582,7 +582,7 @@ class SynthTable(Component):
                     "ignore_number"].on()
 
                 if 1 < len(bs_element.text) <= max_text_length and (
-                        ignore_number and any(not c.isdigit() for c in bs_element.text)):
+                        not ignore_number or (ignore_number and any(not c.isdigit() for c in bs_element.text))):
                     self.global_style[css_selector_name]['text-orientation'] = 'upright'
                     self.global_style[css_selector_name]['writing-mode'] = 'vertical-rl'
 
