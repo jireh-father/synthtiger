@@ -227,17 +227,36 @@ class SynthTable(Component):
         thead_inner_border_type = self.config_selectors['style']['global']['absolute'][css_selector][
             'inner_border'].select()
         if thead_inner_border_type == "all":
+            # tr_elements = self.meta['html_bs'].find(css_selector).find_all("tr")
+            # for ridx in range(1, len(tr_elements)):
+            #     self._set_global_border('{} tr:nth-child({}) td'.format(css_selector, ridx), 'bottom')
+
             tr_elements = self.meta['html_bs'].find(css_selector).find_all("tr")
             for ridx in range(1, len(tr_elements)):
-                self._set_global_border('{} tr:nth-child({}) td'.format(css_selector, ridx), 'bottom')
+                for cidx, td_element in enumerate(tr_elements.find_all("td")):
+                    cidx += 1
+                    if td_element.has_attr('rowspan') and int(td_element['rowspan']) == self.meta['nums_head_row'] - (
+                            ridx - 1):
+                        continue
+                    self._set_global_border('{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx, cidx),
+                                            'bottom')
 
             for ridx, tr_element in enumerate(tr_elements):
                 for cidx in range(1, len(tr_element.find_all("td"))):
                     self._set_global_border('{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx + 1, cidx),
                                             'right')
         elif thead_inner_border_type == "row":
-            for ridx in range(1, len(self.meta['html_bs'].find(css_selector).find_all("tr"))):
-                self._set_global_border('{} tr:nth-child({}) td'.format(css_selector, ridx), 'bottom')
+            # for ridx in range(1, len(self.meta['html_bs'].find(css_selector).find_all("tr"))):
+            #     self._set_global_border('{} tr:nth-child({}) td'.format(css_selector, ridx), 'bottom')
+            tr_elements = self.meta['html_bs'].find(css_selector).find_all("tr")
+            for ridx in range(1, len(tr_elements)):
+                for cidx, td_element in enumerate(tr_elements.find_all("td")):
+                    cidx += 1
+                    if td_element.has_attr('rowspan') and int(td_element['rowspan']) == self.meta['nums_head_row'] - (
+                            ridx - 1):
+                        continue
+                    self._set_global_border('{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx, cidx),
+                                            'bottom')
         elif thead_inner_border_type == "col":
             for ridx, tr_element in enumerate(self.meta['html_bs'].find(css_selector).find_all("tr")):
                 for cidx in range(1, len(tr_element.find_all("td"))):
