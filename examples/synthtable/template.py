@@ -53,10 +53,6 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        헤더나 tbody에서 inner border row 있을때 rowspan이 있으면 outline이 될수 있는거 처리
-
-        tbody의 inner border가 row혹은 col 이 있을 경우, header도 맞춰줌.
-
         효과 과하지 않도로고 설정 파라미터 미세조정
         
         pubtabnet 데이터셋용 컨피그 추가
