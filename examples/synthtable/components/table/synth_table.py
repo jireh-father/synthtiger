@@ -211,6 +211,9 @@ class SynthTable(Component):
                 self.global_style["thead tr:nth-child({})".format(i)]["background-color"] = self._sample_bg_color(
                     color_mode)
                 self.global_style["thead tr:nth-child({})".format(i)]["color"] = font_color
+        elif self.meta['background_config'] == 'solid':
+            self.global_style["table"]["background-color"] = self._sample_bg_color(color_mode)
+            self.global_style["table"]["color"] = self._sample_fg_color(color_mode)
 
     def _sample_global_thead_outline(self):
         thead_outline_type = self.config_selectors['style']['global']['absolute']['thead']['outline'].select()
@@ -572,19 +575,14 @@ class SynthTable(Component):
                     self._sample_font(css_selector_name)
 
             # td: text vertical
-            if config_key == "td":
-                use_text_vertical = absolute_config['text_vertical'].on()
-                if use_text_vertical:
-                    max_text_length = absolute_config['text_vertical'].get()[
-                        "max_text_length"].select()
-                    if len(bs_element.text) > max_text_length:
-                        use_text_vertical = False
-                if use_text_vertical:
-                    ignore_number = absolute_config['text_vertical'].get()[
-                        "ignore_number"].select()
-                    if ignore_number and any(c.isdigit() for c in bs_element.text):
-                        use_text_vertical = False
-                if use_text_vertical:
+            if config_key == "td" and absolute_config['text_vertical'].on():
+                max_text_length = absolute_config['text_vertical'].get()[
+                    "max_text_length"].select()
+                ignore_number = absolute_config['text_vertical'].get()[
+                    "ignore_number"].on()
+
+                if 1 < len(bs_element.text) <= max_text_length and (
+                        ignore_number and any(not c.isdigit() for c in bs_element.text)):
                     self.global_style[css_selector_name]['text-orientation'] = 'upright'
                     self.global_style[css_selector_name]['writing-mode'] = 'vertical-rl'
 
