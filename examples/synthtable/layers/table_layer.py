@@ -99,11 +99,7 @@ class TableLayer(Layer):
         window_width = 6000
         window_height = 6000
         driver.set_window_size(window_width, window_height)
-        try:
-            table_element = driver.find_element(By.TAG_NAME, 'table')
-        except Exception as e:
-            print(html_path)
-            raise e
+        table_element = driver.find_element(By.TAG_NAME, 'table')
         table_width = table_element.size['width']
         table_height = table_element.size['height']
         if not self.meta['table_full_size']:
@@ -195,8 +191,8 @@ class TableLayer(Layer):
             except Exception as e:
                 if os.path.isfile(image_path):
                     os.unlink(image_path)
-                # if os.path.isfile(html_path):
-                #     os.unlink(html_path)
+                if os.path.isfile(html_path):
+                    os.unlink(html_path)
                 raise e
 
             self.meta['css'] = self._convert_global_style_to_css()
