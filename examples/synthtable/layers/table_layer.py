@@ -99,7 +99,6 @@ class TableLayer(Layer):
         window_width = 6000
         window_height = 6000
         driver.set_window_size(window_width, window_height)
-        print(html_path)
         try:
             table_element = driver.find_element(By.TAG_NAME, 'table')
         except Exception as e:
