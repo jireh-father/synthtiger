@@ -133,7 +133,7 @@ class SynthTable(Component):
 
             gd_colors = []
             for i in range(num_colors):
-                gd_colors.append(self._sample_fg_color(color_mode))
+                gd_colors.append(self._sample_bg_color(color_mode))
 
             if gradient_type == "conic":
                 bg_gradient = "{}-gradient(from {}deg, {})".format(gradient_type, angle, ", ".join(gd_colors))
