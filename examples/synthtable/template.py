@@ -65,7 +65,7 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        pubtabnet 데이터셋용 컨피그 추가
+            pubtabnet 데이터셋용 컨피그 추가
         
         resources 준비
         
