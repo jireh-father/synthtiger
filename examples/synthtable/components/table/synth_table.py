@@ -272,7 +272,7 @@ class SynthTable(Component):
             for cidx in range(len(td_tags)):
                 if self.meta['span']:
                     real_cidx += cidx
-                    while table_row_span_map[ridx][real_cidx]:
+                    while table_row_span_map[ridx][real_cidx] and real_cidx < self.meta['nums_col']:
                         real_cidx += 1
                     has_row_span = tr_element.has_attr('rowspan')
                     has_col_span = tr_element.has_attr('colspan')
