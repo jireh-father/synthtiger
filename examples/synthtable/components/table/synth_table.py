@@ -35,7 +35,7 @@ class SynthTable(Component):
                                                config_selectors['html']['weights'].values, exts=['.json'])
 
         self.html_charset = None
-        if 'charset' in config_selectors['html']:
+        if 'charset' in config_selectors['html'] and config_selectors['html']['charset']:
             self.html_charset = Charset(config_selectors['html']['charset'])
 
         # styles
@@ -65,6 +65,10 @@ class SynthTable(Component):
         self.has_span = config_selectors['html']['has_span']
         self.has_col_span = config_selectors['html']['has_col_span']
         self.has_row_span = config_selectors['html']['has_row_span']
+
+        self.min_font_size = self.config['style']['global']['css']['table']['font-size']['values'][0]
+        self.max_font_size = self.config['style']['global']['css']['table']['font-size']['values'][1]
+
         tmp_path = config_selectors['html']['tmp_path'].select()
         os.makedirs(tmp_path, exist_ok=True)
 
@@ -129,7 +133,8 @@ class SynthTable(Component):
             gradient_type = self.gradient_bg['type'].select()
             angle = self.gradient_bg['angle'].select()
             num_colors = self.gradient_bg['num_colors'].select()
-            # use_random_stop_position = self.gradient_bg['use_random_stop_position'].on()
+            # todo:
+            # random_stop_position = self.gradient_bg['random_stop_position'].on()
 
             gd_colors = []
             for i in range(num_colors):
@@ -358,8 +363,7 @@ class SynthTable(Component):
         background_config = self.config_selectors['style']['global']['absolute']['table_wrapper']['background'].select()
         self.meta['background_config'] = background_config['name']
         if self.meta['background_config'] == "paper":
-            self.meta['color_mode'] = self.config_selectors['style']['global']['absolute']['table'][
-                'paper_color_mode'].select()
+            self.meta['color_mode'] = "light"
 
     def sample_styles(self):
         # static style
@@ -431,10 +435,13 @@ class SynthTable(Component):
             self._sample_font(global_style_key)
 
         # font-size
+
+
         font_size_scale = local_config['relative']['td']['text']['font_size'].select()
         if font_size_scale:
             font_size = int(
                 round(float(self.global_style['table']['font-size'].split("px")[0]) * font_size_scale))
+            font_size = min(self.max_font_size, max(self.min_font_size, font_size))
             self.global_style[global_style_key]['font-size'] = str(font_size) + "px"
 
     def _set_local_text_styles(self, bs_element, color_mode):
@@ -582,7 +589,7 @@ class SynthTable(Component):
                     "ignore_number"].on()
 
                 if 1 < len(bs_element.text) <= max_text_length and (
-                        not ignore_number or (ignore_number and any(not c.isdigit() for c in bs_element.text))):
+                        not ignore_number or (ignore_number and all(not c.isdigit() for c in bs_element.text))):
                     self.global_style[css_selector_name]['text-orientation'] = 'upright'
                     self.global_style[css_selector_name]['writing-mode'] = 'vertical-rl'
 
@@ -594,6 +601,7 @@ class SynthTable(Component):
                     font_size_scale = self.meta[css_selector_name + "_font_size_scale"]
                     font_size = int(
                         round(float(self.global_style['table']['font-size'].split("px")[0]) * font_size_scale))
+                    font_size = min(self.max_font_size, max(self.min_font_size, font_size))
                     self.global_style[css_selector_name]['font-size'] = str(font_size) + "px"
                     self.meta[css_selector_name + "_font_size_scale"] = font_size_scale
                     self.meta[css_selector_name + "_font_size"] = font_size

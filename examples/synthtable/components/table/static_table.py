@@ -17,7 +17,7 @@ class StaticTable(Component):
                                                config_selectors['html']['weights'].values, exts=['.json'])
         self.image_path_selector = PathSelector(config_selectors['image']['paths'].values, None,
                                                 exts=['.jpg', '.png'])
-        self.lower_image_size_ratios = config_selectors['image']['lower_image_size_ratios'].values
+        self.min_image_size_ratio = config_selectors['image']['min_image_size_ratio'].values
 
         self.config_selectors = config_selectors
 
@@ -51,7 +51,7 @@ class StaticTable(Component):
 
         meta["html_path"] = html_path
         meta["image_path"] = image_path
-        meta["lower_image_size_ratio"] = self.lower_image_size_ratios[key]
+        meta["min_image_size_ratio"] = self.min_image_size_ratio[key]
         meta['has_span'] = self.has_span.on()
         meta['has_row_span'] = self.has_row_span.on()
         meta['has_col_span'] = self.has_col_span.on()
@@ -76,8 +76,8 @@ class StaticTable(Component):
             if meta['has_span'] != html_json['has_span']:
                 continue
 
-            width_limit = html_json['width'] * meta["lower_image_size_ratio"]
-            height_limit = html_json['height'] * meta["lower_image_size_ratio"]
+            width_limit = html_json['width'] * meta["min_image_size_ratio"]
+            height_limit = html_json['height'] * meta["min_image_size_ratio"]
 
             target_width, target_height = target_size
 
