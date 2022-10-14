@@ -657,7 +657,10 @@ class SynthTable(Component):
             self._synth_structure_and_content()
         else:
             # static html
+            import time
+            start = time.time()
             html_result = self._sample_html_path()
+            print(time.time() - start)
             if html_result is False:
                 return self.sample(meta)
             html_path, html_json = html_result
@@ -706,9 +709,9 @@ class SynthTable(Component):
         try_cnt = 0
         while True:
             try_cnt += 1
-            if try_cnt >= 10:
-                print("Failed to find the html file with that condition.")
-                return False
+            # if try_cnt >= 10:
+            #     print("Failed to find the html file with that condition.")
+            #     return False
             html_json_path, _, _ = self.html_path_selector.select()
 
             html_json = json.load(open(html_json_path), encoding='utf-8')
@@ -730,7 +733,7 @@ class SynthTable(Component):
                     continue
                 if self.has_col_span.on() and not html_json['has_col_span']:
                     continue
-
+            print("try cnt", try_cnt)
             return html_json_path, html_json
 
     def _synth_structure_and_content(self):

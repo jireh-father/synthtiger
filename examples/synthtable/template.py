@@ -53,8 +53,6 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        static html 불러올때 col, row, span 별로 인덱싱해놓기
-        
         pubtabnet 데이터셋용 컨피그 추가
         
         resources 준비
