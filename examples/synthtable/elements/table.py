@@ -34,6 +34,6 @@ class Table():
             table_layer.meta['table_type'] = table_type
         except:
             traceback.print_exc()
-            return self.generate(size)#, max_size)
+            return self.generate(size, selenium_driver)#, max_size)
 
         return table_layer
