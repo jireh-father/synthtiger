@@ -53,24 +53,22 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        효과 과하지 않도로고 설정 파라미터 미세조정
+        pkill 로 chrome 프로세스 죽이기
+
+        static html 불러올때 col, row, span 별로 인덱싱해놓기
         
         pubtabnet 데이터셋용 컨피그 추가
         
         resources 준비
         
         pubtabnet 변형 데이터 생성
-        
-        static html 불러올때 col, row, span 별로 인덱싱해놓기
-        
+
+        수집한 table html & table image 어떻게 전처리할지 고민
+
+        ## later to do
         아이콘이나 이미지 넣기<i> 태그
 
         change html structure. span
-
-        meta 넣어서 static 이미지 만들기
-        
-        # meta data 보고 버그없는지 디버깅
-         - 폰트때문에 텍스트 깨지는거 있는지 확인
         '''
 
         table_layer, bg_size = self.document.generate()
