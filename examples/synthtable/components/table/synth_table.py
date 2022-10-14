@@ -270,23 +270,24 @@ class SynthTable(Component):
             real_cidx = 0
             td_tags = tr_element.find_all("td")
             for cidx in range(len(td_tags)):
-                real_cidx += cidx
-                while table_row_span_map[ridx][real_cidx]:
-                    real_cidx += 1
-                has_row_span = tr_element.has_attr('rowspan')
-                has_col_span = tr_element.has_attr('colspan')
-                if has_row_span and has_col_span:
-                    table_row_span_map[ridx:ridx + int(tr_element['rowspan']),
-                    real_cidx:real_cidx + int(tr_element['colspan'])] = True
-                elif has_row_span:
-                    table_row_span_map[ridx:ridx + int(tr_element['rowspan']), real_cidx] = True
-                elif has_col_span:
-                    table_row_span_map[ridx, real_cidx:real_cidx + int(tr_element['colspan'])] = True
+                if self.meta['span']:
+                    real_cidx += cidx
+                    while table_row_span_map[ridx][real_cidx]:
+                        real_cidx += 1
+                    has_row_span = tr_element.has_attr('rowspan')
+                    has_col_span = tr_element.has_attr('colspan')
+                    if has_row_span and has_col_span:
+                        table_row_span_map[ridx:ridx + int(tr_element['rowspan']),
+                        real_cidx:real_cidx + int(tr_element['colspan'])] = True
+                    elif has_row_span:
+                        table_row_span_map[ridx:ridx + int(tr_element['rowspan']), real_cidx] = True
+                    elif has_col_span:
+                        table_row_span_map[ridx, real_cidx:real_cidx + int(tr_element['colspan'])] = True
 
                 # last tag
                 if cidx == len(td_tags) - 1:
-                    if all([table_row_span_map[ridx][inner_cidx] for inner_cidx in
-                            range(real_cidx + 1, self.meta['nums_col'])]):
+                    if self.meta['span'] and all([table_row_span_map[ridx][inner_cidx] for inner_cidx in
+                                                  range(real_cidx + 1, self.meta['nums_col'])]):
                         self._set_global_border(
                             '{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx + 1, cidx + 1),
                             'right')
