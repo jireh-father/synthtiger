@@ -65,7 +65,10 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-            pubtabnet 데이터셋용 컨피그 추가
+        inner border의 col 그릴때 특정 td에서 오른쪽 border 안그릴때,
+        span map 다 그린 다음에 현재 td가 마지막이고 오른쪽에 rowspan이 없을 경우에만 그리지 않도록 수정.
+
+        pubtabnet 데이터셋용 컨피그 추가
         
         resources 준비
         

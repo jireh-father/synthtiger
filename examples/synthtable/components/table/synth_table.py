@@ -262,39 +262,10 @@ class SynthTable(Component):
                                         'bottom')
 
     def _set_inner_border_col(self, css_selector):
-        tr_tags = self.meta['html_bs'].find(css_selector).find_all("tr")
-        if self.meta['span']:
-            table_row_span_map = np.full((self.meta['nums_row'], self.meta['nums_col']), False)
-
-        for ridx, tr_element in enumerate(tr_tags):
-            real_cidx = 0
-            td_tags = tr_element.find_all("td")
-            for cidx in range(len(td_tags)):
-                if self.meta['span']:
-                    real_cidx += cidx
-                    while real_cidx < self.meta['nums_col'] and table_row_span_map[ridx][real_cidx]:
-                        real_cidx += 1
-                    has_row_span = tr_element.has_attr('rowspan')
-                    has_col_span = tr_element.has_attr('colspan')
-                    if has_row_span and has_col_span:
-                        table_row_span_map[ridx:ridx + int(tr_element['rowspan']),
-                        real_cidx:real_cidx + int(tr_element['colspan'])] = True
-                    elif has_row_span:
-                        table_row_span_map[ridx:ridx + int(tr_element['rowspan']), real_cidx] = True
-                    elif has_col_span:
-                        table_row_span_map[ridx, real_cidx:real_cidx + int(tr_element['colspan'])] = True
-
-                # last tag
-                if cidx == len(td_tags) - 1:
-                    if self.meta['span'] and all([table_row_span_map[ridx][inner_cidx] for inner_cidx in
-                                                  range(real_cidx + 1, self.meta['nums_col'])]):
-                        self._set_global_border(
-                            '{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx + 1, cidx + 1),
-                            'right')
-                else:
-                    self._set_global_border(
-                        '{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx + 1, cidx + 1),
-                        'right')
+        for ridx, tr_element in enumerate(self.meta['html_bs'].find(css_selector).find_all("tr")):
+            for cidx in range(1, len(tr_element.find_all("td"))):
+                self._set_global_border('{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx + 1, cidx),
+                                        'right')
 
     def _sample_global_thead(self):
         self._sample_global_thead_outline()
@@ -731,7 +702,6 @@ class SynthTable(Component):
             self.meta['original_html'] = html
             self.meta['nums_col'] = html_json['nums_col']
             self.meta['nums_row'] = html_json['nums_row']
-            self.meta['span'] = html_json['has_span']
 
         if 'html_bs' not in self.meta:
             self.meta['html_bs'] = BeautifulSoup(meta['html'], 'html.parser')
@@ -792,7 +762,7 @@ class SynthTable(Component):
 
     def _synth_structure_and_content(self):
         if self.meta['span']:
-            table_span_map = np.full((self.meta['nums_row'], self.meta['nums_col']), False)
+            span_table = np.full((self.meta['nums_row'], self.meta['nums_col']), False)
 
         tags = ["<table>"]
         add_thead = self.meta['add_thead']
@@ -814,7 +784,7 @@ class SynthTable(Component):
             tags.append("<tr>")
             for col in range(self.meta['nums_col']):
                 if self.meta['span']:
-                    if table_span_map[row][col]:
+                    if span_table[row][col]:
                         continue
                     spans = []
                     if self.synth_structure_config['span'].get()['row_span'].on():
@@ -824,27 +794,27 @@ class SynthTable(Component):
                             max_row_span = self.meta['nums_row'] - row
 
                         for row_span_idx in range(1, max_row_span):
-                            if table_span_map[row + row_span_idx][col]:
+                            if span_table[row + row_span_idx][col]:
                                 max_row_span = row_span_idx - 1
                                 break
 
                         if max_row_span > 1:
                             row_span = np.random.randint(2, max_row_span + 1)
                             spans.append(' rowspan="{}"'.format(row_span))
-                            table_span_map[row:row + row_span, col] = True
+                            span_table[row:row + row_span, col] = True
                     if self.synth_structure_config['span'].get()['col_span'].on():
                         max_col_span = self.meta['nums_col'] - col
                         for col_span_idx in range(1, max_col_span):
-                            if table_span_map[row][col + col_span_idx]:
+                            if span_table[row][col + col_span_idx]:
                                 max_col_span = col_span_idx - 1
                                 break
 
                         if max_col_span > 1:
                             col_span = np.random.randint(2, max_col_span + 1)
                             spans.append(' colspan="{}"'.format(col_span))
-                            table_span_map[row, col:col + col_span] = True
+                            span_table[row, col:col + col_span] = True
                     if len(spans) == 2:
-                        table_span_map[row:row + row_span, col:col + col_span] = True
+                        span_table[row:row + row_span, col:col + col_span] = True
                     span_attr = "".join(spans)
                     tags.append("<td{}>".format(span_attr))
                 else:
