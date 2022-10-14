@@ -657,7 +657,10 @@ class SynthTable(Component):
             self._synth_structure_and_content()
         else:
             # static html
-            html_path, html_json = self._sample_html_path()
+            html_result = self._sample_html_path()
+            if html_result is False:
+                return self.sample(meta)
+            html_path, html_json = html_result
             self.meta['html_path'] = html_path
             html = html_json['html'].strip()
             # insert tbody
@@ -700,7 +703,12 @@ class SynthTable(Component):
         return self.meta
 
     def _sample_html_path(self):
+        try_cnt = 0
         while True:
+            try_cnt += 1
+            if try_cnt >= 10:
+                print("Failed to find the html file with that condition.")
+                return False
             html_json_path, _, _ = self.html_path_selector.select()
 
             html_json = json.load(open(html_json_path), encoding='utf-8')
