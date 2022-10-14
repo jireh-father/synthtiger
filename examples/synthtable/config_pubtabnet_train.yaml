@@ -39,10 +39,10 @@ document:
       static:
         weight: 0
         image:
-          paths: [ resources/image/pubtabnet ]
+          paths: [ resources/table_image/pubtabnet ]
           min_image_size_ratio: [ 0.9 ]
         html:
-          paths: [ resources/table_html/pubtabnettrain ]
+          paths: [ resources/table_html/pubtabnet/train ]
           weights: [ 1 ]
 #          charset:
           min_row: 2
