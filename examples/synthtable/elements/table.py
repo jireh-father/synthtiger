@@ -25,15 +25,15 @@ class Table():
         table_layer = TableLayer(size, selenium_driver)
 
         table_config = self.table_selector.select()
-        try:
-            table_type = table_config['name']
-            if table_type == "static":
-                self.static.apply([table_layer], {'size': size})
-            elif table_type == "synth":
-                self.synth.apply([table_layer])
-            table_layer.meta['table_type'] = table_type
-        except:
-            traceback.print_exc()
-            return self.generate(size, selenium_driver)#, max_size)
+        # try:
+        table_type = table_config['name']
+        if table_type == "static":
+            self.static.apply([table_layer], {'size': size})
+        elif table_type == "synth":
+            self.synth.apply([table_layer])
+        table_layer.meta['table_type'] = table_type
+        # except:
+        #     traceback.print_exc()
+        #     return self.generate(size, selenium_driver)#, max_size)
 
         return table_layer
