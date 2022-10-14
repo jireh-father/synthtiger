@@ -41,12 +41,13 @@ class SynthTable(templates.Template):
         options = webdriver.ChromeOptions()
         options.add_argument('--headless')
         # options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
-        options.add_argument('--detach_driver')
+        # options.add_argument('--disable-dev-shm-usage')
+        # options.add_argument('--detach_driver')
         self.selenium_driver = webdriver.Chrome('chromedriver', options=options)
         self.selenium_driver.implicitly_wait(0.5)
 
     def __del__(self):
+        self.selenium_driver.close()
         self.selenium_driver.quit()
 
     def _filter_html(self, html, bs=None):
