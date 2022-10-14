@@ -257,9 +257,13 @@ document:
                 outline: [ empty, all, top_bottom ]
               thead:
                 outline: [empty, all, top_bottom, bottom]
-                inner_border: [ empty, all, col ]
+                inner_border:
+                  values: [ empty, all, col ]
+                  weights: [2, 1, 1]
               tbody:
-                inner_border: [ empty, all, row, col ]
+                inner_border:
+                  values: [ empty, all, row, col ]
+                  weights: [3,1,1,1]
             relative:
               table:
                 width_scale: [ 0.7, 1.2 ]
@@ -537,7 +541,7 @@ document:
                   postfix: "px"
                   prob: 0.1
                 border-style:
-                  values: [ none, solid, dotted, dashed ]
+                  values: [ none, solid ] #, dotted, dashed ]
                   prob: 0.1
 #                border-top-width:
 #                  values: [ 1, 4 ]

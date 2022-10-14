@@ -435,8 +435,6 @@ class SynthTable(Component):
             self._sample_font(global_style_key)
 
         # font-size
-
-
         font_size_scale = local_config['relative']['td']['text']['font_size'].select()
         if font_size_scale:
             font_size = int(
@@ -522,10 +520,10 @@ class SynthTable(Component):
                     "border-{}-color".format(ltrb)] = border_color if border_color else self._sample_fg_color(
                     color_mode)
 
-    def _set_local_css_styles(self, config_key, css_selector_name, bs_element=None):
+    def _set_local_css_styles(self, config_key, css_selector_name, parent_color_mode, bs_element=None):
         local_config = self.config_selectors['style']['local'].get()
 
-        color_mode = self.meta['color_mode']
+        color_mode = parent_color_mode
         if local_config['absolute'][config_key].on():
             # css
             selectors = local_config['css'][config_key]
@@ -608,30 +606,54 @@ class SynthTable(Component):
 
         if config_key == "td" and local_config['absolute']['td'].get()['text'].on():
             self._set_local_text_styles(bs_element, color_mode)
+        return color_mode
+
+    def _sample_local_hierical_tag_styles(self, parent_selector):
+        thead_tag = self.meta['html_bs'].find(parent_selector)
+        color_mode = self.meta['color_mode']
+        color_mode = self._set_local_css_styles(parent_selector, parent_selector, parent_color_mode=color_mode)
+        for row_idx, tr_tag in enumerate(thead_tag.find_all("tr")):
+            color_mode = self._set_local_css_styles('tr',
+                                                    "{} tr:nth-child({})".format(parent_selector, row_idx + 1),
+                                                    bs_element=tr_tag, parent_color_mode=color_mode)
+            for col_idx, td_tag in enumerate(tr_tag.find_all("td")):
+                self._set_local_css_styles('td',
+                                           "{} tr:nth-child({}) td:nth-child({})".format(parent_selector,
+                                                                                         row_idx + 1, col_idx + 1),
+                                           bs_element=td_tag, parent_color_mode=color_mode)
 
     def sample_local_styles(self):
         if not self.config_selectors['style']['local'].on():
             return
 
-        thead_and_tbody_list = ["tbody"]
-        if self.meta['has_thead']:
-            self._set_local_css_styles('thead', 'thead')
-            thead_and_tbody_list.append("thead")
-        self._set_local_css_styles('tbody', 'tbody')
-
         if 'html_bs' not in self.meta:
             self.meta['html_bs'] = BeautifulSoup(self.meta['html'], 'html.parser')
-        for thead_or_tbody in thead_and_tbody_list:
-            thead_or_tbody_element = self.meta['html_bs'].find(thead_or_tbody)
-            for row_idx, tr_tag in enumerate(thead_or_tbody_element.find_all("tr")):
-                # for row_idx in range(1, self.meta['nums_row'] + 1):
-                self._set_local_css_styles('tr', "{} tr:nth-child({})".format(thead_or_tbody, row_idx + 1), tr_tag)
-                for col_idx, td_tag in enumerate(tr_tag.find_all("td")):
-                    # for col_idx in range(1, self.meta['nums_col'] + 1):
-                    self._set_local_css_styles('td',
-                                               "{} tr:nth-child({}) td:nth-child({})".format(thead_or_tbody,
-                                                                                             row_idx + 1, col_idx + 1),
-                                               td_tag)
+
+        if self.meta['has_thead']:
+            self._sample_local_hierical_tag_styles("thead")
+            
+        self._sample_local_hierical_tag_styles("tbody")
+
+        # thead_and_tbody_list = ["tbody"]
+        # if self.meta['has_thead']:
+        #     self._set_local_css_styles('thead', 'thead')
+        #     thead_and_tbody_list.append("thead")
+        # self._set_local_css_styles('tbody', 'tbody')
+        #
+        # if 'html_bs' not in self.meta:
+        #     self.meta['html_bs'] = BeautifulSoup(self.meta['html'], 'html.parser')
+        # for thead_or_tbody in thead_and_tbody_list:
+        #     thead_or_tbody_element = self.meta['html_bs'].find(thead_or_tbody)
+        #     for row_idx, tr_tag in enumerate(thead_or_tbody_element.find_all("tr")):
+        #         # for row_idx in range(1, self.meta['nums_row'] + 1):
+        #         self._set_local_css_styles('tr', "{} tr:nth-child({})".format(thead_or_tbody, row_idx + 1),
+        #                                    bs_element=tr_tag)
+        #         for col_idx, td_tag in enumerate(tr_tag.find_all("td")):
+        #             # for col_idx in range(1, self.meta['nums_col'] + 1):
+        #             self._set_local_css_styles('td',
+        #                                        "{} tr:nth-child({}) td:nth-child({})".format(thead_or_tbody,
+        #                                                                                      row_idx + 1, col_idx + 1),
+        #                                        bs_element=td_tag)
         # for row_idx, tr_tag in enumerate(self.meta['html_bs'].find_all("tr")):
         #     # for row_idx in range(1, self.meta['nums_row'] + 1):
         #     self._set_local_css_styles('tr', "tr:nth-child({})".format(row_idx + 1), tr_tag)
