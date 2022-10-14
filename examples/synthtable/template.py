@@ -53,9 +53,6 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        arc 변형후, polynomial 밑에부분 가운데로 당겨보기
-        
-        
         pubtabnet 데이터셋용 컨피그 추가
         
         resources 준비

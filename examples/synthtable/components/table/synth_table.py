@@ -407,11 +407,9 @@ class SynthTable(Component):
         span_tag = bs.new_tag("span", id="text_{}".format(text_id))
         span_tag.append(text)
         bs_element.append(span_tag)
-        selectors = local_config['css']['td']
+        selectors = local_config['css']['text']
         global_style_key = "#text_{}".format(text_id)
         for css_selector in selectors:
-            if css_selector.startswith("border"):
-                continue
             css_val = selectors[css_selector]
             val = css_val.select()
             if val is None:
@@ -631,7 +629,7 @@ class SynthTable(Component):
 
         if self.meta['has_thead']:
             self._sample_local_hierical_tag_styles("thead")
-            
+
         self._sample_local_hierical_tag_styles("tbody")
 
         # thead_and_tbody_list = ["tbody"]

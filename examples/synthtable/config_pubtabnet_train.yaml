@@ -378,7 +378,7 @@ document:
                     bg_color_change:
                       prob: 0.5
                     font:
-                      prob: 0.5
+                      prob: 0.0
                   char:
                     weight: 1
                     length: [0.1, 0.9]
@@ -387,7 +387,7 @@ document:
                     bg_color_change:
                       prob: 0.5
                     font:
-                      prob: 0.5
+                      prob: 0.0
             relative:
               thead:
                 font_size:
@@ -407,7 +407,7 @@ document:
                   prob: 0.3
                 text:
                   font_size:
-                    values: [ 0.8, 1.2 ]
+                    values: [ 0.9, 1.1 ]
                     prob: 0.3
             css:
               thead:
@@ -576,6 +576,16 @@ document:
                 #text-shadow: 1px 1px 1px red, 2px 2px 1px red;
                 #              width: []
                 #              height: [ ]
+              text:
+                font-weight:
+                  values: [ lighter, bold, normal ]
+                  prob: 0.1
+                font-style:
+                  values: [ normal, italic ]
+                  prob: 0.1
+                text-decoration:
+                  values: [ none, underline, line-through ]
+                  weights: [ 10, 1, 1 ]
 #    text:
 #      path: resources/corpus/kowiki.txt
 #    font:
