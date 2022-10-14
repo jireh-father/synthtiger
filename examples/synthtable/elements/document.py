@@ -39,14 +39,14 @@ class Document:
             **config.get("effect", {}),
         )
 
-    def generate(self):
+    def generate(self, selenium_driver):
         landscape = np.random.rand() < self.landscape
         short_size = np.random.randint(self.short_size[0], self.short_size[1] + 1)
         aspect_ratio = np.random.uniform(self.aspect_ratio[0], self.aspect_ratio[1])
         long_size = int(short_size * aspect_ratio)
         size = (long_size, short_size) if landscape else (short_size, long_size)
 
-        table_layer = self.content.generate(size)#, int(self.short_size[1] * self.aspect_ratio[1]))
+        table_layer = self.content.generate(size, selenium_driver)#, int(self.short_size[1] * self.aspect_ratio[1]))
 
         fullscreen = np.random.rand() < self.fullscreen
         if fullscreen:

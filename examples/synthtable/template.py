@@ -13,6 +13,7 @@ from elements import Background, Document
 from PIL import Image
 from synthtiger import components, layers, templates
 from utils import html_util
+from selenium import webdriver
 
 
 class SynthTable(templates.Template):
@@ -37,6 +38,16 @@ class SynthTable(templates.Template):
             ],
             **config.get("effect", {}),
         )
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        # options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        options.add_argument('--detach_driver')
+        self.selenium_driver = webdriver.Chrome('chromedriver', options=options)
+        self.selenium_driver.implicitly_wait(0.5)
+
+    def __del__(self):
+        self.selenium_driver.quit()
 
     def _filter_html(self, html, bs=None):
         if self.html_output["remove_tag_in_content"]:
@@ -67,7 +78,7 @@ class SynthTable(templates.Template):
         change html structure. span
         '''
 
-        table_layer, bg_size = self.document.generate()
+        table_layer, bg_size = self.document.generate(self.selenium_driver)
 
         bg_layer, bg_image_meta, bg_effect_meta = self.background.generate(bg_size)
         table_layer.meta['bg_image'] = bg_image_meta

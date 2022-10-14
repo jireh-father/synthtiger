@@ -21,8 +21,8 @@ class Table():
             else:
                 self.synth = comps.SynthTable(selector_dict['config'], config["synth"])
 
-    def generate(self, size):#, max_size):
-        table_layer = TableLayer(size)
+    def generate(self, size, selenium_driver):#, max_size):
+        table_layer = TableLayer(size, selenium_driver)
 
         table_config = self.table_selector.select()
         try:
