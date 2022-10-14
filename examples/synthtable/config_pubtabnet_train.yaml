@@ -20,11 +20,11 @@ background:
   color:
     rgb: [[ 0, 255 ],[ 0, 255 ],[ 0, 255 ]]
     alpha: [ 1, 1 ]
-    grayscale: 0
+    grayscale: 0.5
   effect:
     args:
       # gaussian blur
-      - prob: 0.7
+      - prob: 0.5
         args:
           sigma: [0, 10]
 
@@ -33,16 +33,16 @@ document:
   landscape: 0.5
   short_size: [720, 1024]
   aspect_ratio: [1, 2]
-  margin: [0, 0.17]
+  margin: [0, 0.35]
   content:
     table:
       static:
         weight: 0
         image:
-          paths: [ resources/table_image ]
+          paths: [ resources/image/pubtabnet ]
           lower_image_size_ratios: [ 0.9 ]
         html:
-          paths: [ resources/table_html/train ]
+          paths: [ resources/table_html/pubtabnettrain ]
           weights: [ 1 ]
 #          charset:
           min_row: 2
