@@ -12,7 +12,7 @@ import uuid
 
 
 class Sylinder(Component):
-    def __init__(self, angle=None, reverse_prob=0.5):
+    def __init__(self, angle=None):
         super().__init__()
         self.angle = angle
 
