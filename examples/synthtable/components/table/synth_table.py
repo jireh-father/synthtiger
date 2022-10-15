@@ -262,28 +262,30 @@ class SynthTable(Component):
 
     def _set_inner_border_col(self, css_selector):
         tr_tags = self.meta['html_bs'].find(css_selector).find_all("tr")
-        table_row_span_map = np.full((self.meta['nums_row'], self.meta['nums_col']), False)
+        if self.meta['span']:
+            table_row_span_map = np.full((self.meta['nums_row'], self.meta['nums_col']), False)
         for ridx, tr_element in enumerate(tr_tags):
             real_cidx = 0
             td_tags = tr_element.find_all("td")
             for cidx, td_tag in enumerate(td_tags):
-                while table_row_span_map[ridx][real_cidx]:
-                    real_cidx += 1
+                if self.meta['span']:
+                    while table_row_span_map[ridx][real_cidx]:
+                        real_cidx += 1
 
-                has_row_span = td_tag.has_attr('rowspan')
-                has_col_span = td_tag.has_attr('colspan')
-                if has_row_span and has_col_span:
-                    table_row_span_map[ridx:ridx + int(td_tag['rowspan']),
-                    real_cidx:real_cidx + int(td_tag['colspan'])] = True
-                elif has_row_span:
-                    table_row_span_map[ridx:ridx + int(td_tag['rowspan']), real_cidx] = True
-                elif has_col_span:
-                    table_row_span_map[ridx, real_cidx:real_cidx + int(td_tag['colspan'])] = True
+                    has_row_span = td_tag.has_attr('rowspan')
+                    has_col_span = td_tag.has_attr('colspan')
+                    if has_row_span and has_col_span:
+                        table_row_span_map[ridx:ridx + int(td_tag['rowspan']),
+                        real_cidx:real_cidx + int(td_tag['colspan'])] = True
+                    elif has_row_span:
+                        table_row_span_map[ridx:ridx + int(td_tag['rowspan']), real_cidx] = True
+                    elif has_col_span:
+                        table_row_span_map[ridx, real_cidx:real_cidx + int(td_tag['colspan'])] = True
 
-                real_cidx += int(td_tag['colspan']) if has_col_span else 1
+                    real_cidx += int(td_tag['colspan']) if has_col_span else 1
 
                 if cidx == len(td_tags) - 1:
-                    if real_cidx < self.meta['nums_col'] and all([table_row_span_map[ridx][inner_cidx] for inner_cidx in
+                    if self.meta['span'] and real_cidx < self.meta['nums_col'] and all([table_row_span_map[ridx][inner_cidx] for inner_cidx in
                                                                   range(real_cidx, self.meta['nums_col'])]):
                         self._set_global_border(
                             '{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx + 1, cidx + 1),
@@ -728,6 +730,7 @@ class SynthTable(Component):
             self.meta['original_html'] = html
             self.meta['nums_col'] = html_json['nums_col']
             self.meta['nums_row'] = html_json['nums_row']
+            self.meta['span'] = html_json['has_span']
 
         if 'html_bs' not in self.meta:
             self.meta['html_bs'] = BeautifulSoup(meta['html'], 'html.parser')
@@ -764,6 +767,7 @@ class SynthTable(Component):
                 print("Failed to find the html file with that condition.")
                 return False
             html_json_path, _, _ = self.html_path_selector.select()
+            html_json_path = 'resources/table_html/pubtabnet/train/PMC2065868_007_00.json'
 
             html_json = json.load(open(html_json_path), encoding='utf-8')
             if self.html_charset:

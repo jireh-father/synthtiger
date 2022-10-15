@@ -47,8 +47,9 @@ class SynthTable(templates.Template):
         self.selenium_driver.implicitly_wait(0.5)
 
     def __del__(self):
-        self.selenium_driver.close()
-        self.selenium_driver.quit()
+        # self.selenium_driver.close()
+        # self.selenium_driver.quit()
+        pass
 
     def _filter_html(self, html, bs=None):
         if self.html_output["remove_tag_in_content"]:

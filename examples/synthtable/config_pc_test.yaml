@@ -259,7 +259,7 @@ document:
                 outline: [empty, all, top_bottom, bottom]
                 inner_border: [ empty, all, col ]
               tbody:
-                inner_border: [ empty, all, row, col ]
+                inner_border: [ all ] #empty, all, row, col ]
             relative:
               table:
                 width_scale: [ 0.7, 1.2 ]
