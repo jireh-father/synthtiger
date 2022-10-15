@@ -69,17 +69,9 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
-        핑크 계열 다크 색 없애기
-        구름 , 고양이 폰트 없애기
-
-        inner border의 col 그릴때 특정 td에서 오른쪽 border 안그릴때,
-        span map 다 그린 다음에 현재 td가 마지막이고 오른쪽에 rowspan이 없을 경우에만 그리지 않도록 수정.
-
-        pubtabnet 데이터셋용 컨피그 추가
-        
-        resources 준비
-        
         pubtabnet 변형 데이터 생성
+        1. wild
+        2. wild hard
 
         수집한 table html & table image 어떻게 전처리할지 고민
 

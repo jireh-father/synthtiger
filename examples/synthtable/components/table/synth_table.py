@@ -34,6 +34,9 @@ class SynthTable(Component):
         self.html_path_selector = PathSelector(config_selectors['html']['paths'].values,
                                                config_selectors['html']['weights'].values, exts=['.json'])
 
+        self.html_path_shuffle = config["html"]["shuffle"] if "shuffle" in config["html"] else True
+        self.html_file_idx = 0
+
         self.html_charset = None
         if 'charset' in config_selectors['html'] and config_selectors['html']['charset']:
             self.html_charset = Charset(config_selectors['html']['charset'])
@@ -766,27 +769,34 @@ class SynthTable(Component):
             if try_cnt >= 100:
                 print("Failed to find the html file with that condition.")
                 return False
-            html_json_path, _, _ = self.html_path_selector.select()
+
+            if self.html_path_shuffle:
+                html_json_path, _, _ = self.html_path_selector.select()
+            else:
+                html_json_path = self.html_path_selector.get(0, self.html_file_idx)
+                self.html_file_idx += 1
 
             html_json = json.load(open(html_json_path), encoding='utf-8')
-            if self.html_charset:
-                bs = BeautifulSoup(html_json['html'], 'html.parser')
-                self.meta['html_bs'] = bs
-                if not self.html_charset.check_charset(bs.text):
-                    continue
-            if self.min_cols > html_json['nums_col'] or self.max_cols < html_json['nums_col']:
-                continue
-            if self.min_rows > html_json['nums_row'] or self.max_rows < html_json['nums_row']:
-                continue
-            has_span = self.has_span.on()
-            if has_span != html_json['has_span']:
-                continue
 
-            if has_span:
-                if self.has_row_span.on() and not html_json['has_row_span']:
+            if self.html_path_shuffle:
+                if self.html_charset:
+                    bs = BeautifulSoup(html_json['html'], 'html.parser')
+                    self.meta['html_bs'] = bs
+                    if not self.html_charset.check_charset(bs.text):
+                        continue
+                if self.min_cols > html_json['nums_col'] or self.max_cols < html_json['nums_col']:
                     continue
-                if self.has_col_span.on() and not html_json['has_col_span']:
+                if self.min_rows > html_json['nums_row'] or self.max_rows < html_json['nums_row']:
                     continue
+                has_span = self.has_span.on()
+                if has_span != html_json['has_span']:
+                    continue
+
+                if has_span:
+                    if self.has_row_span.on() and not html_json['has_row_span']:
+                        continue
+                    if self.has_col_span.on() and not html_json['has_col_span']:
+                        continue
             return html_json_path, html_json
 
     def _synth_structure_and_content(self):

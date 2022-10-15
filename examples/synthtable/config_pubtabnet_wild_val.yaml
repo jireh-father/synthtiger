@@ -12,8 +12,8 @@ background:
     image: 1
     color: 1
   image:
-    paths: [resources/background]
-    weights: [1]
+    paths: [resources/background/background,resources/background/deep_learning_paper,resources/background/document,resources/background/free_photo,resources/background/high_street,resources/background/random_image,resources/background/scholar_paper,resources/background/text]
+    weights: [1,1,1,1,1,1,1,1]
     alpha: [ 0.8, 1.0 ]
     grayscale: 0.5
     crop: 0.5
@@ -44,6 +44,7 @@ document:
         html:
           paths: [ resources/table_html/pubtabnet/val ]
           weights: [ 1 ]
+          shuffle: False
 #          charset:
           min_row: 1
           max_row: 10
@@ -96,6 +97,7 @@ document:
         html:
           paths: [ resources/table_html/pubtabnet/val ]
           weights: [1]
+          shuffle: False
           charset: null
           min_row: 1
           max_row: 10
@@ -199,7 +201,7 @@ document:
             paths: [ resources/fonts ]
             weights: [ 1 ]
           color_set:
-            dark: [ MediumVioletRed, blue, darkmagenta, darkblue, forestgreen, blueviolet, mediumblue, darkslateblue, darkred, darkviolet, purple, dimgray, firebrick, fuchsia, maroon, darkorchid, brown, navy, magenta, crimson, deeppink, indigo, darkcyan, red, green, black, chocolate, darkgreen, darkslategray, MidnightBlue,Navy,OrangeRed,Purple,RebeccaPurple,RoyalBlue,SaddleBrown ]
+            dark: [ MediumVioletRed, blue, darkmagenta, darkblue, forestgreen, blueviolet, mediumblue, darkslateblue, darkred, darkviolet, purple, dimgray, firebrick, maroon, darkorchid, brown, navy, crimson, indigo, darkcyan, red, green, black, chocolate, darkgreen, darkslategray, MidnightBlue,Navy,OrangeRed,Purple,RebeccaPurple,RoyalBlue,SaddleBrown ]
             light: [ Linen, bisque, beige, antiquewhite, chartreuse, greenyellow, lemonchiffon, honeydew, gold, floralwhite, aliceblue, linen, lavender, cornsilk, azure, lightyellow, white, gainsboro, lightgoldenrodyellow, cyan, lavenderblush, ivory, lightcyan, aquamarine, aqua, ghostwhite, blanchedalmond, SeaShell,MintCream,MistyRose,Moccasin,OldLace,PaleGoldenRod,PapayaWhip,Snow,SpringGreen ]
           global:
             absolute:
@@ -207,7 +209,7 @@ document:
                 background:
                   paper:
                     weight: 2
-                    paths: [ resources/paper ]
+                    paths: [ resources/background/paper_background ]
                     weights: [ 1 ]
                     alpha: [ 0.1, 0.3 ]
                     grayscale: 0.5
