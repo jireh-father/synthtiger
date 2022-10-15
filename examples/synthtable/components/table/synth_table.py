@@ -285,16 +285,13 @@ class SynthTable(Component):
                 if cidx == len(td_tags) - 1:
                     if real_cidx < self.meta['nums_col'] and all([table_row_span_map[ridx][inner_cidx] for inner_cidx in
                                                                   range(real_cidx, self.meta['nums_col'])]):
-                        self._set_global_border('{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx, cidx),
-                                                'right')
+                        self._set_global_border(
+                            '{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx + 1, cidx + 1),
+                            'right')
                 else:
-                    self._set_global_border('{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx, cidx),
-                                            'right')
-
-        for ridx, tr_element in enumerate(self.meta['html_bs'].find(css_selector).find_all("tr")):
-            for cidx in range(1, len(tr_element.find_all("td"))):
-                self._set_global_border('{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx + 1, cidx),
-                                        'right')
+                    self._set_global_border(
+                        '{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx + 1, cidx + 1),
+                        'right')
 
     def _sample_global_thead(self):
         self._sample_global_thead_outline()
