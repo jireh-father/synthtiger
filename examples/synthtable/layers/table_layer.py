@@ -159,6 +159,9 @@ class TableLayer(Layer):
                     self.meta["effect_config"]["distort"]["polynomial"]["dest_coord_ratios"],
                     self.meta["effect_config"]["distort"]["polynomial"]["move_prob"])
                 image = polynomial.apply_image(image)
+            elif effect_config['name'] == "sylinder":
+                sylinder = components.Sylinder(self.meta["effect_config"]["distort"]["sylinder"]["angle"])
+                image = sylinder.apply_image(image)
         if self.meta["rotate"]:
             rotate_config = selectors["rotate"].get()
             angle = rotate_config['angle'].select()
