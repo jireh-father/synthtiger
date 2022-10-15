@@ -767,7 +767,6 @@ class SynthTable(Component):
                 print("Failed to find the html file with that condition.")
                 return False
             html_json_path, _, _ = self.html_path_selector.select()
-            html_json_path = 'resources/table_html/pubtabnet/train/PMC2065868_007_00.json'
 
             html_json = json.load(open(html_json_path), encoding='utf-8')
             if self.html_charset:
