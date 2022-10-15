@@ -65,6 +65,9 @@ class SynthTable(templates.Template):
     def generate(self):
         # todo:
         '''
+        핑크 계열 다크 색 없애기
+        구름 폰트 없애기
+
         inner border의 col 그릴때 특정 td에서 오른쪽 border 안그릴때,
         span map 다 그린 다음에 현재 td가 마지막이고 오른쪽에 rowspan이 없을 경우에만 그리지 않도록 수정.
 

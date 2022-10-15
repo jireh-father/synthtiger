@@ -251,15 +251,37 @@ class SynthTable(Component):
                 self._set_inner_border_row("thead")
 
     def _set_inner_border_row(self, css_selector):
-        tr_elements = self.meta['html_bs'].find(css_selector).find_all("tr")
-        for ridx in range(1, len(tr_elements)):
-            for cidx, td_element in enumerate(tr_elements[ridx - 1].find_all("td")):
-                cidx += 1
-                if td_element.has_attr('rowspan') and int(td_element['rowspan']) == self.meta['nums_head_row'] - (
-                        ridx - 1):
-                    continue
-                self._set_global_border('{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx, cidx),
-                                        'bottom')
+        tr_tags = self.meta['html_bs'].find(css_selector).find_all("tr")
+        table_row_span_map = np.full((self.meta['nums_row'], self.meta['nums_col']), False)
+        for ridx, tr_element in enumerate(tr_tags):
+            real_cidx = 0
+            td_tags = tr_element.find_all("td")
+            for cidx, td_tag in enumerate(td_tags):
+                while table_row_span_map[ridx][real_cidx]:
+                    real_cidx += 1
+
+                has_row_span = td_tag.has_attr('rowspan')
+                has_col_span = td_tag.has_attr('colspan')
+                if has_row_span and has_col_span:
+                    table_row_span_map[ridx:ridx + int(td_tag['rowspan']),
+                    real_cidx:real_cidx + int(td_tag['colspan'])] = True
+                elif has_row_span:
+                    table_row_span_map[ridx:ridx + int(td_tag['rowspan']), real_cidx] = True
+                elif has_col_span:
+                    table_row_span_map[ridx, real_cidx:real_cidx + int(td_tag['colspan'])] = True
+
+                real_cidx += int(td_tag['colspan']) if has_col_span else 1
+
+                if cidx == len(td_tags) - 1:
+                    if real_cidx < self.meta['nums_col'] and all([table_row_span_map[ridx][inner_cidx] for inner_cidx in
+                                                     range(real_cidx, self.meta['nums_col'])]):
+                        self._set_global_border('{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx, cidx),
+                                                'bottom')
+                else:
+                    self._set_global_border('{} tr:nth-child({}) td:nth-child({})'.format(css_selector, ridx, cidx),
+                                            'bottom')
+
+
 
     def _set_inner_border_col(self, css_selector):
         for ridx, tr_element in enumerate(self.meta['html_bs'].find(css_selector).find_all("tr")):
