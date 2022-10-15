@@ -59,7 +59,7 @@ document:
           distort:
             prob: 0.5
             arc:
-              weight: 1
+              weight: 0
               angles: [ 3, 11 ]
               reverse:
                 prob: 1.0
@@ -68,6 +68,9 @@ document:
               weight: 1
               dest_coord_ratios: [ 0.01, 0.04 ]
               move_prob: 0.5
+            sylinder:
+              weight: 1
+              args: [5, 50]
           rotate:
             prob: 0.5
             angle: [ 1, 3 ]
@@ -79,7 +82,7 @@ document:
           distort:
             prob: 0.5
             arc:
-              weight: 1
+              weight: 0
               angles: [ 3, 11 ]
               reverse:
                 prob: 1.0
@@ -88,6 +91,9 @@ document:
               weight: 1
               dest_coord_ratios: [ 0.01, 0.04 ]
               move_prob: 0.5
+            sylinder:
+              weight: 1
+              args: [ 5, 50 ]
           rotate:
             prob: 0.5
             angle: [1, 3]
