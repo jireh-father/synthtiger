@@ -38,18 +38,21 @@ class SynthTable(templates.Template):
             ],
             **config.get("effect", {}),
         )
-        options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
-        options.add_argument('--detach_driver')
-        self.selenium_driver = webdriver.Chrome('chromedriver', options=options)
-        self.selenium_driver.implicitly_wait(0.5)
+        self.table_html_synth = False
+        if config["document"]["content"]["table"]["synth"]["weight"] > 0:
+            self.table_html_synth = True
+            options = webdriver.ChromeOptions()
+            options.add_argument('--headless')
+            options.add_argument('--no-sandbox')
+            options.add_argument('--disable-dev-shm-usage')
+            options.add_argument('--detach_driver')
+            self.selenium_driver = webdriver.Chrome('chromedriver', options=options)
+            self.selenium_driver.implicitly_wait(0.5)
 
     def __del__(self):
-        # self.selenium_driver.close()
-        # self.selenium_driver.quit()
-        pass
+        if self.table_html_synth:
+            self.selenium_driver.close()
+            self.selenium_driver.quit()
 
     def _filter_html(self, html, bs=None):
         if self.html_output["remove_tag_in_content"]:
