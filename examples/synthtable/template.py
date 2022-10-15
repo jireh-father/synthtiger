@@ -39,6 +39,7 @@ class SynthTable(templates.Template):
             **config.get("effect", {}),
         )
         self.table_html_synth = False
+        self.selenium_driver = None
         if config["document"]["content"]["table"]["synth"]["weight"] > 0:
             self.table_html_synth = True
             options = webdriver.ChromeOptions()
