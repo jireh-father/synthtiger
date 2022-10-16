@@ -44,6 +44,7 @@ document:
         html:
           paths: [ resources/table_html/pubtabnet/val ]
           weights: [ 1 ]
+          shuffle: False
 #          charset:
           min_row: 2
           max_row: 10
@@ -102,6 +103,7 @@ document:
         html:
           paths: [ resources/table_html/pubtabnet/val ]
           weights: [1]
+          shuffle: False
           charset: null
           min_row: 1
           max_row: 10
