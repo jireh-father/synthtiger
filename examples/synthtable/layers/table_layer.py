@@ -200,6 +200,7 @@ class TableLayer(Layer):
                 raise e
             finally:
                 if driver and hasattr(driver, "close"):
+                    print("close")
                     driver.close()
                     driver.quit()
 
