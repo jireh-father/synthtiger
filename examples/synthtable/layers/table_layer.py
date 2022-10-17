@@ -85,17 +85,8 @@ class TableLayer(Layer):
             margin_vertical += int(self.global_style['table']['margin'].split("px")[0]) / 2
         return margin_horizontal, margin_vertical
 
-    def _render_table_selenium(self, html_path, image_path, paper):
+    def _render_table_selenium(self, html_path, image_path, paper, driver):
         # driver = self.selenium_driver
-
-        options = webdriver.ChromeOptions()
-        options.add_argument('--headless')
-        options.add_argument('--no-sandbox')
-        options.add_argument('--disable-dev-shm-usage')
-        options.add_argument('--detach_driver')
-        driver = webdriver.Chrome('chromedriver', options=options)
-        driver.implicitly_wait(0.5)
-
         self._write_html_file(html_path)
         driver.get("file:///{}".format(os.path.abspath(html_path)))
 
@@ -145,8 +136,6 @@ class TableLayer(Layer):
         # driver.set_window_size(int(image_width * 1.5), int(image_height * 1.5))
         div_element = driver.find_element(By.ID, 'table_wrapper')
         div_element.screenshot(image_path)
-        driver.close()
-        driver.quit()
 
     def effect(self, image):
         selectors = parse_config(self.meta["effect_config"])
@@ -196,21 +185,23 @@ class TableLayer(Layer):
 
             try:
                 self.global_style = meta['global_style']
-                # options = webdriver.ChromeOptions()
-                # options.add_argument('--headless')
-                # # options.add_argument('--no-sandbox')
-                # options.add_argument('--disable-dev-shm-usage')
-                # options.add_argument('--detach_driver')
-                # driver = webdriver.Chrome('chromedriver', options=options)
-                self._render_table_selenium(html_path, image_path, paper)
+                options = webdriver.ChromeOptions()
+                options.add_argument('--headless')
+                options.add_argument('--no-sandbox')
+                options.add_argument('--disable-dev-shm-usage')
+                options.add_argument('--detach_driver')
+                driver = webdriver.Chrome('chromedriver', options=options)
+                self._render_table_selenium(html_path, image_path, paper, driver)
             except Exception as e:
                 if os.path.isfile(image_path):
                     os.unlink(image_path)
                 if os.path.isfile(html_path):
                     os.unlink(html_path)
                 raise e
-            # finally:
-            #     self.selenium_driver.close()
+            finally:
+                if driver and hasattr(driver, "close"):
+                    driver.close()
+                    driver.quit()
 
             self.meta['css'] = self._convert_global_style_to_css()
             image = Image.open(image_path)
