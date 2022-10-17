@@ -40,15 +40,15 @@ class SynthTable(templates.Template):
         )
         self.table_html_synth = False
         self.selenium_driver = None
-        if config["document"]["content"]["table"]["synth"]["weight"] > 0:
-            self.table_html_synth = True
-            options = webdriver.ChromeOptions()
-            options.add_argument('--headless')
-            options.add_argument('--no-sandbox')
-            options.add_argument('--disable-dev-shm-usage')
-            options.add_argument('--detach_driver')
-            self.selenium_driver = webdriver.Chrome('chromedriver', options=options)
-            self.selenium_driver.implicitly_wait(0.5)
+        # if config["document"]["content"]["table"]["synth"]["weight"] > 0:
+        #     self.table_html_synth = True
+        #     options = webdriver.ChromeOptions()
+        #     options.add_argument('--headless')
+        #     options.add_argument('--no-sandbox')
+        #     options.add_argument('--disable-dev-shm-usage')
+        #     options.add_argument('--detach_driver')
+        #     self.selenium_driver = webdriver.Chrome('chromedriver', options=options)
+        #     self.selenium_driver.implicitly_wait(0.5)
 
     def __del__(self):
         if self.table_html_synth:
