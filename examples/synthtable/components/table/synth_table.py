@@ -774,7 +774,10 @@ class SynthTable(Component):
                 html_json_path, _, _ = self.html_path_selector.select()
             else:
                 html_json_path = self.html_path_selector.get(0, self.html_file_idx)
-                self.html_file_idx += 1
+                if len(self.html_path_selector.paths[0]) <= self.html_file_idx + 1:
+                    self.html_file_idx = 0
+                else:
+                    self.html_file_idx += 1
 
             html_json = json.load(open(html_json_path), encoding='utf-8')
 
